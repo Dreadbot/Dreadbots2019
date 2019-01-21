@@ -13,4 +13,8 @@ class Lifter {
  public:
   Lifter();
   void Lift(int height);
+  //from Abbie and Clara
+  void RaiseLift();
+  void LiftInit();
+  int GetLiftPosition();
 };
