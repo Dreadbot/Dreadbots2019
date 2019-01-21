@@ -5,12 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Example.h"
-#include <iostream>
+#pragma once
 
-
-Example::Example() {}
-
-void Example::HelloWorld(int value) {
-    std::cout << "Hello World! " << value << " is the parameter" << std::endl;
-}
+class Lifter {
+ public:
+  Lifter();
+  void Lift(int height);
+};

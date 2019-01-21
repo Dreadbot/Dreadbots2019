@@ -5,12 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Example.h"
-#include <iostream>
+#include "Lifter.h"
 
+Lifter::Lifter() {}
 
-Example::Example() {}
-
-void Example::HelloWorld(int value) {
-    std::cout << "Hello World! " << value << " is the parameter" << std::endl;
+void Lifter::Lift (int height){
+    
 }
