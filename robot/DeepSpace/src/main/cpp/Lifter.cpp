@@ -6,6 +6,10 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Lifter.h"
+#include "frc/WPILib.h"
+#include "ctre/Phoenix.h"
+
+TalonSRX motor = {0};
 
 Lifter::Lifter() {}
 
