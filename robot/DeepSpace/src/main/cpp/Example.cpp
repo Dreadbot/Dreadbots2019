@@ -7,7 +7,7 @@
 
 #include "Example.h"
 #include <iostream>
-//Hello
+
 
 Example::Example() {}
 
