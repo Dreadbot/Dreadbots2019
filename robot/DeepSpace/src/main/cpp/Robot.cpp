@@ -12,6 +12,18 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "Example.h"
 
+#include "ctre/Phoenix.h"
+#include "Lifter.h"
+#include "frc/WPILib.h"
+
+frc::Joystick *js1 = new frc::Joystick(0);
+Lifter *lifter = new Lifter();
+
+int currentLevel = 0;
+int upButton = 6;
+int downButton = 8;
+int buttonTimer = 0;
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
@@ -64,9 +76,23 @@ void Robot::AutonomousPeriodic() {
   }
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  lifter->LiftInit();
+}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  if(js1->GetRawButton(upButton) && buttonTimer >= 75 && currentLevel < 7){
+    buttonTimer = 0;
+    currentLevel++;
+    lifter->RaiseLift(currentLevel);
+  }
+  if(js1->GetRawButton(downButton) && buttonTimer >= 75 && currentLevel > 0){
+    buttonTimer = 0;
+    currentLevel--;
+    lifter->RaiseLift(currentLevel);
+  }
+  buttonTimer++;
+}
 
 void Robot::TestPeriodic() {}
 

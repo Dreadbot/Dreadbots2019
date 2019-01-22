@@ -9,30 +9,29 @@
 #include "frc/WPILib.h"
 #include "ctre/Phoenix.h"
 
-TalonSRX liftMotor = {0};
+int const ENCODER_ID = 0;
+int const TICKS_PER_ROTATION = 4096;
+TalonSRX liftMotor = {ENCODER_ID};
+double levels [] = {0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 10.0};
 
-Lifter::Lifter() {}
-
-void Lifter::Lift (int height){
-    
+Lifter::Lifter() {
 }
 
 //this stuff is from Abbie and Clara's code
 
-void Lifter::RaiseLift() 
+void Lifter::RaiseLift(int level) 
 {
-    double motorSpeed = 0.5;
-    liftMotor.Set(ControlMode::PercentOutput, motorSpeed);  
+    liftMotor.Set(ControlMode::Position, levels[level]*TICKS_PER_ROTATION);
 }
 
 void Lifter::LiftInit()
 {
-    liftMotor.SetSelectedSensorPosition(0, 0, 0);
+    liftMotor.SetSelectedSensorPosition(0);
 }
 
 int Lifter::GetLiftPosition()
 {
-    int currentLift;
-    currentLift = liftMotor.GetSelectedSensorPosition(0);
-    return currentLift;
+    int currentPosition;
+    currentPosition = liftMotor.GetSelectedSensorPosition();
+    return currentPosition;
 }
