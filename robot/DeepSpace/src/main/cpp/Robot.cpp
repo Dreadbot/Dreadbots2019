@@ -81,9 +81,11 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
+  std::cout << lifter->GetLiftPosition() << std::endl;
   if(js1->GetRawButton(upButton) && buttonTimer >= 75 && currentLevel < 7){
     buttonTimer = 0;
     currentLevel++;
+    std::cout << "UpButton Pressed" << std::endl;
     lifter->RaiseLift(currentLevel);
   }
   if(js1->GetRawButton(downButton) && buttonTimer >= 75 && currentLevel > 0){

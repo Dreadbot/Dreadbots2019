@@ -15,6 +15,5 @@ class Lifter {
   //from Abbie and Clara
   void RaiseLift(int level);
   void LiftInit();
- private:
   int GetLiftPosition();
 };
