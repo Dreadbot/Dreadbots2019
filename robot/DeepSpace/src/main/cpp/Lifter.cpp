@@ -9,17 +9,21 @@
 #include "frc/WPILib.h"
 #include "ctre/Phoenix.h"
 #include <iostream>
+#include <math.h>
 
 int const ENCODER_ID = 0;
 double const TICKS_PER_ROTATION = 4096;
 TalonSRX liftMotor = {ENCODER_ID};
-double levels [] = {0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 150.0};
+double levels [] = {0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0};
+double motorSpeed = 0;
+double MAXLIFTROTATION = 10000;
+double MINLIFTROTATION = -500;
 
 Lifter::Lifter() {}
 
 //this stuff is from Abbie and Clara's code
-
-void Lifter::RaiseLift(int level) 
+    
+void Lifter::SetLift(int level) 
 {
     std::cout << "Raised lift to ";
     std::cout << level <<std::endl;
@@ -27,6 +31,25 @@ void Lifter::RaiseLift(int level)
     std::cout << TICKS_PER_ROTATION << std::endl;
     std::cout << levels[level]*TICKS_PER_ROTATION << std::endl;
     liftMotor.Set(ControlMode::Position, levels[level]*TICKS_PER_ROTATION);
+}
+
+void Lifter::MoveLift(double motorSpeed)
+{
+    double speed = 0;
+
+    if(GetLiftPosition() < MAXLIFTROTATION && GetLiftPosition() > MINLIFTROTATION)
+    {
+       speed = motorSpeed;
+    }
+    else if(GetLiftPosition() < MINLIFTROTATION) //if too low
+    {
+        speed = fmax(motorSpeed, 0);
+    }
+    else if(GetLiftPosition() > MAXLIFTROTATION) //if too high
+    {
+        speed = fmin(motorSpeed, 0);
+    }
+    liftMotor.Set(ControlMode::PercentOutput, speed);
 }
 
 void Lifter::LiftInit()

@@ -11,6 +11,9 @@
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include "frc/WPILib.h"
+#include "Lifter.h"
+#include <iostream>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -21,6 +24,17 @@ class Robot : public frc::TimedRobot {
   void TeleopInit() override;
   void TeleopPeriodic() override;
   void TestPeriodic() override;
+  void TeleopLifterControl();
+
+  //lifter variables and joystick
+  frc::Joystick *js1 = new frc::Joystick(0);
+  Lifter *lifter = new Lifter();
+
+  int currentLevel = 0;
+  int upButton = 6;
+  int downButton = 8;
+  int manualOverrideButton = 3;
+  int buttonTimer = 0;
 
  private:
   frc::SendableChooser<std::string> m_chooser;
