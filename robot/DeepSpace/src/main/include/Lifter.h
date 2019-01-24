@@ -13,7 +13,8 @@ class Lifter {
  public:
   Lifter();
   //from Abbie and Clara
-  void RaiseLift(int level);
+  void SetLift(int level);
   void LiftInit();
   int GetLiftPosition();
+  void MoveLift(double motorSpeed);
 };

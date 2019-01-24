@@ -16,14 +16,6 @@
 #include "Lifter.h"
 #include "frc/WPILib.h"
 
-frc::Joystick *js1 = new frc::Joystick(0);
-Lifter *lifter = new Lifter();
-
-int currentLevel = 0;
-int upButton = 6;
-int downButton = 8;
-int buttonTimer = 0;
-
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
@@ -81,19 +73,7 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
-  std::cout << lifter->GetLiftPosition() << std::endl;
-  if(js1->GetRawButton(upButton) && buttonTimer >= 75 && currentLevel < 7){
-    buttonTimer = 0;
-    currentLevel++;
-    std::cout << "UpButton Pressed" << std::endl;
-    lifter->RaiseLift(currentLevel);
-  }
-  if(js1->GetRawButton(downButton) && buttonTimer >= 75 && currentLevel > 0){
-    buttonTimer = 0;
-    currentLevel--;
-    lifter->RaiseLift(currentLevel);
-  }
-  buttonTimer++;
+  TeleopLifterControl();
 }
 
 void Robot::TestPeriodic() {}
