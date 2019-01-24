@@ -10,21 +10,48 @@
 #include <iostream>
 
 #include <frc/smartdashboard/SmartDashboard.h>
+
 #include "Example.h"
+#include <frc/Joystick.h>
+#include <AHRS.h>
+#include "rev/CANSparkMax.h"
 
 #include "ctre/Phoenix.h"
 #include "Lifter.h"
 #include "frc/WPILib.h"
+#include "Drive.h"
+#include "Stilts.h"
 
-frc::Joystick *js1 = new frc::Joystick(0);
-Lifter *lifter = new Lifter();
+
 
 int currentLevel = 0;
-int upButton = 6;
-int downButton = 8;
 int buttonTimer = 0;
 
-void Robot::RobotInit() {
+//----------USB Controllers--------
+frc::Joystick *js1 = new frc::Joystick(0);
+frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
+
+
+int const upButton = 6;
+int const downButton = 8;
+int const turboButton = 8;
+int const joystickX = 0;
+int const joystickY = 1;
+int const joystickRot = 2;
+//---------------------------------
+
+//-------------Talons-------------------
+WPI_TalonSRX *lFront = new WPI_TalonSRX(0); //left front
+WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
+WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
+//----------------------------------------
+
+Lifter *lifter = new Lifter();
+Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+
+void Robot::RobotInit() 
+{
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
@@ -42,7 +69,10 @@ void Robot::RobotInit() {
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() 
+{
+
+}
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -55,12 +85,23 @@ void Robot::RobotPeriodic() {}
  * if-else structure below with additional strings. If using the SendableChooser
  * make sure to add them to the chooser code above as well.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit() 
+{
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
   std::cout << "Auto selected: " << m_autoSelected << std::endl;
 
+  if (m_autoSelected == kAutoNameCustom) 
+  {
+    // Custom Auto goes here
+  } else {
+    // Default Auto goes here
+  }
+}
+
+void Robot::AutonomousPeriodic() 
+{
   if (m_autoSelected == kAutoNameCustom) {
     // Custom Auto goes here
   } else {
@@ -68,19 +109,13 @@ void Robot::AutonomousInit() {
   }
 }
 
-void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
-}
-
-void Robot::TeleopInit() {
+void Robot::TeleopInit()
+{
   lifter->LiftInit();
 }
 
-void Robot::TeleopPeriodic() {
+void Robot::TeleopPeriodic() 
+{
   std::cout << lifter->GetLiftPosition() << std::endl;
   if(js1->GetRawButton(upButton) && buttonTimer >= 75 && currentLevel < 7){
     buttonTimer = 0;
@@ -94,9 +129,14 @@ void Robot::TeleopPeriodic() {
     lifter->RaiseLift(currentLevel);
   }
   buttonTimer++;
+
+  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton));
 }
 
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic() 
+{
+
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
