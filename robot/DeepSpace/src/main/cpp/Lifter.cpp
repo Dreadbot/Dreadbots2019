@@ -9,12 +9,15 @@
 #include "frc/WPILib.h"
 #include "ctre/Phoenix.h"
 #include <iostream>
+#include <math.h>
 
 int const ENCODER_ID = 0;
 double const TICKS_PER_ROTATION = 4096;
 TalonSRX liftMotor = {ENCODER_ID};
 double levels [] = {0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0};
 double motorSpeed = 0;
+double MAXLIFTROTATION = 10000;
+double MINLIFTROTATION = -500;
 
 Lifter::Lifter() {}
 
@@ -32,7 +35,21 @@ void Lifter::SetLift(int level)
 
 void Lifter::MoveLift(double motorSpeed)
 {
-    liftMotor.Set(ControlMode::PercentOutput, motorSpeed);
+    double speed = 0;
+
+    if(GetLiftPosition() < MAXLIFTROTATION && GetLiftPosition() > MINLIFTROTATION)
+    {
+       speed = motorSpeed;
+    }
+    else if(GetLiftPosition() < MINLIFTROTATION) //if too low
+    {
+        speed = fmax(motorSpeed, 0);
+    }
+    else if(GetLiftPosition() > MAXLIFTROTATION) //if too high
+    {
+        speed = fmin(motorSpeed, 0);
+    }
+    liftMotor.Set(ControlMode::PercentOutput, speed);
 }
 
 void Lifter::LiftInit()
