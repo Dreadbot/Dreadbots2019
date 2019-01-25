@@ -14,6 +14,7 @@
 #include "frc/WPILib.h"
 #include "Lifter.h"
 #include <iostream>
+#include "Drive.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -26,15 +27,37 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void TeleopLifterControl();
 
-  //lifter variables and joystick
-  frc::Joystick *js1 = new frc::Joystick(0);
-  Lifter *lifter = new Lifter();
 
-  int currentLevel = 0;
-  int upButton = 6;
-  int downButton = 8;
-  int manualOverrideButton = 3;
-  int buttonTimer = 0;
+//----------USB Controllers--------
+frc::Joystick *js1 = new frc::Joystick(0);
+frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
+
+//js1
+int const turboButton = 8;
+int const joystickX = 0;
+int const joystickY = 1;
+int const joystickRot = 2;
+//js2
+int const upButton = 6; 
+int const downButton = 8; 
+int const manualOverrideButton = 3;
+//---------------------------------
+
+//-------------Talons-------------------
+WPI_TalonSRX *lFront = new WPI_TalonSRX(0); //left front
+WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
+WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
+//----------------------------------------
+
+//lifter variables
+
+int currentLevel = 0;
+int buttonTimer = 0;
+
+Lifter *lifter = new Lifter();
+Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+
 
  private:
   frc::SendableChooser<std::string> m_chooser;
