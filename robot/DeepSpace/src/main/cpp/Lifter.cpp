@@ -106,5 +106,5 @@ int Lifter::CheckHeight()
     {
         currentHeight = -100;
     }
-
+    return currentHeight;
 }
