@@ -52,10 +52,6 @@ Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
 void Robot::RobotInit() 
 {
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
   // Example *example;
   // example = new Example();
   // example->HelloWorld(4);
@@ -74,39 +70,15 @@ void Robot::RobotPeriodic()
 
 }
 
-/**
- * This autonomous (along with the chooser code above) shows how to select
- * between different autonomous modes using the dashboard. The sendable chooser
- * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
- * remove all of the chooser code and uncomment the GetString line to get the
- * auto name from the text box below the Gyro.
- *
- * You can add additional auto modes by adding additional comparisons to the
- * if-else structure below with additional strings. If using the SendableChooser
- * make sure to add them to the chooser code above as well.
- */
 void Robot::AutonomousInit() 
 {
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  std::cout << "Auto selected: " << m_autoSelected << std::endl;
 
-  if (m_autoSelected == kAutoNameCustom) 
-  {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
+  
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
+  
 }
 
 void Robot::TeleopInit()
@@ -116,23 +88,8 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 {
-  //I believe not all the code for these functions was pushed. Check with Abbie
-
-  /*std::cout << lifter->GetLiftPosition() << std::endl;
-  if(js1->GetRawButton(upButton) && buttonTimer >= 75 && currentLevel < 7){
-    buttonTimer = 0;
-    currentLevel++;
-    std::cout << "UpButton Pressed" << std::endl;
-    lifter->RaiseLift(currentLevel); 
-  }
-  if(js1->GetRawButton(downButton) && buttonTimer >= 75 && currentLevel > 0){
-    buttonTimer = 0;
-    currentLevel--;
-    lifter->RaiseLift(currentLevel);
-  }
-  buttonTimer++;
   TeleopLifterControl();
-*/
+
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton));
 }
 
