@@ -7,7 +7,7 @@ Drive::Drive(WPI_TalonSRX *lFront_in, WPI_TalonSRX *lBack_in, WPI_TalonSRX *rFro
     rFront = rFront_in;
     rBack = rBack_in;
 }
-void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton) //homemade mecanum drive!
+void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton) //homemade mecanum drive!
 	{
 		double noMove = 0.2; //Dead area of the axes
 		double maxSpeed = .5; //normal speed (not turbo)
@@ -23,6 +23,9 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton) /
 
 		if (turboButton)
 			maxSpeed = 1;
+
+		else if (slowButton)
+			maxSpeed = .3;
 
 		else
 			maxSpeed = .5;

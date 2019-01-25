@@ -34,6 +34,7 @@ frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
 
 int const upButton = 6;
 int const downButton = 8;
+int const slowButton = 7;
 int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
@@ -90,7 +91,7 @@ void Robot::TeleopPeriodic()
 {
   TeleopLifterControl();
 
-  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton));
+  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
 }
 
 void Robot::TestPeriodic() 
