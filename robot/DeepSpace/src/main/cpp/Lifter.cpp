@@ -10,6 +10,8 @@
 #include "ctre/Phoenix.h"
 #include <iostream>
 #include <math.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
 
 int const ENCODER_ID = 0;
 double const TICKS_PER_ROTATION = 4096;
@@ -107,4 +109,5 @@ int Lifter::CheckHeight()
         currentHeight = -100;
     }
     return currentHeight;
+    frc::SmartDashboard::PutNumber("Current level", currentHeight);
 }

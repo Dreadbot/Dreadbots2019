@@ -16,6 +16,9 @@
 #include <iostream>
 #include "Drive.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;

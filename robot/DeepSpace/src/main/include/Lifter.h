@@ -9,7 +9,8 @@
 #include "frc/WPILib.h"
 #include "ctre/Phoenix.h"
 
-class Lifter {
+class Lifter 
+{
  public:
   Lifter();
   void SetLift(int level);

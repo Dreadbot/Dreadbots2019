@@ -11,6 +11,8 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include <frc/shuffleboard/Shuffleboard.h>
+
 #include "Example.h"
 #include <frc/Joystick.h>
 #include <AHRS.h>
@@ -92,6 +94,8 @@ void Robot::TeleopPeriodic()
   TeleopLifterControl();
 
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton));
+
+  lifter->CheckHeight();
 }
 
 void Robot::TestPeriodic() 
