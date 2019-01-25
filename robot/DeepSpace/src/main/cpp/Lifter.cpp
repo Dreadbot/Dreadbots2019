@@ -21,7 +21,6 @@ double MINLIFTROTATION = -500;
 
 Lifter::Lifter() {}
 
-//this stuff is from Abbie and Clara's code
     
 void Lifter::SetLift(int level) 
 {
@@ -67,4 +66,45 @@ int Lifter::GetLiftPosition()
     int currentPosition;
     currentPosition = liftMotor.GetSelectedSensorPosition();
     return currentPosition;
+}
+
+int Lifter::CheckHeight()
+{
+    //0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0
+    int currentHeight;
+    int currentRotation;
+    currentRotation = liftMotor.GetSelectedSensorPosition()/TICKS_PER_ROTATION;
+    if(currentRotation > -0.5 && currentRotation < 0.5)
+    {
+        currentHeight = 0;
+    }
+    else if(currentRotation > 0.5 && currentRotation < 1.5)
+    {
+        currentHeight = 1;
+    }
+    else if(currentRotation > 3.0 && currentRotation < 4.0)
+    {
+        currentHeight = 2;
+    }
+    else if(currentRotation > 4.5 && currentRotation < 5.5)
+    {
+        currentHeight = 3;
+    }
+    else if(currentRotation > 5.9 && currentRotation < 6.9)
+    {
+        currentHeight = 4;
+    }
+    else if(currentRotation > 6.5 && currentRotation < 7.5)
+    {
+        currentHeight = 5;
+    }
+    else if(currentRotation > 14.5 && currentRotation < 15.5)
+    {
+        currentHeight = 6;
+    }
+    else
+    {
+        currentHeight = -100;
+    }
+    return currentHeight;
 }
