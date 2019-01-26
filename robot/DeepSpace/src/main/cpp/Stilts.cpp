@@ -6,3 +6,17 @@ Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor) 
 {
 
 }
+void Stilts::setFrontToHeight(float height)
+{
+
+}
+
+void Stilts::setBackToHeight(float height)
+{
+
+}
+
+void Stilts::driveWheels(float speed)
+{
+    
+}
