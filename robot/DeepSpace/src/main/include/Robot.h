@@ -19,6 +19,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
 
+double const TALON_TICKS_PER_ROTATION = 4096;
+
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;
@@ -63,6 +65,10 @@ double currentAngle;
 
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+
+//Encoder Variables
+
+
 
 
  private:
