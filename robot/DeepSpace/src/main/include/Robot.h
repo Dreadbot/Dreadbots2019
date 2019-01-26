@@ -61,6 +61,10 @@ int buttonTimer = 0;
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
+//Encoder Variables
+
+double const TALON_TICKS_PER_ROTATION = 4096;
+
 
  private:
   frc::SendableChooser<std::string> m_chooser;
