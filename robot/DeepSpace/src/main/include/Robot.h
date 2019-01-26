@@ -60,6 +60,9 @@ WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 int currentLevel = 0;
 int buttonTimer = 0;
 
+//------------Auton Variables-------
+double currentAngle;
+
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 

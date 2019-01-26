@@ -51,14 +51,20 @@ WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
 WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //----------------------------------------
 
+AHRS *gyro;
+
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+
 
 void Robot::RobotInit() 
 {
   // Example *example;
   // example = new Example();
   // example->HelloWorld(4);
+  gyro = new AHRS(SPI::Port::kMXP);
+
+  gyro->ZeroYaw();
 }
 
 /**
@@ -76,13 +82,14 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-
-  
+  gyro->ZeroYaw();
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  
+  currentAngle = gyro->GetYaw();
+
+  drive->DriveStraight(.3, currentAngle);
 }
 
 void Robot::TeleopInit()

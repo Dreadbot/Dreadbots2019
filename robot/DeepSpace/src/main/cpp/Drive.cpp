@@ -52,3 +52,33 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 		rFront -> Set(ControlMode::PercentOutput, rFrontSpeed*maxSpeed);
 		rBack -> Set(ControlMode::PercentOutput, rBackSpeed*maxSpeed);
 	}
+
+	void Drive::DriveStraight(double speed, double currentAngle)
+	{
+		leftDifference = currentAngle*.05;
+		rightDifference = currentAngle*.05;
+
+		if(currentAngle < 0 - slop)
+		{
+			lFront -> Set(ControlMode :: PercentOutput, -speed);
+			rFront -> Set(ControlMode :: PercentOutput, speed+leftDifference);
+			lBack -> Set(ControlMode :: PercentOutput, -speed);
+			rBack -> Set(ControlMode :: PercentOutput, speed+leftDifference);
+		}
+
+		else if(currentAngle > 0 + slop)
+		{
+			lFront -> Set(ControlMode :: PercentOutput, -speed+rightDifference);
+			rFront -> Set(ControlMode :: PercentOutput, speed);
+			lBack -> Set(ControlMode :: PercentOutput, -speed+rightDifference);
+			rBack -> Set(ControlMode :: PercentOutput, speed);
+		}
+
+		else
+		{
+			rFront -> Set(ControlMode :: PercentOutput, speed);
+			lFront -> Set(ControlMode :: PercentOutput, -speed);
+			lBack -> Set(ControlMode :: PercentOutput, -speed);
+			rBack -> Set(ControlMode :: PercentOutput, speed);
+		}
+	}
