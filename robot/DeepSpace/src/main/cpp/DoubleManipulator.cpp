@@ -9,9 +9,11 @@
 
 #include "ctre/Phoenix.h"
 #include "frc/WPILib.h"
+#include "Robot.h"
 
 const int WRIST_ID = 0;
 const int WHEEL_ID = 1;
+double positions [] = {0.0, 5.0, 10.0};
 TalonSRX wrist = {WRIST_ID};
 TalonSRX intakeWheels = {WHEEL_ID};
 
@@ -23,11 +25,11 @@ void DoubleManipulator::Init(){
 
 void DoubleManipulator::RotateWrist(int position){ //0 = lowest, 1 = 45 degrees, 2 = 90 degrees
     //Must raise lift in order to get to 0
-    
+    wrist.Set(ControlMode::Position, positions[position]*TALON_TICKS_PER_ROTATION);
 }
 
 void DoubleManipulator::SpinWheels(double motorSpeed){
-
+    intakeWheels.Set(ControlMode::PercentOutput, motorSpeed);
 }
 
 void DoubleManipulator::GrabPanel(){
@@ -36,4 +38,12 @@ void DoubleManipulator::GrabPanel(){
 
 void DoubleManipulator::ReleasePanel(){
 //uses 1 solenoid
+}
+
+void DoubleManipulator::SetPickup(bool value){
+    pickingUp = value;
+}
+
+bool DoubleManipulator::CheckPickup() {
+    return pickingUp;
 }

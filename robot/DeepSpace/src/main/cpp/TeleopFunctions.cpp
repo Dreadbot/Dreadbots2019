@@ -1,23 +1,24 @@
 #include "Robot.h"
 #include "Lifter.h"
 #include "frc/WPILib.h"
+#include "DoubleManipulator.h"
 
 void Robot::TeleopLifterControl()
 {
-  std::cout << lifter->GetLiftPosition() << std::endl;
+  std::cout << lifter->GetEncoderPosition() << std::endl;
   if(!js2->GetRawButton(manualOverrideButton)){
-    if(js2->GetRawButton(upButton) && buttonTimer >= 75 && currentLevel < 6){
+    if(js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6){
       buttonTimer = 0;
-      currentLevel++;
+      lifter->IncreaseCurrentLevel();
       std::cout << "UpButton Pressed" << std::endl;
-      lifter->SetLift(currentLevel);
-      frc::SmartDashboard::PutNumber("Wanted level", currentLevel); //needs to be changed to Shuffleboard
+      lifter->SetLift(lifter->GetCurrentLevel());
+      frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
-    if(js2->GetRawButton(downButton) && buttonTimer >= 75 && currentLevel > 0){
+    if(js2->GetRawButton(downButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() > 0){
       buttonTimer = 0;
-      currentLevel--;
-      lifter->SetLift(currentLevel);
-      frc::SmartDashboard::PutNumber("Wanted level", currentLevel); //needs to be changed to Shuffleboard
+      lifter->DecreaseCurrentLevel();
+      lifter->SetLift(lifter->GetCurrentLevel());
+      frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
     buttonTimer++;
   }
@@ -34,6 +35,25 @@ void Robot::TeleopLifterControl()
     else
     {
       lifter->MoveLift(0);
+    }
+  }
+}
+
+void Robot::TeleopManipulatorControl()
+{
+  if (!js2->GetRawButton(manualOverrideButton)){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
+      std::cout << "button pressed" << std::endl;
+      buttonTimer = 0;
+      manipulator->RotateWrist(1);
+      manipulator->SpinWheels(0.5);
+      manipulator->SetPickup(true);
+    }
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
+      buttonTimer = 0;
+      manipulator->RotateWrist(2);
+      manipulator->SetPickup(false);
+      manipulator->SpinWheels(0);
     }
   }
 }

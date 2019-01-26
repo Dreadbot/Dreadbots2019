@@ -15,6 +15,7 @@
 #include "Lifter.h"
 #include <iostream>
 #include "Drive.h"
+#include "DoubleManipulator.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
@@ -31,7 +32,7 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
   void TeleopLifterControl();
-
+  void TeleopManipulatorControl();
 
 //----------USB Controllers--------
 frc::Joystick *js1 = new frc::Joystick(0);
@@ -45,6 +46,7 @@ int const joystickRot = 2;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
+int const ballPickup = 1;
 int const manualOverrideButton = 3;
 //---------------------------------
 
@@ -55,19 +57,15 @@ WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
 WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //----------------------------------------
 
-//lifter variables
-
-int currentLevel = 0;
 int buttonTimer = 0;
+int const BUTTON_TIMEOUT = BUTTON_TIMEOUT;
 
 //------------Auton Variables-------
 double currentAngle;
 
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
-
-//Encoder Variables
-
+DoubleManipulator *manipulator = new DoubleManipulator();
 
 
 
