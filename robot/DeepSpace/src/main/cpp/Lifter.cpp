@@ -72,7 +72,8 @@ int Lifter::GetLiftPosition()
 
 int Lifter::CheckHeight()
 {
-    //0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0
+    //0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0 
+    //these are the current rotations for the different levels, once we have a bot they will need to be changed
     int currentHeight;
     int currentRotation;
     currentRotation = liftMotor.GetSelectedSensorPosition()/TICKS_PER_ROTATION;
@@ -109,5 +110,5 @@ int Lifter::CheckHeight()
         currentHeight = -100;
     }
     return currentHeight;
-    frc::SmartDashboard::PutNumber("Current level", currentHeight);
+    frc::SmartDashboard::PutNumber("Current level", currentHeight); //needs to be changed to Shuffleboard
 }

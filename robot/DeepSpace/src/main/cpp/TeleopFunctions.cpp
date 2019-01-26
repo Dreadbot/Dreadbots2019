@@ -11,13 +11,13 @@ void Robot::TeleopLifterControl()
       currentLevel++;
       std::cout << "UpButton Pressed" << std::endl;
       lifter->SetLift(currentLevel);
-      frc::SmartDashboard::PutNumber("Wanted level", currentLevel);
+      frc::SmartDashboard::PutNumber("Wanted level", currentLevel); //needs to be changed to Shuffleboard
     }
     if(js2->GetRawButton(downButton) && buttonTimer >= 75 && currentLevel > 0){
       buttonTimer = 0;
       currentLevel--;
       lifter->SetLift(currentLevel);
-      frc::SmartDashboard::PutNumber("Wanted level", currentLevel);
+      frc::SmartDashboard::PutNumber("Wanted level", currentLevel); //needs to be changed to Shuffleboard
     }
     buttonTimer++;
   }
