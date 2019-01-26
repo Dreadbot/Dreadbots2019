@@ -98,7 +98,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic() 
 {
   TeleopLifterControl();
-
+  TeleopManipulatorControl();
   lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
 }

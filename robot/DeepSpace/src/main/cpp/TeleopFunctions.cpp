@@ -43,12 +43,13 @@ void Robot::TeleopManipulatorControl()
 {
   if (!js2->GetRawButton(manualOverrideButton)){
     if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
+      std::cout << "button pressed" << std::endl;
       buttonTimer = 0;
       manipulator->RotateWrist(1);
       manipulator->SpinWheels(0.5);
       manipulator->SetPickup(true);
     }
-    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
       buttonTimer = 0;
       manipulator->RotateWrist(2);
       manipulator->SetPickup(false);
