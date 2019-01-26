@@ -60,6 +60,9 @@ WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 int buttonTimer = 0;
 int const BUTTON_TIMEOUT = BUTTON_TIMEOUT;
 
+//------------Auton Variables-------
+double currentAngle;
+
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 DoubleManipulator *manipulator = new DoubleManipulator();
