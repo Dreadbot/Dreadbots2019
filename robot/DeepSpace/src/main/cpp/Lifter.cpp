@@ -42,11 +42,11 @@ void Lifter::MoveLift(double motorSpeed)
     {
        speed = motorSpeed;
     }
-    else if(GetLiftPosition() < MINLIFTROTATION) //if too low
+    else if(GetLiftPosition() <= MINLIFTROTATION) //if too low
     {
         speed = fmax(motorSpeed, 0);
     }
-    else if(GetLiftPosition() > MAXLIFTROTATION) //if too high
+    else if(GetLiftPosition() >= MAXLIFTROTATION) //if too high
     {
         speed = fmin(motorSpeed, 0);
     }
