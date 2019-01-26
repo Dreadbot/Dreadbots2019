@@ -15,4 +15,4 @@ class DoubleManipulator {
   void SpinWheels(double motorSpeed);
   void GrabPanel();
   void ReleasePanel();
-}
+};

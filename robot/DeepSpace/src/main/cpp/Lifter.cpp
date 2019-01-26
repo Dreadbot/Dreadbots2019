@@ -29,7 +29,7 @@ void Lifter::SetLift(int level)
     std::cout << "Raised lift to ";
     std::cout << level <<std::endl;
     std::cout << levels[level] << std::endl;
-    std::cout << TICKS_PER_ROTATION << std::endl;
+    std::cout << TALON_TICKS_PER_ROTATION << std::endl;
     std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
     liftMotor.Set(ControlMode::Position, levels[level]*TALON_TICKS_PER_ROTATION);
 }
@@ -76,7 +76,7 @@ int Lifter::CheckHeight()
     //these are the current rotations for the different levels, once we have a bot they will need to be changed
     int currentHeight;
     int currentRotation;
-    currentRotation = liftMotor.GetSelectedSensorPosition()/TICKS_PER_ROTATION;
+    currentRotation = liftMotor.GetSelectedSensorPosition()/TALON_TICKS_PER_ROTATION;
     if(currentRotation > -0.5 && currentRotation < 0.5)
     {
         currentHeight = 0;
