@@ -27,11 +27,12 @@ Lifter::Lifter() {}
     
 void Lifter::SetLift(int level) 
 {
-    // std::cout << "Raised lift to ";
-    // std::cout << level <<std::endl;
-    // std::cout << levels[level] << std::endl;
-    // std::cout << TALON_TICKS_PER_ROTATION << std::endl;
-    // std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
+    std::cout << "Raised lift to " << std::endl;
+    std::cout << level <<std::endl;
+    std::cout << levels[level] << std::endl;
+    std::cout << TALON_TICKS_PER_ROTATION << std::endl;
+    std::cout << "!    New Pos" << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
+    std::cout << "!Current Pos" << liftMotor.GetSelectedSensorPosition() << std::endl;
     liftMotor.Set(ControlMode::Position, levels[level]*TALON_TICKS_PER_ROTATION);
 }
 

@@ -43,16 +43,16 @@ int const hatchPickup = 4;
 //---------------------------------
 
 //-------------Talons-------------------
-WPI_TalonSRX *lFront = new WPI_TalonSRX(0); //left front
-WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
+// WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
+// WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+// WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
+// WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //----------------------------------------
 
 //Lifter *lifter = new Lifter();
 
 AHRS *gyro;
-Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+//Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
 
 void Robot::RobotInit() 
@@ -93,14 +93,19 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   lifter->LiftInit();
+  //manipulator->Init();
+  //manipulator->SetPickup(false);
+  buttonTimer = 0;
 }
 
 void Robot::TeleopPeriodic() 
 {
   TeleopLifterControl();
-  TeleopManipulatorControl();
+  //TeleopManipulatorControl();
   lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
-  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot),
+      //js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  buttonTimer++;
 }
 
 void Robot::TestPeriodic() 

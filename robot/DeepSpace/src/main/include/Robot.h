@@ -58,7 +58,7 @@ WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //----------------------------------------
 
 int buttonTimer = 0;
-int const BUTTON_TIMEOUT = BUTTON_TIMEOUT;
+int const BUTTON_TIMEOUT = 75;
 
 //------------Auton Variables-------
 double currentAngle;
