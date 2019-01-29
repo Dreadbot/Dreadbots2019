@@ -24,6 +24,12 @@
 #include "Drive.h"
 #include "Stilts.h"
 #include "DoubleManipulator.h"
+#include <Ultra.h>
+#include <frc/Ultrasonic.h>
+
+
+int currentLevel = 0;
+int buttonTimer = 0;
 
 //----------USB Controllers--------
 frc::Joystick *js1 = new frc::Joystick(0);
@@ -52,7 +58,13 @@ WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //Lifter *lifter = new Lifter();
 
 AHRS *gyro;
+//---------------Ultrasonics-------------
+//double distanceDF = 50;
+//double distanceDB = 50;
+//---------------------------------------
+Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+Ultra *ultra = new Ultra();
 
 
 void Robot::RobotInit() 
