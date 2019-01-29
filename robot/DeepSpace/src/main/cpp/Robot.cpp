@@ -24,12 +24,17 @@
 #include "Drive.h"
 #include "Stilts.h"
 #include "DoubleManipulator.h"
+<<<<<<< Updated upstream
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
 
 
 int currentLevel = 0;
 int buttonTimer = 0;
+=======
+#include "AutoHatchPanel.h"
+
+>>>>>>> Stashed changes
 
 //----------USB Controllers--------
 frc::Joystick *js1 = new frc::Joystick(0);
