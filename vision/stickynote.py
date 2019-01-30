@@ -149,7 +149,11 @@ class GripPipeline:
             if (cv2.arcLength(contour, True) < min_perimeter):
                 continue
             hull = cv2.convexHull(contour)
-            solid = 100 * area / cv2.contourArea(hull)
+            try:
+                solid = 100 * area / cv2.contourArea(hull)
+            except:
+                print("No contours found, exiting")
+                exit()
             if (solid < solidity[0] or solid > solidity[1]):
                 continue
             if (len(contour) < min_vertex_count or len(contour) > max_vertex_count):

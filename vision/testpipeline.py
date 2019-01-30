@@ -12,7 +12,7 @@ while(True):
     # Our operations on the frame come here
 
     grip.process(frame)
-    
+    print(grip.filter_contours_output)
 
     # Display the resulting frame
     cv2.imshow('frame',frame)
