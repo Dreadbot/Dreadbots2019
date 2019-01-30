@@ -4,18 +4,22 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
 #pragma once
 #include "frc/WPILib.h"
 #include "ctre/Phoenix.h"
-
+  
 class Lifter 
 {
- public:
-  Lifter();
-  void SetLift(int level);
-  void LiftInit();
-  int GetLiftPosition();
-  void MoveLift(double motorSpeed);
-  int CheckHeight();
+  private:
+    int currentLiftLevel = 0;
+  public:
+    Lifter();
+    void SetLift(int level);
+    void LiftInit();
+    int GetEncoderPosition();
+    void MoveLift(double motorSpeed);
+    int CheckHeight();
+    void IncreaseCurrentLevel();
+    void DecreaseCurrentLevel();
+    int GetCurrentLevel();
 };

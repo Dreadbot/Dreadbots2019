@@ -27,27 +27,28 @@ Lifter::Lifter() {}
     
 void Lifter::SetLift(int level) 
 {
-    std::cout << "Raised lift to ";
-    std::cout << level <<std::endl;
-    std::cout << levels[level] << std::endl;
-    std::cout << TALON_TICKS_PER_ROTATION << std::endl;
-    std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
+    // std::cout << "Raised lift to ";
+    // std::cout << level <<std::endl;
+    // std::cout << levels[level] << std::endl;
+    // std::cout << TALON_TICKS_PER_ROTATION << std::endl;
+    // std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
     liftMotor.Set(ControlMode::Position, levels[level]*TALON_TICKS_PER_ROTATION);
 }
 
 void Lifter::MoveLift(double motorSpeed)
 {
     double speed = 0;
+    double liftPosition = GetEncoderPosition();
 
-    if(GetLiftPosition() < MAXLIFTROTATION && GetLiftPosition() > MINLIFTROTATION)
+    if(liftPosition < MAXLIFTROTATION && liftPosition > MINLIFTROTATION)
     {
        speed = motorSpeed;
     }
-    else if(GetLiftPosition() <= MINLIFTROTATION) //if too low
+    else if(liftPosition <= MINLIFTROTATION) //if too low
     {
         speed = fmax(motorSpeed, 0);
     }
-    else if(GetLiftPosition() >= MAXLIFTROTATION) //if too high
+    else if(liftPosition >= MAXLIFTROTATION) //if too high
     {
         speed = fmin(motorSpeed, 0);
     }
@@ -64,7 +65,7 @@ void Lifter::LiftInit()
     liftMotor.SetSelectedSensorPosition(0);
 }
 
-int Lifter::GetLiftPosition()
+int Lifter::GetEncoderPosition()
 {
     int currentPosition;
     currentPosition = liftMotor.GetSelectedSensorPosition();
@@ -112,4 +113,18 @@ int Lifter::CheckHeight()
     }
     return currentHeight;
     frc::SmartDashboard::PutNumber("Current level", currentHeight); //needs to be changed to Shuffleboard
+}
+
+void Lifter::IncreaseCurrentLevel(){
+    currentLiftLevel++;
+    SetLift(currentLiftLevel);
+}
+
+void Lifter::DecreaseCurrentLevel(){
+    currentLiftLevel--;
+    SetLift(currentLiftLevel);
+}
+
+int Lifter::GetCurrentLevel(){
+    return currentLiftLevel;
 }

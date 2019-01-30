@@ -23,7 +23,10 @@
 #include "frc/WPILib.h"
 #include "Drive.h"
 #include "Stilts.h"
-
+#include "DoubleManipulator.h"
+#include <Ultra.h>
+#include <frc/Ultrasonic.h>
+#include "AutoHatchPanel.h"
 
 
 int currentLevel = 0;
@@ -41,7 +44,9 @@ int const joystickY = 1;
 int const joystickRot = 2;
 //js2
 int const upButton = 6; 
-int const downButton = 8; 
+int const downButton = 8;
+int const ballPickup = 1;
+int const hatchPickup = 4;
 //---------------------------------
 
 //-------------Talons-------------------
@@ -51,10 +56,16 @@ WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
 WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //----------------------------------------
 
-AHRS *gyro;
+//Lifter *lifter = new Lifter();
 
+AHRS *gyro;
+//---------------Ultrasonics-------------
+//double distanceDF = 50;
+//double distanceDB = 50;
+//---------------------------------------
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+Ultra *ultra = new Ultra();
 
 
 void Robot::RobotInit() 
@@ -100,8 +111,8 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic() 
 {
   TeleopLifterControl();
-
-  lifter->CheckHeight();
+  TeleopManipulatorControl();
+  lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
 }
 

@@ -7,7 +7,11 @@
 
 #pragma once
 
+
 class DoubleManipulator {
+  private:
+    int currentPosition = 0;
+    bool pickingUp = false;
  public:
   DoubleManipulator();
   void Init();
@@ -15,4 +19,7 @@ class DoubleManipulator {
   void SpinWheels(double motorSpeed);
   void GrabPanel();
   void ReleasePanel();
+  void IncrementPosition();
+  void SetPickup(bool value);
+  bool CheckPickup();
 };
