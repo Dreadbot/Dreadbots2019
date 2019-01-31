@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import stickynote
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 grip = stickynote.GripPipeline()
 
 while(True):
@@ -12,7 +12,7 @@ while(True):
     # Our operations on the frame come here
 
     grip.process(frame)
-    print(grip.filter_contours_output)
+    cv2.drawContours(frame, grip.filter_contours_output, -1, (0,255,0), 3)
 
     # Display the resulting frame
     cv2.imshow('frame',frame)
