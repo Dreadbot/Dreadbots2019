@@ -52,14 +52,14 @@ int const manualOverrideButton = 3;
 //---------------------------------
 
 //-------------Talons-------------------
-WPI_TalonSRX *lFront = new WPI_TalonSRX(0); //left front
-WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
+ WPI_TalonSRX *lFront = new WPI_TalonSRX(1); //left front
+ WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+ WPI_TalonSRX *lBack = new WPI_TalonSRX(1); //left rear
+ WPI_TalonSRX *rBack = new WPI_TalonSRX(1); //right rear
 //----------------------------------------
 
 int buttonTimer = 0;
-int const BUTTON_TIMEOUT = BUTTON_TIMEOUT;
+int const BUTTON_TIMEOUT = 50;
 
 //------------Auton Variables-------
 double currentAngle;

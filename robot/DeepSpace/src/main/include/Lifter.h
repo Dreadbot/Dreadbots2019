@@ -22,4 +22,6 @@ class Lifter
     void IncreaseCurrentLevel();
     void DecreaseCurrentLevel();
     int GetCurrentLevel();
+    int InchesLift(float inches);
+    
 };
