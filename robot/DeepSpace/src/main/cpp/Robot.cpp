@@ -24,6 +24,10 @@
 #include "Stilts.h"
 #include "SparkDrive.h"
 
+#include "DoubleManipulator.h"
+#include <Ultra.h>
+#include <frc/Ultrasonic.h>
+#include "AutoHatchPanel.h"
 
 
 int currentLevel = 0;
@@ -59,10 +63,14 @@ rev::CANSparkMax *rBackSpark = new rev::CANSparkMax{5, rev::CANSparkMax::MotorTy
 //-----------------------------------------
 AHRS *gyro;
 
-
+//---------------Ultrasonics-------------
+//double distanceDF = 50;
+//double distanceDB = 50;
+//---------------------------------------
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 SparkDrive *sparkDrive = new SparkDrive(lFrontSpark, rFrontSpark, lBackSpark, rBackSpark);
+Ultra *ultra = new Ultra();
 
 
 void Robot::RobotInit() 

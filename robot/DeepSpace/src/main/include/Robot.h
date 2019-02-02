@@ -16,6 +16,7 @@
 #include <iostream>
 #include "Drive.h"
 #include "DoubleManipulator.h"
+#include "AutoHatchPanel.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
