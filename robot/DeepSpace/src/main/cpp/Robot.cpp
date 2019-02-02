@@ -72,9 +72,13 @@ Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 SparkDrive *sparkDrive = new SparkDrive(lFrontSpark, rFrontSpark, lBackSpark, rBackSpark);
 Ultra *ultra = new Ultra();
 
+Compressor *compressor = new Compressor(0);
+Solenoid *solenoid = new Solenoid(4);
+
 
 void Robot::RobotInit() 
 {
+  CameraServer::GetInstance()->StartAutomaticCapture();
   // Example *example;
   // example = new Example();
   // example->HelloWorld(4);
@@ -118,7 +122,7 @@ void Robot::TeleopPeriodic()
   TeleopLifterControl();
 
   lifter->CheckHeight();
- //ElectricSolenoidTest(solenoid);
+  ElectricSolenoidTest(solenoid);
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
 }
 

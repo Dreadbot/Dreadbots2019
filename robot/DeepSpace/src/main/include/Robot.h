@@ -34,7 +34,7 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void TeleopLifterControl();
   void TeleopManipulatorControl();
-  //void ElectricSolenoidTest(Solenoid *solenoid);
+  void ElectricSolenoidTest(frc::Solenoid *solenoid);
 
 //----------USB Controllers--------
 frc::Joystick *js1 = new frc::Joystick(0);
@@ -56,8 +56,8 @@ int const manualOverrideButton = 3;
 //---------------------------------
 
 //-----------Solenoid--------------
-//Compressor *compressor = new Compressor(0);
-//Solenoid *solenoid = new Solenoid(4);
+frc::Compressor *compressor;
+frc::Solenoid *solenoid;
 bool isSolOut = false;
 
 //-------------Talons-------------------

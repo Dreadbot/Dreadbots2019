@@ -58,7 +58,7 @@ void Robot::TeleopManipulatorControl()
   }
 }
 
-/*void Robot::ElectricSolenoidTest(Solenoid *solenoid)
+void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 {
   	if(js1->GetRawButton(4) && isSolOut == false && isADown == false)
 		{
@@ -77,4 +77,4 @@ void Robot::TeleopManipulatorControl()
 		}
 		else if(!js1->GetRawButton(4) && isSolOut == false)
 			isADown = false;
-}*/
+}
