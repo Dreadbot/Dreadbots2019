@@ -34,22 +34,31 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void TeleopLifterControl();
   void TeleopManipulatorControl();
+  void ElectricSolenoidTest(frc::Solenoid *solenoid);
 
 //----------USB Controllers--------
 frc::Joystick *js1 = new frc::Joystick(0);
 frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
+
+bool isADown = false;
 
 //js1
 int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
+int const solButton = 2;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
 int const ballPickup = 1;
 int const manualOverrideButton = 3;
 //---------------------------------
+
+//-----------Solenoid--------------
+frc::Compressor *compressor;
+frc::Solenoid *solenoid;
+bool isSolOut = false;
 
 //-------------Talons-------------------
  WPI_TalonSRX *lFront = new WPI_TalonSRX(1); //left front

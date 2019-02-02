@@ -1,4 +1,3 @@
-#pragma once
 
 #include <Stilts.h>
 #include <frc/WPILib.h>

@@ -10,7 +10,6 @@
 #include <iostream>
 
 #include <frc/smartdashboard/SmartDashboard.h>
-
 #include <frc/shuffleboard/Shuffleboard.h> 
 
 #include "Example.h"
@@ -23,6 +22,8 @@
 #include "frc/WPILib.h"
 #include "Drive.h"
 #include "Stilts.h"
+#include "SparkDrive.h"
+
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
@@ -44,9 +45,7 @@ int const joystickY = 1;
 int const joystickRot = 2;
 //js2
 int const upButton = 6; 
-int const downButton = 8;
-int const ballPickup = 1;
-int const hatchPickup = 4;
+int const downButton = 8; 
 //---------------------------------
 
 //-------------Talons-------------------
@@ -56,20 +55,30 @@ WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
 WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //----------------------------------------
 
-//Lifter *lifter = new Lifter();
-
+//-----------Spark Max--------------------
+rev::CANSparkMax *lFrontSpark = new rev::CANSparkMax{2, rev::CANSparkMax::MotorType::kBrushless};
+rev::CANSparkMax *rFrontSpark = new rev::CANSparkMax{3, rev::CANSparkMax::MotorType::kBrushless};
+rev::CANSparkMax *lBackSpark = new rev::CANSparkMax{4, rev::CANSparkMax::MotorType::kBrushless};
+rev::CANSparkMax *rBackSpark = new rev::CANSparkMax{5, rev::CANSparkMax::MotorType::kBrushless};
+//-----------------------------------------
 AHRS *gyro;
+
 //---------------Ultrasonics-------------
 //double distanceDF = 50;
 //double distanceDB = 50;
 //---------------------------------------
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+SparkDrive *sparkDrive = new SparkDrive(lFrontSpark, rFrontSpark, lBackSpark, rBackSpark);
 Ultra *ultra = new Ultra();
+
+Compressor *compressor = new Compressor(0);
+Solenoid *solenoid = new Solenoid(4);
 
 
 void Robot::RobotInit() 
 {
+  CameraServer::GetInstance()->StartAutomaticCapture();
   // Example *example;
   // example = new Example();
   // example->HelloWorld(4);
@@ -111,8 +120,9 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic() 
 {
   TeleopLifterControl();
-  TeleopManipulatorControl();
-  lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
+
+  lifter->CheckHeight();
+  ElectricSolenoidTest(solenoid);
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
 }
 
