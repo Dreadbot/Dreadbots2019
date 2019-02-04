@@ -82,14 +82,14 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic() 
 {
-  currentAngle = gyro->GetYaw();
-
+  
   drive->DriveStraight(.3, currentAngle);
 }
 
 void Robot::TeleopInit()
 {
   lifter->LiftInit();
+  SmartDashboard::PutNumber("Target Angle", 0.0);
 }
 
 void Robot::TeleopPeriodic() 
@@ -97,13 +97,13 @@ void Robot::TeleopPeriodic()
   double targetAngle = 0.0;
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
-  currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
+  SmartDashboard::PutNumber("Current Angle", currentAngle);
   drive->RotateToAngle(0.5, targetAngle, currentAngle);
-  Climb();
-  TeleopLifterControl();
-  TeleopManipulatorControl();
+  //Climb();
+ // TeleopLifterControl();
+ // TeleopManipulatorControl();
   lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
-  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   
 }
 

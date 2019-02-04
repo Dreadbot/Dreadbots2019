@@ -82,12 +82,11 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 			lBack -> Set(ControlMode :: PercentOutput, -speed);
 			rBack -> Set(ControlMode :: PercentOutput, speed);
 		}
-	}
+	} 
 	 void Drive::RotateToAngle(double speed, double targetAngle, double currentAngle){
 		double rotSpeed = speed;
 		double angleSlop = 3;
 		double remainingAngle = targetAngle - currentAngle;
-		AHRS *gyro;
 		//targetAngle / fabs(currentAngle);
 
 				if (fabs(remainingAngle) > angleSlop)
@@ -98,7 +97,6 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
 					}
 					else if (remainingAngle <= 20 && remainingAngle > angleSlop){
@@ -107,7 +105,6 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
 					}
 					else if (remainingAngle < -20){
@@ -116,7 +113,6 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
 					} 
 					else if (remainingAngle >= -20 && remainingAngle < -angleSlop){
@@ -125,8 +121,19 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
+					}
+					else if (remainingAngle = angleSlop){
+						rFront -> Set(ControlMode :: PercentOutput, 0);
+						lFront -> Set(ControlMode :: PercentOutput, 0);
+						lBack -> Set(ControlMode :: PercentOutput, 0);
+						rBack -> Set(ControlMode :: PercentOutput, 0);
+					}
+					else if (remainingAngle = -angleSlop){
+						rFront -> Set(ControlMode :: PercentOutput, 0);
+						lFront -> Set(ControlMode :: PercentOutput, 0);
+						lBack -> Set(ControlMode :: PercentOutput, 0);
+						rBack -> Set(ControlMode :: PercentOutput, 0);
 					}
 				}
 				//else if goToTarget
