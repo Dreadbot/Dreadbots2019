@@ -6,36 +6,28 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-
 #include <iostream>
-
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h> 
-
 #include "Example.h"
 #include <frc/Joystick.h>
 #include <AHRS.h>
 #include "rev/CANSparkMax.h"
-
 #include "ctre/Phoenix.h"
 #include "Lifter.h"
 #include "frc/WPILib.h"
 #include "Drive.h"
 #include "Stilts.h"
-//#include "SparkDrive.h"
+
+#include "SparkDrive.h"
 
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
-#include "AutoHatchPanel.h"
-
+#include <Ultrasonic.h>
 
 int currentLevel = 0;
 int buttonTimer = 0;
-
-//----------USB Controllers--------
-frc::Joystick *js1 = new frc::Joystick(0);
-frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
 
 //js1
 int const slowButton = 7;
@@ -45,47 +37,34 @@ int const joystickY = 1;
 int const joystickRot = 2;
 //js2
 int const upButton = 6; 
-int const downButton = 8; 
+int const downButton = 8;
+int const ballPickup = 1;
+int const hatchPickup = 4;
 //---------------------------------
-
-//-------------Talons-------------------
-WPI_TalonSRX *lFront = new WPI_TalonSRX(0); //left front
-WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
-//----------------------------------------
-/*
-//-----------Spark Max--------------------
-rev::CANSparkMax *lFrontSpark = new rev::CANSparkMax{2, rev::CANSparkMax::MotorType::kBrushless};
-rev::CANSparkMax *rFrontSpark = new rev::CANSparkMax{3, rev::CANSparkMax::MotorType::kBrushless};
-rev::CANSparkMax *lBackSpark = new rev::CANSparkMax{4, rev::CANSparkMax::MotorType::kBrushless};
-rev::CANSparkMax *rBackSpark = new rev::CANSparkMax{5, rev::CANSparkMax::MotorType::kBrushless};
-//-----------------------------------------
-*/
-AHRS *gyro;
-
-//---------------Ultrasonics-------------
-//double distanceDF = 50;
-//double distanceDB = 50;
-//---------------------------------------
-Lifter *lifter = new Lifter();
-Drive *drive = new Drive(lFront, lBack, rFront, rBack);
-//SparkDrive *sparkDrive = new SparkDrive(lFrontSpark, rFrontSpark, lBackSpark, rBackSpark);
-Ultra *ultra = new Ultra();
-
-
 
 
 void Robot::RobotInit() 
 {
-  CameraServer::GetInstance()->StartAutomaticCapture();
-  // Example *example;
-  // example = new Example();
-  // example->HelloWorld(4);
+ //---------Joysticks---------------------
+ js1 = new frc::Joystick(0); //Driver 1
+ js2 = new frc::Joystick(1); //Driver 2
+ //-------------Talons-------------------
+  lFront = new WPI_TalonSRX(0); //left front
+  rFront = new WPI_TalonSRX(1); //right front
+  lBack = new WPI_TalonSRX(2); //left rear
+  rBack = new WPI_TalonSRX(3); //right rear
+  frontStilts = new WPI_TalonSRX(4);//motor that pushes down the front stilts
+  backStilts = new WPI_TalonSRX(5);//motor that pushes down the back stilts
+  driveStilts = new WPI_TalonSRX(6);//motor that drives the wheels on the stilts
+  //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
 
 
+  lifter = new Lifter();
+  drive = new Drive(lFront, lBack, rFront, rBack);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
+  ultra = new Ultra();
 }
 
 /**
@@ -119,18 +98,24 @@ void Robot::TeleopInit()
 }
 
 void Robot::TeleopPeriodic() 
-{
-  //TeleopLifterControl();
-
-  //lifter->CheckHeight();
+{ 
+  double targetAngle = 0.0;
+  double currentAngle = gyro->GetYaw();
+  targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
+  currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
+  drive->RotateToAngle(0.5, targetAngle, currentAngle);
+  Climb();
+  TeleopLifterControl();
+  TeleopManipulatorControl();
   ElectricSolenoidTest(solenoid);
-  //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
-  //class above should be "drive" for talon drive base, and "sparkDrive" for sparkmax drive base
+  lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
+  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  
 }
 
 void Robot::TestPeriodic() 
 {
-
+  
 }
 
 #ifndef RUNNING_FRC_TESTS

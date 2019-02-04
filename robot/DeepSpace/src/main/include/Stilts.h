@@ -10,6 +10,9 @@ class Stilts
         void setFrontToHeight(float height);//Height in inches
         void setBackToHeight(float height);//Height in inches
         void driveWheels(float speed);//Speed from -1 to 1
+        int getFrontHeight();
+        int getBackHeight();
+        int getDrivePosition();
         TalonSRX& m_driveMotor;
         TalonSRX& m_backMotor;
         TalonSRX& m_frontMotor;

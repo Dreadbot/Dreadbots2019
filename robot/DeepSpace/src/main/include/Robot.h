@@ -8,7 +8,7 @@
 #pragma once
 
 #include <string>
-
+#include <AHRS.h>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include "frc/WPILib.h"
@@ -16,12 +16,15 @@
 #include <iostream>
 #include "Drive.h"
 #include "DoubleManipulator.h"
+#include <Stilts.h>
+#include <Ultra.h>
 #include "AutoHatchPanel.h"
-
+#include <AHRS.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
 
 double const TALON_TICKS_PER_ROTATION = 4096;
+float const LEVEL_3_HEIGHT = 21.5;
 
 class Robot : public frc::TimedRobot {
  public:
@@ -34,11 +37,16 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void TeleopLifterControl();
   void TeleopManipulatorControl();
+  void Climb();
   void ElectricSolenoidTest(frc::Solenoid *solenoid);
 
 //----------USB Controllers--------
-frc::Joystick *js1 = new frc::Joystick(0);
-frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
+frc::Joystick *js1; //Driver 1
+frc::Joystick *js2; //Driver 2
+
+
+Ultra *frontUltra;
+Ultra *backUltra;
 
 bool isXDown = false;
 
@@ -53,6 +61,7 @@ int const upButton = 6;
 int const downButton = 8; 
 int const ballPickup = 1;
 int const manualOverrideButton = 3;
+int const climbButton = 10;
 //---------------------------------
 
 //-----------Solenoid--------------
@@ -61,24 +70,31 @@ frc::Solenoid *solenoid = new frc::Solenoid(4);
 bool isSolOut = false;
 
 //-------------Talons-------------------
-WPI_TalonSRX *lFront = new WPI_TalonSRX(0); //left front
-WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
-//----------------------------------------
+WPI_TalonSRX *lFront; //left front
+WPI_TalonSRX *rFront; //right front
+WPI_TalonSRX *lBack; //left rear
+WPI_TalonSRX *rBack; //right rear
+WPI_TalonSRX *frontStilts; //motor that pushes down the front stilts
+WPI_TalonSRX *backStilts; //motor that pushes down the back stilts
+WPI_TalonSRX *driveStilts; //motor that drives the wheels on the stilts
+//----------------------------------------//
 
 int buttonTimer = 0;
-int const BUTTON_TIMEOUT = BUTTON_TIMEOUT;
+int const BUTTON_TIMEOUT = 75;
+
+//-----------Teleop Variables-------
+int climbState;
 
 //------------Auton Variables-------
 double currentAngle;
 
-Lifter *lifter = new Lifter();
-Drive *drive = new Drive(lFront, lBack, rFront, rBack);
-DoubleManipulator *manipulator = new DoubleManipulator();
-
-
-
+//-----------Objects----------------
+Lifter *lifter;
+Drive *drive;
+DoubleManipulator *manipulator;
+Stilts *stilts;
+Ultra *ultra;
+AHRS *gyro;
  private:
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoNameDefault = "Default";
