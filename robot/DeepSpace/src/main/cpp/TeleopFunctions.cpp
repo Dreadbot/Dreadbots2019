@@ -2,8 +2,8 @@
 #include "Lifter.h"
 #include "frc/WPILib.h"
 #include "DoubleManipulator.h"
-
 #include <Stilts.h>
+
 void Robot::TeleopLifterControl()
 {
   std::cout << lifter->GetEncoderPosition() << std::endl;
@@ -59,6 +59,7 @@ void Robot::TeleopManipulatorControl()
   }
 }
 //Fully autonomous level 3 climb using ultrasonics and encoders
+
 void Robot::Climb()
 {
   if(js2->GetRawButton(climbButton)){
@@ -109,4 +110,24 @@ void Robot::Climb()
     }
    }
   }
+}
+void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
+{
+  	if(js1->GetRawButton(4) && isSolOut == false && isADown == false)
+		{
+			solenoid->Set(true);
+			isSolOut = true;
+			isADown = true;
+		}
+		else if(!js1->GetRawButton(4) && isSolOut == true)
+			isADown = false;
+
+		else if(js1->GetRawButton(4) && isSolOut == true && isADown == false)
+		{
+			solenoid->Set(false);
+			isSolOut = false;
+			isADown = true;
+		}
+		else if(!js1->GetRawButton(4) && isSolOut == false)
+			isADown = false;
 }

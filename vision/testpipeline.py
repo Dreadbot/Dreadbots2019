@@ -1,67 +1,41 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
-
-import io
-import time
-#import picamera
+import numpy as np
 import cv2
-from imutils.video import VideoStream
 import stickynote
 
+<<<<<<< HEAD
+cap = cv2.VideoCapture(0) #This creates a variable for a path to the camera
+grip = stickynote.GripPipeline() #Initializes the pipeline
+=======
+cap = cv2.VideoCapture(1)
+grip = stickynote.GripPipeline()
+>>>>>>> d66b042923aeba4e30a6177e0c6b1989c258eb4f
 
-"""
-Demonstates continous image capture technique suggested here:
- - http://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/
+while(True):
+    # Capture frame-by-fram
+    ret, frame = cap.read() #Begin capturing images from the camera
 
-"""
+    # Our operations on the frame come here
 
-class Timer(object):
-    def __init__(self, name):
-        self.name = name
-        self.t1 = time.time()
-        pass
+<<<<<<< HEAD
+    grip.process(frame) #Push given image through grip pipeline
+    contour_arr = [] #Clear out array before inputing contour data
+    contours = grip.find_contours_output #Pull out the result and assign it to countour_arr 
+    cv2.drawContours(frame, contours, -1, (0,255,0), 3) #Color the contours on the camera output
+    
+    try: print(contours[0][0])
+    except: print(0)
+=======
+    grip.process(frame)
+    cv2.drawContours(frame, grip.filter_contours_output, -1, (0,255,0), 3)
 
-    def start(self):
-        self.t1 = time.time()
+>>>>>>> d66b042923aeba4e30a6177e0c6b1989c258eb4f
+    # Display the resulting frame
+    cv2.imshow('frame',frame) #Display what the camera sees
+    if cv2.waitKey(1) & 0xFF == ord('q'): #Close when q is pressed
+        break
 
-    def stop(self):
-        self.t2 = time.time()
+    
 
-    def elapsed(self):
-        return self.t2-self.t1
-
-    def show(self):
-        print( "%s: %4.4f" % ( self.name, (self.t2-self.t1) ) )
-#|
-
-t = Timer( "Camera continous" )
-idx=0
-cam = VideoStream(src=1).start()
-
-t.start()
-#cam = cv2.VideoCapture(0)
-#stream = io.BytesIO()
-
-for idx in range(20):
-    img = cam.read()
-
-t.stop()
-
-cv2.imshow( 'frame', img )
-cv2.waitKey(0)
-
-
-pipe = stickynote.GripPipeline()
-pipe.process(img)
-
-print(pipe.filter_contours_output())
-
-print( "%s iterations of image captures" % idx )
-
-secs = (t.t2 - t.t1)
-fps = 1.0 * idx / secs
-
-t.show()
-
-print( "fps = %.2f" % (fps) )
+# When everything done, release the capture
+cap.release()
+cv2.destroyAllWindows()

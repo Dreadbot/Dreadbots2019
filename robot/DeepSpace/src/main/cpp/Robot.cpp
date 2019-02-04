@@ -6,18 +6,13 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-
 #include <iostream>
-
 #include <frc/smartdashboard/SmartDashboard.h>
-
 #include <frc/shuffleboard/Shuffleboard.h> 
-
 #include "Example.h"
 #include <frc/Joystick.h>
 #include <AHRS.h>
 #include "rev/CANSparkMax.h"
-
 #include "ctre/Phoenix.h"
 #include "Lifter.h"
 #include "frc/WPILib.h"
@@ -26,14 +21,10 @@
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
-
+#include <Ultrasonic.h>
 
 int currentLevel = 0;
 int buttonTimer = 0;
-
-//----------USB Controllers--------
-frc::Joystick *js1 = new frc::Joystick(0);
-frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
 
 //js1
 int const slowButton = 7;
@@ -48,33 +39,27 @@ int const ballPickup = 1;
 int const hatchPickup = 4;
 //---------------------------------
 
-//-------------Talons-------------------
-WPI_TalonSRX *lFront = new WPI_TalonSRX(0); //left front
-WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
-//----------------------------------------
-
-//Lifter *lifter = new Lifter();
-
-AHRS *gyro;
-//---------------Ultrasonics-------------
-//double distanceDF = 50;
-//double distanceDB = 50;
-//---------------------------------------
-Lifter *lifter = new Lifter();
-Drive *drive = new Drive(lFront, lBack, rFront, rBack);
-Ultra *ultra = new Ultra();
-
 
 void Robot::RobotInit() 
 {
-  // Example *example;
-  // example = new Example();
-  // example->HelloWorld(4);
+ //---------Joysticks---------------------
+ js1 = new frc::Joystick(0); //Driver 1
+ js2 = new frc::Joystick(1); //Driver 2
+ //-------------Talons-------------------
+  lFront = new WPI_TalonSRX(0); //left front
+  rFront = new WPI_TalonSRX(1); //right front
+  lBack = new WPI_TalonSRX(2); //left rear
+  rBack = new WPI_TalonSRX(3); //right rear
+  frontStilts = new WPI_TalonSRX(4);//motor that pushes down the front stilts
+  backStilts = new WPI_TalonSRX(5);//motor that pushes down the back stilts
+  driveStilts = new WPI_TalonSRX(6);//motor that drives the wheels on the stilts
+  //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
-
+  lifter = new Lifter();
+  drive = new Drive(lFront, lBack, rFront, rBack);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
+  ultra = new Ultra();
 }
 
 /**
@@ -108,16 +93,18 @@ void Robot::TeleopInit()
 }
 
 void Robot::TeleopPeriodic() 
-{
+{ 
+  Climb();
   TeleopLifterControl();
   TeleopManipulatorControl();
   lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  
 }
 
 void Robot::TestPeriodic() 
 {
-
+  
 }
 
 #ifndef RUNNING_FRC_TESTS
