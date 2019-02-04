@@ -48,14 +48,14 @@ frc::Joystick *js2; //Driver 2
 Ultra *frontUltra;
 Ultra *backUltra;
 
-bool isADown = false;
+bool isXDown = false;
 
 //js1
 int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
-int const solButton = 2;
+int const solButton = 1;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
@@ -65,8 +65,8 @@ int const climbButton = 10;
 //---------------------------------
 
 //-----------Solenoid--------------
-frc::Compressor *compressor;
-frc::Solenoid *solenoid;
+frc::Compressor *compressor = new frc::Compressor(0);
+frc::Solenoid *solenoid = new frc::Solenoid(4);
 bool isSolOut = false;
 
 //-------------Talons-------------------

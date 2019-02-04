@@ -18,6 +18,9 @@
 #include "frc/WPILib.h"
 #include "Drive.h"
 #include "Stilts.h"
+
+#include "SparkDrive.h"
+
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
@@ -55,6 +58,8 @@ void Robot::RobotInit()
   driveStilts = new WPI_TalonSRX(6);//motor that drives the wheels on the stilts
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
+
+
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
   stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
@@ -89,7 +94,6 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   lifter->LiftInit();
-  SmartDashboard::PutNumber("Target Angle", 0.0);
 }
 
 void Robot::TeleopPeriodic() 
@@ -99,11 +103,11 @@ void Robot::TeleopPeriodic()
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
   SmartDashboard::PutNumber("Current Angle", currentAngle);
   drive->RotateToAngle(0.5, targetAngle, currentAngle);
-  //Climb();
- // TeleopLifterControl();
- // TeleopManipulatorControl();
+  Climb();
+  TeleopLifterControl();
+  TeleopManipulatorControl();
   lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
-  //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   
 }
 
