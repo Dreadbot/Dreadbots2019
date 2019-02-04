@@ -40,14 +40,14 @@ class Robot : public frc::TimedRobot {
 frc::Joystick *js1 = new frc::Joystick(0);
 frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
 
-bool isADown = false;
+bool isXDown = false;
 
 //js1
 int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
-int const solButton = 2;
+int const solButton = 1;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
@@ -56,8 +56,8 @@ int const manualOverrideButton = 3;
 //---------------------------------
 
 //-----------Solenoid--------------
-frc::Compressor *compressor;
-frc::Solenoid *solenoid;
+frc::Compressor *compressor = new frc::Compressor(0);
+frc::Solenoid *solenoid = new frc::Solenoid(4);
 bool isSolOut = false;
 
 //-------------Talons-------------------

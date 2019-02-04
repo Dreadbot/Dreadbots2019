@@ -22,7 +22,7 @@
 #include "frc/WPILib.h"
 #include "Drive.h"
 #include "Stilts.h"
-#include "SparkDrive.h"
+//#include "SparkDrive.h"
 
 #include "DoubleManipulator.h"
 #include <Ultra.h>
@@ -54,13 +54,14 @@ WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
 WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
 WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 //----------------------------------------
-
+/*
 //-----------Spark Max--------------------
 rev::CANSparkMax *lFrontSpark = new rev::CANSparkMax{2, rev::CANSparkMax::MotorType::kBrushless};
 rev::CANSparkMax *rFrontSpark = new rev::CANSparkMax{3, rev::CANSparkMax::MotorType::kBrushless};
 rev::CANSparkMax *lBackSpark = new rev::CANSparkMax{4, rev::CANSparkMax::MotorType::kBrushless};
 rev::CANSparkMax *rBackSpark = new rev::CANSparkMax{5, rev::CANSparkMax::MotorType::kBrushless};
 //-----------------------------------------
+*/
 AHRS *gyro;
 
 //---------------Ultrasonics-------------
@@ -69,11 +70,10 @@ AHRS *gyro;
 //---------------------------------------
 Lifter *lifter = new Lifter();
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
-SparkDrive *sparkDrive = new SparkDrive(lFrontSpark, rFrontSpark, lBackSpark, rBackSpark);
+//SparkDrive *sparkDrive = new SparkDrive(lFrontSpark, rFrontSpark, lBackSpark, rBackSpark);
 Ultra *ultra = new Ultra();
 
-Compressor *compressor = new Compressor(0);
-Solenoid *solenoid = new Solenoid(4);
+
 
 
 void Robot::RobotInit() 
@@ -83,6 +83,7 @@ void Robot::RobotInit()
   // example = new Example();
   // example->HelloWorld(4);
   gyro = new AHRS(SPI::Port::kMXP);
+
 
   gyro->ZeroYaw();
 }
@@ -114,16 +115,17 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
-  lifter->LiftInit();
+  //lifter->LiftInit();
 }
 
 void Robot::TeleopPeriodic() 
 {
-  TeleopLifterControl();
+  //TeleopLifterControl();
 
-  lifter->CheckHeight();
+  //lifter->CheckHeight();
   ElectricSolenoidTest(solenoid);
-  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  //class above should be "drive" for talon drive base, and "sparkDrive" for sparkmax drive base
 }
 
 void Robot::TestPeriodic() 

@@ -60,21 +60,23 @@ void Robot::TeleopManipulatorControl()
 
 void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 {
-  	if(js1->GetRawButton(4) && isSolOut == false && isADown == false)
+  //toggle function for button "X" to fire solenoid
+  	if(js1->GetRawButton(solButton) && isSolOut == false && isXDown == false) 
 		{
 			solenoid->Set(true);
 			isSolOut = true;
-			isADown = true;
+			isXDown = true;
 		}
-		else if(!js1->GetRawButton(4) && isSolOut == true)
-			isADown = false;
+		else if(!js1->GetRawButton(solButton) && isSolOut == true)
+			isXDown = false;
 
-		else if(js1->GetRawButton(4) && isSolOut == true && isADown == false)
+		else if(js1->GetRawButton(solButton) && isSolOut == true && isXDown == false)
 		{
 			solenoid->Set(false);
 			isSolOut = false;
-			isADown = true;
+			isXDown = true;
 		}
-		else if(!js1->GetRawButton(4) && isSolOut == false)
-			isADown = false;
+		else if(!js1->GetRawButton(solButton) && isSolOut == false)
+			isXDown = false;
+
 }
