@@ -2,6 +2,7 @@
 #include "Lifter.h"
 #include "frc/WPILib.h"
 #include "DoubleManipulator.h"
+#include <Stilts.h>
 
 void Robot::TeleopLifterControl()
 {
@@ -57,7 +58,59 @@ void Robot::TeleopManipulatorControl()
     }
   }
 }
+//Fully autonomous level 3 climb using ultrasonics and encoders
 
+void Robot::Climb()
+{
+  if(js2->GetRawButton(climbButton)){
+    climbState = 1;
+    while(climbState != 6 && !js2->GetRawButton(manualOverrideButton)){
+      
+
+     if(climbState == 1 && stilts->getFrontHeight() >= LEVEL_3_HEIGHT && stilts->getBackHeight() >= LEVEL_3_HEIGHT)
+     {
+       climbState = 2; //Drive the stilt wheel
+      }
+     else if(climbState == 2 && frontUltra->getDistanceDownFront() <= 5)
+     {
+        climbState = 3; //Retract front
+     }
+     else if(climbState == 3 && stilts->getFrontHeight() == 0)
+     {
+        climbState = 4; //drive the stilt wheel
+     }
+     else if(climbState == 4)
+    {
+       climbState = 5; //retract back wheel
+    }
+     else if(climbState == 5 && stilts->getBackHeight() == 0){
+       climbState = 6; //finished
+    }
+
+
+     if(climbState = 1)
+     {
+       stilts->setFrontToHeight(LEVEL_3_HEIGHT);
+       stilts->setBackToHeight(LEVEL_3_HEIGHT);
+     }
+     if(climbState == 2){
+        stilts->driveWheels(0.2);
+     }
+     if(climbState == 3)
+     {
+       stilts->setFrontToHeight(0);
+     }
+     if(climbState == 4)
+    {
+      stilts->driveWheels(0.2);
+    }
+     if(climbState == 5)
+    {
+       stilts->setBackToHeight(0);
+    }
+   }
+  }
+}
 void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 {
   	if(js1->GetRawButton(4) && isSolOut == false && isADown == false)
