@@ -119,7 +119,7 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
 					} 
-					else if (remainingAngle > -20 && remainingAngle < -angleSlop){
+					else if (remainingAngle >= -20 && remainingAngle < -angleSlop){
 						rotSpeed = -1;
 						rFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);

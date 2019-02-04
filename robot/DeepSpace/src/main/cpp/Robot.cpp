@@ -94,6 +94,11 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 { 
+  double targetAngle = 0.0;
+  double currentAngle = gyro->GetYaw();
+  targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
+  currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
+  drive->RotateToAngle(0.5, targetAngle, currentAngle);
   Climb();
   TeleopLifterControl();
   TeleopManipulatorControl();
