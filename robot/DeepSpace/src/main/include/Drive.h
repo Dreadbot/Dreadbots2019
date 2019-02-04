@@ -10,6 +10,8 @@ class Drive
         void MecDrive(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton);
 
         void DriveStraight(double speed, double currentAngle);
+       
+        void RotateToAngle(double speed, double targetAngle, double currentAngle);
 
     private:
         WPI_TalonSRX *lFront;

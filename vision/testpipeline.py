@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import stickynote
 
-cap = cv2.VideoCapture(0) #This creates a variable for a path to the camera
+cap = cv2.VideoCapture(1) #This creates a variable for a path to the camera
 grip = stickynote.GripPipeline() #Initializes the pipeline
 
 while(True):

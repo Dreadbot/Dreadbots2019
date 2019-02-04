@@ -152,11 +152,7 @@ class GripPipeline:
             try:
                 solid = 100 * area / cv2.contourArea(hull)
             except:
-<<<<<<< HEAD
                 print("No contours found, returning none")
-=======
-                print("No contours found")
->>>>>>> d66b042923aeba4e30a6177e0c6b1989c258eb4f
                 solid = 0
             if (solid < solidity[0] or solid > solidity[1]):
                 continue
