@@ -80,10 +80,7 @@ WPI_TalonSRX *driveStilts; //motor that drives the wheels on the stilts
 //----------------------------------------//
 
 int buttonTimer = 0;
-int const BUTTON_TIMEOUT = 75;
-
-//-----------Teleop Variables-------
-int climbState;
+int const BUTTON_TIMEOUT = 25;
 
 //------------Auton Variables-------
 double currentAngle;
