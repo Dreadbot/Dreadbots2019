@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <string>
+#include <string.h>
 #include <AHRS.h>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -60,8 +60,11 @@ int const solButton = 1;
 int const upButton = 6; 
 int const downButton = 8; 
 int const ballPickup = 1;
+int const hatchPickup = 4;
 int const manualOverrideButton = 3;
 int const climbButton = 10;
+int const deployStiltsButton = 7;
+int const retractStiltsButton = 5;
 //---------------------------------
 
 //-----------Solenoid--------------
@@ -80,13 +83,15 @@ WPI_TalonSRX *driveStilts; //motor that drives the wheels on the stilts
 //----------------------------------------//
 
 int buttonTimer = 0;
-int const BUTTON_TIMEOUT = 75;
+int const BUTTON_TIMEOUT = 25;
 
-//-----------Teleop Variables-------
-int climbState;
+
 
 //------------Auton Variables-------
 double currentAngle;
+
+//-----------TeleopVariables---------
+int climbState;
 
 //-----------Objects----------------
 Lifter *lifter;

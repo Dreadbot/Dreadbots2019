@@ -82,12 +82,11 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 			lBack -> Set(ControlMode :: PercentOutput, -speed);
 			rBack -> Set(ControlMode :: PercentOutput, speed);
 		}
-	}
+	} 
 	 void Drive::RotateToAngle(double speed, double targetAngle, double currentAngle){
 		double rotSpeed = speed;
 		double angleSlop = 3;
 		double remainingAngle = targetAngle - currentAngle;
-		AHRS *gyro;
 		//targetAngle / fabs(currentAngle);
 
 				if (fabs(remainingAngle) > angleSlop)
@@ -98,7 +97,6 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
 					}
 					else if (remainingAngle <= 20 && remainingAngle > angleSlop){
@@ -107,7 +105,6 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
 					}
 					else if (remainingAngle < -20){
@@ -116,7 +113,6 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
 					} 
 					else if (remainingAngle >= -20 && remainingAngle < -angleSlop){
@@ -125,10 +121,56 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
-						currentAngle = gyro->GetYaw();
 						remainingAngle = (targetAngle - currentAngle);
+					}
+					else if (remainingAngle = angleSlop){
+						rFront -> Set(ControlMode :: PercentOutput, 0);
+						lFront -> Set(ControlMode :: PercentOutput, 0);
+						lBack -> Set(ControlMode :: PercentOutput, 0);
+						rBack -> Set(ControlMode :: PercentOutput, 0);
+					}
+					else if (remainingAngle = -angleSlop){
+						rFront -> Set(ControlMode :: PercentOutput, 0);
+						lFront -> Set(ControlMode :: PercentOutput, 0);
+						lBack -> Set(ControlMode :: PercentOutput, 0);
+						rBack -> Set(ControlMode :: PercentOutput, 0);
 					}
 				}
 				//else if goToTarget
 				// add different function where we travel to the vison target
 	 }
+void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
+{
+	switch(direction)
+	{
+		case LEFT:
+			lFront->Set(ControlMode::Position, -strafeDistance);
+			rFront->Set(ControlMode::Position, strafeDistance);
+			lBack->Set(ControlMode::Position, strafeDistance);
+			rBack->Set(ControlMode::Position, -strafeDistance);
+		case RIGHT:
+			lFront->Set(ControlMode::Position, strafeDistance);
+			rFront->Set(ControlMode::Position, -strafeDistance);
+			lBack->Set(ControlMode::Position, -strafeDistance);
+			rBack->Set(ControlMode::Position, strafeDistance);
+	}
+}
+
+
+const float driveGearRatio = 5;
+const float driveGearDiameter = 3.5;
+const double pi = 3.1415;
+const  int ticksPerRotation = 4096;
+const float inchesPerRotation = 1; //dummy value, pls change later (NOTE: THIS IS SPECIFIC TO THE DRIVE GEARS)
+
+int strafeDistance(float rotations) //finding rotations to inches - comment once THIS mystery has been solved
+{
+	int driveTicks = (int) (rotations * ticksPerRotation * driveGearRatio);
+	return driveTicks;
+}
+
+// int strafeDistance(float inches) //actual strafeDistance - uncomment when able to use
+// {
+// 	int driveTicks = (int) ((inches / inchesPerRotation) * ticksPerRotation * driveGearRatio);
+// 	return driveTicks;
+// }

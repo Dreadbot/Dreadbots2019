@@ -3,6 +3,7 @@
 #include "Robot.h"
 #include "frc/WPILib.h"
 #include "AutoHatchPanel.h"
+#include "Drive.h"
 
 AutoHatchPanel::AutoHatchPanel() {}
 

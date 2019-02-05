@@ -24,7 +24,6 @@
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
-#include <Ultrasonic.h>
 
 int currentLevel = 0;
 int buttonTimer = 0;
@@ -41,6 +40,22 @@ int const downButton = 8;
 int const ballPickup = 1;
 int const hatchPickup = 4;
 //---------------------------------
+bool const DRIVE_ENABLED = false;
+bool const LIFTER_ENABLED = false;
+bool const MANIPULATOR_ENABLED = true;
+bool const TURN_TO_ANGLE = false;
+
+//-------------Talons-------------------
+WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
+WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
+WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
+//----------------------------------------
+
+//Lifter *lifter = new Lifter();
+
+AHRS *gyro;
+Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
 
 void Robot::RobotInit() 
@@ -48,7 +63,7 @@ void Robot::RobotInit()
  //---------Joysticks---------------------
  js1 = new frc::Joystick(0); //Driver 1
  js2 = new frc::Joystick(1); //Driver 2
- //-------------Talons-------------------
+ //-------------Talons------------------- 
   lFront = new WPI_TalonSRX(0); //left front
   rFront = new WPI_TalonSRX(1); //right front
   lBack = new WPI_TalonSRX(2); //left rear
@@ -89,16 +104,23 @@ void Robot::AutonomousPeriodic()
 {
   currentAngle = gyro->GetYaw();
 
-  drive->DriveStraight(.3, currentAngle);
+  if(DRIVE_ENABLED) {
+    drive->DriveStraight(.3, currentAngle);
+  }
+
 }
 
 void Robot::TeleopInit()
 {
   //lifter->LiftInit();
+  manipulator->Init();
+  manipulator->SetBallPickup(false);
+  buttonTimer = 0;
 }
 
 void Robot::TeleopPeriodic() 
-{ 
+{
+  if(TURN_TO_ANGLE){
   double targetAngle = 0.0;
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
@@ -108,14 +130,24 @@ void Robot::TeleopPeriodic()
   TeleopLifterControl();
   TeleopManipulatorControl();
   ElectricSolenoidTest(solenoid);
-<<<<<<< HEAD
-//  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
-sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
-=======
   lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
   drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  }
   
->>>>>>> 61614bc32c370136455da3972a8dd7844f0a1a5d
+  if(LIFTER_ENABLED){
+    TeleopLifterControl();
+    lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
+  }
+  if(MANIPULATOR_ENABLED){
+    TeleopManipulatorControl();
+  }
+  if(DRIVE_ENABLED) {
+    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot),
+      js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  }
+  buttonTimer++;
+  ElectricSolenoidTest(solenoid);
+  stilts->teleopStilts(deployStiltsButton, retractStiltsButton, stilts->defaultStiltsSpeed);
 }
 
 void Robot::TestPeriodic() 
