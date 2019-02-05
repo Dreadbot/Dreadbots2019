@@ -63,7 +63,7 @@ void Robot::RobotInit()
  //---------Joysticks---------------------
  js1 = new frc::Joystick(0); //Driver 1
  js2 = new frc::Joystick(1); //Driver 2
- //-------------Talons-------------------
+ //-------------Talons------------------- 
   lFront = new WPI_TalonSRX(0); //left front
   rFront = new WPI_TalonSRX(1); //right front
   lBack = new WPI_TalonSRX(2); //left rear
@@ -124,7 +124,7 @@ void Robot::TeleopPeriodic()
   double targetAngle = 0.0;
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
-  SmartDashboard::PutNumber("Current Angle", currentAngle);
+  currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
   drive->RotateToAngle(0.5, targetAngle, currentAngle);
   Climb();
   }
@@ -141,7 +141,8 @@ void Robot::TeleopPeriodic()
       js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
   buttonTimer++;
-  
+  ElectricSolenoidTest(solenoid);
+  stilts->teleopStilts(deployStiltsButton, retractStiltsButton, stilts->defaultStiltsSpeed);
 }
 
 void Robot::TestPeriodic() 
