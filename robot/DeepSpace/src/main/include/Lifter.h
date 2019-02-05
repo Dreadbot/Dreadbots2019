@@ -24,5 +24,4 @@ class Lifter
     int InchesLift(float inches);
     int GetCurrentLevel();
     
-    
 };
