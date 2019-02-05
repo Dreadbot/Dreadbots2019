@@ -112,7 +112,7 @@ class GripPipeline:
         else:
             mode = cv2.RETR_LIST
         method = cv2.CHAIN_APPROX_SIMPLE
-        im2, contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
+        contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
         return contours
 
     @staticmethod
@@ -149,7 +149,15 @@ class GripPipeline:
             if (cv2.arcLength(contour, True) < min_perimeter):
                 continue
             hull = cv2.convexHull(contour)
-            solid = 100 * area / cv2.contourArea(hull)
+            try:
+                solid = 100 * area / cv2.contourArea(hull)
+            except:
+<<<<<<< HEAD
+                print("No contours found, returning none")
+=======
+                print("No contours found")
+>>>>>>> d66b042923aeba4e30a6177e0c6b1989c258eb4f
+                solid = 0
             if (solid < solidity[0] or solid > solidity[1]):
                 continue
             if (len(contour) < min_vertex_count or len(contour) > max_vertex_count):

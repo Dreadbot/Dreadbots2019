@@ -1,4 +1,5 @@
 #include <Drive.h>
+#include <AHRS.h>
 
 Drive::Drive(WPI_TalonSRX *lFront_in, WPI_TalonSRX *lBack_in, WPI_TalonSRX *rFront_in, WPI_TalonSRX *rBack_in)
 {
@@ -81,4 +82,84 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 			lBack -> Set(ControlMode :: PercentOutput, -speed);
 			rBack -> Set(ControlMode :: PercentOutput, speed);
 		}
+	} 
+	 void Drive::RotateToAngle(double speed, double targetAngle, double currentAngle){
+		double rotSpeed = speed;
+		double angleSlop = 3;
+		double remainingAngle = targetAngle - currentAngle;
+		//targetAngle / fabs(currentAngle);
+
+				if (fabs(remainingAngle) > angleSlop)
+				{
+					if (remainingAngle > 20){
+						rotSpeed = 1;
+						rFront -> Set(ControlMode :: PercentOutput, rotSpeed);
+						lFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						lBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						rBack -> Set(ControlMode :: PercentOutput, rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					}
+					else if (remainingAngle <= 20 && remainingAngle > angleSlop){
+						rotSpeed = 0.5;
+						rFront -> Set(ControlMode :: PercentOutput, rotSpeed);
+						lFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						lBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						rBack -> Set(ControlMode :: PercentOutput, rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					}
+					else if (remainingAngle < -20){
+						rotSpeed = 1;
+						rFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);
+						lBack -> Set(ControlMode :: PercentOutput, rotSpeed);
+						rBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					} 
+					else if (remainingAngle >= -20 && remainingAngle < -angleSlop){
+						rotSpeed = -1;
+						rFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);
+						lBack -> Set(ControlMode :: PercentOutput, rotSpeed);
+						rBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					}
+					else if (remainingAngle = angleSlop){
+						rFront -> Set(ControlMode :: PercentOutput, 0);
+						lFront -> Set(ControlMode :: PercentOutput, 0);
+						lBack -> Set(ControlMode :: PercentOutput, 0);
+						rBack -> Set(ControlMode :: PercentOutput, 0);
+					}
+					else if (remainingAngle = -angleSlop){
+						rFront -> Set(ControlMode :: PercentOutput, 0);
+						lFront -> Set(ControlMode :: PercentOutput, 0);
+						lBack -> Set(ControlMode :: PercentOutput, 0);
+						rBack -> Set(ControlMode :: PercentOutput, 0);
+					}
+				}
+				//else if goToTarget
+				// add different function where we travel to the vison target
+	 }
+void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
+{
+	switch(direction)
+	{
+		case LEFT:
+			lFront->Set(ControlMode::Position, -strafeDistance);
+			rFront->Set(ControlMode::Position, strafeDistance);
+			lBack->Set(ControlMode::Position, strafeDistance);
+			rBack->Set(ControlMode::Position, -strafeDistance);
+		case RIGHT:
+			lFront->Set(ControlMode::Position, strafeDistance);
+			rFront->Set(ControlMode::Position, -strafeDistance);
+			lBack->Set(ControlMode::Position, -strafeDistance);
+			rBack->Set(ControlMode::Position, strafeDistance);
 	}
+}
+
+const float driveGearRatio = 1;
+const float driveGearDiameter = 1;
+double pi = 3.1415;
+int CalculateDistance(float inches)
+{
+	int ticks = (int) (inches * ((4096 * driveGearRatio) / (driveGearDiameter * pi));
+}

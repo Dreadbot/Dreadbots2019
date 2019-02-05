@@ -6,28 +6,28 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-
 #include <iostream>
-
 #include <frc/smartdashboard/SmartDashboard.h>
-
 #include <frc/shuffleboard/Shuffleboard.h> 
-
 #include "Example.h"
 #include <frc/Joystick.h>
 #include <AHRS.h>
 #include "rev/CANSparkMax.h"
-
 #include "ctre/Phoenix.h"
 #include "Lifter.h"
 #include "frc/WPILib.h"
 #include "Drive.h"
 #include "Stilts.h"
-#include "DoubleManipulator.h"
 
-//----------USB Controllers--------
-frc::Joystick *js1 = new frc::Joystick(0);
-frc::Joystick *js2 = new frc::Joystick(1); //Driver 2
+#include "SparkDrive.h"
+
+#include "DoubleManipulator.h"
+#include <Ultra.h>
+#include <frc/Ultrasonic.h>
+#include <Ultrasonic.h>
+
+int currentLevel = 0;
+int buttonTimer = 0;
 
 //js1
 int const slowButton = 7;
@@ -60,12 +60,26 @@ Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
 void Robot::RobotInit() 
 {
-  // Example *example;
-  // example = new Example();
-  // example->HelloWorld(4);
+ //---------Joysticks---------------------
+ js1 = new frc::Joystick(0); //Driver 1
+ js2 = new frc::Joystick(1); //Driver 2
+ //-------------Talons-------------------
+  lFront = new WPI_TalonSRX(0); //left front
+  rFront = new WPI_TalonSRX(1); //right front
+  lBack = new WPI_TalonSRX(2); //left rear
+  rBack = new WPI_TalonSRX(3); //right rear
+  frontStilts = new WPI_TalonSRX(4);//motor that pushes down the front stilts
+  backStilts = new WPI_TalonSRX(5);//motor that pushes down the back stilts
+  driveStilts = new WPI_TalonSRX(6);//motor that drives the wheels on the stilts
+  //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
 
+
+  lifter = new Lifter();
+  drive = new Drive(lFront, lBack, rFront, rBack);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
+  ultra = new Ultra();
 }
 
 /**
@@ -91,7 +105,7 @@ void Robot::AutonomousPeriodic()
   currentAngle = gyro->GetYaw();
 
   if(DRIVE_ENABLED) {
-    //drive->DriveStraight(.3, currentAngle);
+    drive->DriveStraight(.3, currentAngle);
   }
 
 }
@@ -105,7 +119,14 @@ void Robot::TeleopInit()
 }
 
 void Robot::TeleopPeriodic() 
-{
+{ 
+  double targetAngle = 0.0;
+  double currentAngle = gyro->GetYaw();
+  targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
+  SmartDashboard::PutNumber("Current Angle", currentAngle);
+  drive->RotateToAngle(0.5, targetAngle, currentAngle);
+  Climb();
+  
   if(LIFTER_ENABLED){
     TeleopLifterControl();
     lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
@@ -118,11 +139,12 @@ void Robot::TeleopPeriodic()
       js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
   buttonTimer++;
+  
 }
 
 void Robot::TestPeriodic() 
 {
-
+  
 }
 
 #ifndef RUNNING_FRC_TESTS
