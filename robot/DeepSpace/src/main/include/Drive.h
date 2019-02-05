@@ -13,6 +13,10 @@ class Drive
        
         void RotateToAngle(double speed, double targetAngle, double currentAngle);
 
+        enum StrafeDirection{LEFT, RIGHT};
+        void StrafeToDistance(StrafeDirection direction, int strafeDistance);
+
+        int CalculateDistance(float inches);
     private:
         WPI_TalonSRX *lFront;
         WPI_TalonSRX *lBack;

@@ -139,3 +139,27 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 				//else if goToTarget
 				// add different function where we travel to the vison target
 	 }
+void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
+{
+	switch(direction)
+	{
+		case LEFT:
+			lFront->Set(ControlMode::Position, -strafeDistance);
+			rFront->Set(ControlMode::Position, strafeDistance);
+			lBack->Set(ControlMode::Position, strafeDistance);
+			rBack->Set(ControlMode::Position, -strafeDistance);
+		case RIGHT:
+			lFront->Set(ControlMode::Position, strafeDistance);
+			rFront->Set(ControlMode::Position, -strafeDistance);
+			lBack->Set(ControlMode::Position, -strafeDistance);
+			rBack->Set(ControlMode::Position, strafeDistance);
+	}
+}
+
+const float driveGearRatio = 1;
+const float driveGearDiameter = 1;
+double pi = 3.1415;
+int CalculateDistance(float inches)
+{
+	int ticks = (int) (inches * ((4096 * driveGearRatio) / (driveGearDiameter * pi));
+}
