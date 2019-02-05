@@ -161,5 +161,6 @@ const float driveGearDiameter = 1;
 double pi = 3.1415;
 int CalculateDistance(float inches)
 {
-	int ticks = (int) (inches * ((4096 * driveGearRatio) / (driveGearDiameter * pi));
+	int driveTicks = (int) (inches * ((4096 * driveGearRatio) / (driveGearDiameter * pi));
+	return driveTicks;
 }
