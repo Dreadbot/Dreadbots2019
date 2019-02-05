@@ -85,6 +85,9 @@ int const BUTTON_TIMEOUT = 25;
 //------------Auton Variables-------
 double currentAngle;
 
+//-----------TeleopVariables---------
+int climbState;
+
 //-----------Objects----------------
 Lifter *lifter;
 Drive *drive;
