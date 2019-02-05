@@ -65,6 +65,9 @@ int const manualOverrideButton = 3;
 int const climbButton = 10;
 //---------------------------------
 
+//----------Teleop Variables-------
+int climbState;
+
 //-----------Solenoid--------------
 frc::Compressor *compressor = new frc::Compressor(0);
 frc::Solenoid *solenoid = new frc::Solenoid(4);
