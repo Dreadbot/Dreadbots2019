@@ -164,12 +164,15 @@ class GripPipeline:
             tmp = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
             lines = detector.detect(tmp)
         output = []
-        if len(lines) != 0:
-            for i in range(1, len(lines[0])):
-                tmp = GripPipeline.Line(lines[0][i, 0][0], lines[0][i, 0][1],
-                                lines[0][i, 0][2], lines[0][i, 0][3])
-                output.append(tmp)
-        return output
+        try:
+            if len(lines) != 0:
+                for i in range(1, len(lines[0])):
+                    tmp = GripPipeline.Line(lines[0][i, 0][0], lines[0][i, 0][1],
+                                    lines[0][i, 0][2], lines[0][i, 0][3])
+                    output.append(tmp)
+            return output
+        except:
+            pass
 
     @staticmethod
     def __filter_lines(inputs, min_length, angle):
@@ -182,12 +185,15 @@ class GripPipeline:
             A filtered list of Lines.
         """
         outputs = []
-        for line in inputs:
-            if (line.length() > min_length):
-                if ((line.angle() >= angle[0] and line.angle() <= angle[1]) or
-                        (line.angle() + 180.0 >= angle[0] and line.angle() + 180.0 <= angle[1])):
-                    outputs.append(line)
-        return outputs
+        try:
+            for line in inputs:
+                if (line.length() > min_length):
+                    if ((line.angle() >= angle[0] and line.angle() <= angle[1]) or
+                            (line.angle() + 180.0 >= angle[0] and line.angle() + 180.0 <= angle[1])):
+                        outputs.append(line)
+            return outputs
+        except:
+            pass
 
     @staticmethod
     def __find_contours(input, external_only):
@@ -203,7 +209,7 @@ class GripPipeline:
         else:
             mode = cv2.RETR_LIST
         method = cv2.CHAIN_APPROX_SIMPLE
-        im2, contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
+        contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
         return contours
 
     @staticmethod
@@ -240,7 +246,12 @@ class GripPipeline:
             if (cv2.arcLength(contour, True) < min_perimeter):
                 continue
             hull = cv2.convexHull(contour)
-            solid = 100 * area / cv2.contourArea(hull)
+            try:
+                solid = 100 * area / cv2.contourArea(hull)
+            except:
+                #print("No contours")
+                solid = 0
+                pass
             if (solid < solidity[0] or solid > solidity[1]):
                 continue
             if (len(contour) < min_vertex_count or len(contour) > max_vertex_count):
@@ -252,78 +263,5 @@ class GripPipeline:
         return output
 
 
-
-
-"""""""""PIPELINE - IGNORE"""""""""""
-
-
-import json
-import time
-import sys
-
-from cscore import CameraServer, VideoSource, UsbCamera, MjpegServer
-from networktables import NetworkTablesInstance
-
-def readConfig():
-    global team
-    global server
-
-    # parse file
-    try:
-        with open(configFile, "rt") as f:
-            j = json.load(f)
-    except OSError as err:
-        print("could not open '{}': {}".format(configFile, err), file=sys.stderr)
-        return False
-
-    # top level must be an object
-    if not isinstance(j, dict):
-        parseError("must be JSON object")
-        return False
-
-    # team number
-    try:
-        team = j["team"]
-    except KeyError:
-        parseError("could not read team number")
-        return False
-
-    # ntmode (optional)
-    if "ntmode" in j:
-        str = j["ntmode"]
-        if str.lower() == "client":
-            server = False
-        elif str.lower() == "server":
-            server = True
-        else:
-            parseError("could not understand ntmode value '{}'".format(str))
-
-    # cameras
-    try:
-        cameras = j["cameras"]
-    except KeyError:
-        parseError("could not read cameras")
-        return False
-    for camera in cameras:
-        if not readCameraConfig(camera):
-            return False
-
-    return True
-
-def startCamera(config):
-    print("Starting camera '{}' on {}".format(config.name, config.path))
-    inst = CameraServer.getInstance()
-    camera = UsbCamera(config.name, config.path)
-    server = inst.startAutomaticCapture(camera=camera, return_server=True)
-
-    camera.setConfigJson(json.dumps(config.config))
-    camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen)
-
-    if config.streamConfig is not None:
-        server.setConfigJson(json.dumps(config.streamConfig))
-
-    return camera
-
-startCamera(cameraConfig)
 
 
