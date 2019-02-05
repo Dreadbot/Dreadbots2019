@@ -157,7 +157,7 @@ void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
 }
 
 const float driveGearRatio = 5;
-const float driveGearDiameter = 1;
+const float driveGearDiameter = 3.5;
 const double pi = 3.1415;
 int CalculateDistance(float inches)
 {
