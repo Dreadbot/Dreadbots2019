@@ -63,6 +63,8 @@ int const ballPickup = 1;
 int const hatchPickup = 4;
 int const manualOverrideButton = 3;
 int const climbButton = 10;
+int const deployStiltsButton = 7;
+int const retractStiltsButton = 5;
 //---------------------------------
 
 //-----------Solenoid--------------
