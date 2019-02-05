@@ -24,7 +24,6 @@
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
-#include <Ultrasonic.h>
 
 int currentLevel = 0;
 int buttonTimer = 0;
