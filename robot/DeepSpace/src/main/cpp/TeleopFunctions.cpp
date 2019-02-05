@@ -57,7 +57,7 @@ void Robot::TeleopManipulatorControl()
       //manipulator->SpinWheels(0);
       manipulator->SetPickup(false);
     }
-    if(js2->GetRawButton()){
+    if(js2->GetRawButton(hatchPickup) && buttonTimer >= BUTTON_TIMEOUT){
       
     }
   }
