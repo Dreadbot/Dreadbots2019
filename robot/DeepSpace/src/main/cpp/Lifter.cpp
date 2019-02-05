@@ -15,7 +15,7 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include "Robot.h"
 
-int const ENCODER_ID = 0;
+int const ENCODER_ID = 2;
 TalonSRX liftMotor = {ENCODER_ID};
 double levels [] = {0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0};
 double motorSpeed = 0;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <string>
+#include <string.h>
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -47,6 +47,7 @@ int const joystickRot = 2;
 int const upButton = 6; 
 int const downButton = 8; 
 int const ballPickup = 1;
+int const hatchPickup = 4;
 int const manualOverrideButton = 3;
 //---------------------------------
 

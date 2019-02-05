@@ -11,7 +11,7 @@
 #include "frc/WPILib.h"
 #include "Robot.h"
 
-const int WRIST_ID = 2;
+const int WRIST_ID = 0;
 const int WHEEL_ID = 1;
 double positions[] = {0.0, 5.0, 10.0};
 TalonSRX wrist = {WRIST_ID};
@@ -26,9 +26,9 @@ void DoubleManipulator::Init()
     wrist.SetSensorPhase(true);
     wrist.SetSelectedSensorPosition(0);
 
-    intakeWheels.SetSensorPhase(true);
-    intakeWheels.SetSelectedSensorPosition(0);
-    intakeWheels.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+    //intakeWheels.SetSensorPhase(true);
+    //intakeWheels.SetSelectedSensorPosition(0);
+    //intakeWheels.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
 }
 
 void DoubleManipulator::RotateWrist(int position)

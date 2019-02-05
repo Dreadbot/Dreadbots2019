@@ -38,24 +38,27 @@ void Robot::TeleopLifterControl()
   }
 }
 
-// void Robot::TeleopManipulatorControl()
-// {
-//   // std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
-//   // std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
-//   if (!js2->GetRawButton(manualOverrideButton)){
-//     if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
-//       //std::cout << "button pressed" << std::endl;
-//       buttonTimer = 0;
-//       manipulator->RotateWrist(1);
-//       //manipulator->SpinWheels(0.5);
+void Robot::TeleopManipulatorControl()
+{
+  // std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
+  // std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
+  if (!js2->GetRawButton(manualOverrideButton)){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
+      std::cout << "button pressed" << std::endl;
+      buttonTimer = 0;
+      manipulator->RotateWrist(1);
+      //manipulator->SpinWheels(0.5);
 
-//       manipulator->SetPickup(true);
-//     }
-//     if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
-//       buttonTimer = 0;
-//       manipulator->RotateWrist(2);
-//       //manipulator->SpinWheels(0);
-//       manipulator->SetPickup(false);
-//     }
-//   }
-// }
+      manipulator->SetPickup(true);
+    }
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
+      buttonTimer = 0;
+      manipulator->RotateWrist(2);
+      //manipulator->SpinWheels(0);
+      manipulator->SetPickup(false);
+    }
+    if(js2->GetRawButton()){
+      
+    }
+  }
+}
