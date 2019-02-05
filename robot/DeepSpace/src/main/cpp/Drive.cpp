@@ -161,9 +161,16 @@ const float driveGearRatio = 5;
 const float driveGearDiameter = 3.5;
 const double pi = 3.1415;
 const  int ticksPerRotation = 4096;
+const float inchesPerRotation = 1; //dummy value, pls change later
 
-int strafeDistance(float inches)
+int strafeDistance(float rotations) //finding rotations to inches - comment once THIS mystery has been solved
 {
-	int driveTicks = (int) (inches * ((ticksPerRotation * driveGearRatio) / (driveGearDiameter * pi)));
+	int driveTicks = (int) (rotations * ticksPerRotation * driveGearRatio);
 	return driveTicks;
 }
+
+// int strafeDistance(float inches) //actual strafeDistance - uncomment when able to use
+// {
+// 	int driveTicks = (int) ((inches / inchesPerRotation) * ticksPerRotation * driveGearRatio);
+// 	return driveTicks;
+// }
