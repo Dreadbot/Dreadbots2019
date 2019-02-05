@@ -161,7 +161,7 @@ const float driveGearRatio = 5;
 const float driveGearDiameter = 3.5;
 const double pi = 3.1415;
 const  int ticksPerRotation = 4096;
-const float inchesPerRotation = 1; //dummy value, pls change later
+const float inchesPerRotation = 1; //dummy value, pls change later (NOTE: THIS IS SPECIFIC TO THE DRIVE GEARS)
 
 int strafeDistance(float rotations) //finding rotations to inches - comment once THIS mystery has been solved
 {
