@@ -6,12 +6,12 @@
 
 void Robot::TeleopLifterControl()
 {
-  std::cout << lifter->GetEncoderPosition() << std::endl;
+  //std::cout << lifter->GetEncoderPosition() << std::endl;
   if(!js2->GetRawButton(manualOverrideButton)){
     if(js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6){
       buttonTimer = 0;
       lifter->IncreaseCurrentLevel();
-      std::cout << "UpButton Pressed" << std::endl;
+      //std::cout << "UpButton Pressed" << std::endl;
       lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
@@ -21,7 +21,6 @@ void Robot::TeleopLifterControl()
       lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
-    buttonTimer++;
   }
   else
   {
@@ -42,19 +41,25 @@ void Robot::TeleopLifterControl()
 
 void Robot::TeleopManipulatorControl()
 {
+  // std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
+  // std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
   if (!js2->GetRawButton(manualOverrideButton)){
-    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
       std::cout << "button pressed" << std::endl;
       buttonTimer = 0;
       manipulator->RotateWrist(1);
-      manipulator->SpinWheels(0.5);
+      //manipulator->SpinWheels(0.5);
+
       manipulator->SetPickup(true);
     }
-    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
       buttonTimer = 0;
       manipulator->RotateWrist(2);
+      //manipulator->SpinWheels(0);
       manipulator->SetPickup(false);
-      manipulator->SpinWheels(0);
+    }
+    if(js2->GetRawButton(hatchPickup) && buttonTimer >= BUTTON_TIMEOUT){
+      
     }
   }
 }
