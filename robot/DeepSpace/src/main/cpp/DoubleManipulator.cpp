@@ -54,12 +54,12 @@ void DoubleManipulator::ReleasePanel()
     //uses 1 solenoid
 }
 
-void DoubleManipulator::SetPickup(bool value)
+void DoubleManipulator::SetBallPickup(bool value)
 {
     pickingUp = value;
 }
 
-bool DoubleManipulator::CheckPickup()
+bool DoubleManipulator::CheckBallPickup()
 {
     return pickingUp;
 }

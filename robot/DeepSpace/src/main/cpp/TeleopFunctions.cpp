@@ -44,22 +44,18 @@ void Robot::TeleopManipulatorControl()
   // std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
   // std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
   if (!js2->GetRawButton(manualOverrideButton)){
-    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckBallPickup()){
       std::cout << "button pressed" << std::endl;
       buttonTimer = 0;
       manipulator->RotateWrist(1);
-      //manipulator->SpinWheels(0.5);
-
-      manipulator->SetPickup(true);
+      manipulator->SpinWheels(0.5);
+      manipulator->SetBallPickup(true);
     }
-    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckBallPickup()){
       buttonTimer = 0;
       manipulator->RotateWrist(2);
-      //manipulator->SpinWheels(0);
-      manipulator->SetPickup(false);
-    }
-    if(js2->GetRawButton(hatchPickup) && buttonTimer >= BUTTON_TIMEOUT){
-      
+      manipulator->SetBallPickup(false);
+      manipulator->SpinWheels(0);
     }
   }
 }

@@ -43,6 +43,7 @@ int const hatchPickup = 4;
 bool const DRIVE_ENABLED = false;
 bool const LIFTER_ENABLED = false;
 bool const MANIPULATOR_ENABLED = true;
+bool const TURN_TO_ANGLE = false;
 
 //-------------Talons-------------------
 WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -113,18 +114,20 @@ void Robot::TeleopInit()
 {
   //lifter->LiftInit();
   manipulator->Init();
-  manipulator->SetPickup(false);
+  manipulator->SetBallPickup(false);
   buttonTimer = 0;
 }
 
 void Robot::TeleopPeriodic() 
-{ 
+{
+  if(TURN_TO_ANGLE){
   double targetAngle = 0.0;
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
   SmartDashboard::PutNumber("Current Angle", currentAngle);
   drive->RotateToAngle(0.5, targetAngle, currentAngle);
   Climb();
+  }
   
   if(LIFTER_ENABLED){
     TeleopLifterControl();
