@@ -8,7 +8,7 @@
 #include "Robot.h"
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/shuffleboard/Shuffleboard.h> 
+#include <frc/shuffleboard/Shuffleboard.h>
 #include "Example.h"
 #include <frc/Joystick.h>
 #include <AHRS.h>
@@ -35,7 +35,7 @@ int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
 //js2
-int const upButton = 6; 
+int const upButton = 6;
 int const downButton = 8;
 int const ballPickup = 1;
 int const hatchPickup = 4;
@@ -43,13 +43,15 @@ int const hatchPickup = 4;
 bool const DRIVE_ENABLED = false;
 bool const LIFTER_ENABLED = false;
 bool const MANIPULATOR_ENABLED = true;
-bool const TURN_TO_ANGLE = false;
+bool const TURN_TO_ANGLE_ENABELED = false;
+bool const SOLENOID_TEST_ENABLED = false;
+bool const CLIMB_ENABLED = false;
 
 //-------------Talons-------------------
 WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
 WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2); //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
+WPI_TalonSRX *lBack = new WPI_TalonSRX(2);  //left rear
+WPI_TalonSRX *rBack = new WPI_TalonSRX(3);  //right rear
 //----------------------------------------
 
 //Lifter *lifter = new Lifter();
@@ -57,23 +59,21 @@ WPI_TalonSRX *rBack = new WPI_TalonSRX(3); //right rear
 AHRS *gyro;
 Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
-
-void Robot::RobotInit() 
+void Robot::RobotInit()
 {
- //---------Joysticks---------------------
- js1 = new frc::Joystick(0); //Driver 1
- js2 = new frc::Joystick(1); //Driver 2
- //-------------Talons------------------- 
-  lFront = new WPI_TalonSRX(0); //left front
-  rFront = new WPI_TalonSRX(1); //right front
-  lBack = new WPI_TalonSRX(2); //left rear
-  rBack = new WPI_TalonSRX(3); //right rear
-  frontStilts = new WPI_TalonSRX(4);//motor that pushes down the front stilts
-  backStilts = new WPI_TalonSRX(5);//motor that pushes down the back stilts
-  driveStilts = new WPI_TalonSRX(6);//motor that drives the wheels on the stilts
+  //---------Joysticks---------------------
+  js1 = new frc::Joystick(0);        //Driver 1
+  js2 = new frc::Joystick(1);        //Driver 2
+                                     //-------------Talons-------------------
+  lFront = new WPI_TalonSRX(0);      //left front
+  rFront = new WPI_TalonSRX(1);      //right front
+  lBack = new WPI_TalonSRX(2);       //left rear
+  rBack = new WPI_TalonSRX(3);       //right rear
+  frontStilts = new WPI_TalonSRX(4); //motor that pushes down the front stilts
+  backStilts = new WPI_TalonSRX(5);  //motor that pushes down the back stilts
+  driveStilts = new WPI_TalonSRX(6); //motor that drives the wheels on the stilts
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
-
 
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
@@ -90,71 +90,84 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() 
+void Robot::RobotPeriodic()
 {
-
 }
 
-void Robot::AutonomousInit() 
+void Robot::AutonomousInit()
 {
   gyro->ZeroYaw();
 }
 
-void Robot::AutonomousPeriodic() 
+void Robot::AutonomousPeriodic()
 {
   currentAngle = gyro->GetYaw();
 
-  if(DRIVE_ENABLED) {
+  if (DRIVE_ENABLED)
+  {
     drive->DriveStraight(.3, currentAngle);
   }
-
 }
 
 void Robot::TeleopInit()
 {
-  //lifter->LiftInit();
-  manipulator->Init();
-  manipulator->SetBallPickup(false);
+  if(LIFTER_ENABLED) {
+    lifter->LiftInit();
+  }
+  if(MANIPULATOR_ENABLED) {
+    manipulator->Init();
+    manipulator->SetBallPickup(false);
+  }
   buttonTimer = 0;
 }
 
-void Robot::TeleopPeriodic() 
+void Robot::TeleopPeriodic()
 {
-  if(TURN_TO_ANGLE){
-  double targetAngle = 0.0;
-  double currentAngle = gyro->GetYaw();
-  targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
-  currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
-  drive->RotateToAngle(0.5, targetAngle, currentAngle);
-  Climb();
-  TeleopLifterControl();
-  TeleopManipulatorControl();
-  ElectricSolenoidTest(solenoid);
-  lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
-  drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+  if (TURN_TO_ANGLE_ENABELED)
+  {
+    double targetAngle = 0.0;
+    double currentAngle = gyro->GetYaw();
+    targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
+    currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
+    drive->RotateToAngle(0.5, targetAngle, currentAngle);
+    Climb();
   }
-  
-  if(LIFTER_ENABLED){
+
+  if (LIFTER_ENABLED)
+  {
     TeleopLifterControl();
     lifter->CheckHeight(); //needs to be finished. will be used for outputing to smart dashboard
   }
-  if(MANIPULATOR_ENABLED){
+
+  if (MANIPULATOR_ENABLED)
+  {
     TeleopManipulatorControl();
   }
-  if(DRIVE_ENABLED) {
-    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)), js1->GetRawAxis(joystickRot),
-      js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+
+  if (DRIVE_ENABLED)
+  {
+    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
+  
+  if(SOLENOID_TEST_ENABLED) {
+    ElectricSolenoidTest(solenoid);
+  }
+
+  if(CLIMB_ENABLED) {
+    stilts->teleopStilts(deployStiltsButton, retractStiltsButton, stilts->defaultStiltsSpeed);
+  }
+  // always increment buttonTimer - regardless of what functionality is Enabled or not
   buttonTimer++;
-  ElectricSolenoidTest(solenoid);
-  stilts->teleopStilts(deployStiltsButton, retractStiltsButton, stilts->defaultStiltsSpeed);
 }
 
-void Robot::TestPeriodic() 
+void Robot::TestPeriodic()
 {
-  
 }
 
 #ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
+int main()
+{
+  return frc::StartRobot<Robot>();
+}
 #endif
