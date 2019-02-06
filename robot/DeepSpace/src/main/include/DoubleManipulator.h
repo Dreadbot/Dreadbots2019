@@ -20,6 +20,6 @@ class DoubleManipulator {
   void GrabPanel();
   void ReleasePanel();
   void IncrementPosition();
-  void SetPickup(bool value);
-  bool CheckPickup();
+  void SetBallPickup(bool value);
+  bool CheckBallPickup();
 };

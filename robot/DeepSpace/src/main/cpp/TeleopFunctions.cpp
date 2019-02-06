@@ -2,15 +2,16 @@
 #include "Lifter.h"
 #include "frc/WPILib.h"
 #include "DoubleManipulator.h"
+#include <Stilts.h>
 
 void Robot::TeleopLifterControl()
 {
-  std::cout << lifter->GetEncoderPosition() << std::endl;
+  //std::cout << lifter->GetEncoderPosition() << std::endl;
   if(!js2->GetRawButton(manualOverrideButton)){
     if(js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6){
       buttonTimer = 0;
       lifter->IncreaseCurrentLevel();
-      std::cout << "UpButton Pressed" << std::endl;
+      //std::cout << "UpButton Pressed" << std::endl;
       lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
@@ -20,7 +21,6 @@ void Robot::TeleopLifterControl()
       lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
-    buttonTimer++;
   }
   else
   {
@@ -41,40 +41,96 @@ void Robot::TeleopLifterControl()
 
 void Robot::TeleopManipulatorControl()
 {
+  // std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
+  // std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
   if (!js2->GetRawButton(manualOverrideButton)){
-    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckPickup()){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckBallPickup()){
       std::cout << "button pressed" << std::endl;
       buttonTimer = 0;
       manipulator->RotateWrist(1);
       manipulator->SpinWheels(0.5);
-      manipulator->SetPickup(true);
+      manipulator->SetBallPickup(true);
     }
-    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckPickup()){
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckBallPickup()){
       buttonTimer = 0;
       manipulator->RotateWrist(2);
-      manipulator->SetPickup(false);
+      manipulator->SetBallPickup(false);
       manipulator->SpinWheels(0);
     }
   }
 }
+//Fully autonomous level 3 climb using ultrasonics and encoders
 
+void Robot::Climb()
+{
+  if(js2->GetRawButton(climbButton)){
+    climbState = 1;
+    while(climbState != 6 && !js2->GetRawButton(manualOverrideButton)){
+      
+
+     if(climbState == 1 && stilts->getFrontHeight() >= LEVEL_3_HEIGHT && stilts->getBackHeight() >= LEVEL_3_HEIGHT)
+     {
+       climbState = 2; //Drive the stilt wheel
+      }
+     else if(climbState == 2 && frontUltra->getDistanceDownFront() <= 5)
+     {
+        climbState = 3; //Retract front
+     }
+     else if(climbState == 3 && stilts->getFrontHeight() == 0)
+     {
+        climbState = 4; //drive the stilt wheel
+     }
+     else if(climbState == 4)
+    {
+       climbState = 5; //retract back wheel
+    }
+     else if(climbState == 5 && stilts->getBackHeight() == 0){
+       climbState = 6; //finished
+    }
+
+
+     if(climbState = 1)
+     {
+       stilts->setFrontToHeight(LEVEL_3_HEIGHT);
+       stilts->setBackToHeight(LEVEL_3_HEIGHT);
+     }
+     if(climbState == 2){
+        stilts->driveWheels(0.2);
+     }
+     if(climbState == 3)
+     {
+       stilts->setFrontToHeight(0);
+     }
+     if(climbState == 4)
+    {
+      stilts->driveWheels(0.2);
+    }
+     if(climbState == 5)
+    {
+       stilts->setBackToHeight(0);
+    }
+   }
+  }
+}
 void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 {
-  	if(js1->GetRawButton(4) && isSolOut == false && isADown == false)
+  //toggle function for button "X" to fire solenoid
+  	if(js1->GetRawButton(solButton) && isSolOut == false && Robot::isXDown == false) 
 		{
 			solenoid->Set(true);
 			isSolOut = true;
-			isADown = true;
+			isXDown = true;
 		}
-		else if(!js1->GetRawButton(4) && isSolOut == true)
-			isADown = false;
+		else if(!js1->GetRawButton(solButton) && isSolOut == true)
+			isXDown = false;
 
-		else if(js1->GetRawButton(4) && isSolOut == true && isADown == false)
+		else if(js1->GetRawButton(solButton) && isSolOut == true && isXDown == false)
 		{
 			solenoid->Set(false);
 			isSolOut = false;
-			isADown = true;
+			isXDown = true;
 		}
-		else if(!js1->GetRawButton(4) && isSolOut == false)
-			isADown = false;
+		else if(!js1->GetRawButton(solButton) && isSolOut == false)
+			isXDown = false;
+
 }

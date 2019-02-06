@@ -14,7 +14,9 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include "Robot.h"
 
-int const ENCODER_ID = 0;
+
+int const ENCODER_ID = 7;
+
 TalonSRX liftMotor = {ENCODER_ID};
 double levels [] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
 double motorSpeed = 0;
@@ -32,12 +34,12 @@ Lifter::Lifter() {
     
 void Lifter::SetLift(int level) 
 {
-    // std::cout << "Raised lift to ";
-    // std::cout << level <<std::endl;
-    // std::cout << levels[level] << std::endl;
-    // std::cout << TALON_TICKS_PER_ROTATION << std::endl;
-    // std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
-    //liftMotor.Set(ControlMode::Position, levels[level]*TALON_TICKS_PER_ROTATION);
+    /* std::cout << "Raised lift to ";
+     std::cout << level <<std::endl;
+     std::cout << levels[level] << std::endl;
+     std::cout << TALON_TICKS_PER_ROTATION << std::endl;
+     std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
+    liftMotor.Set(ControlMode::Position, levels[level]*TALON_TICKS_PER_ROTATION);*/
     liftMotor.Set(ControlMode::Position, InchesLift(levels[level]) );
     std::cout << InchesLift(levels[level]) << std::endl;
 }
