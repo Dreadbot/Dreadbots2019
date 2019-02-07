@@ -19,7 +19,7 @@ while(True):
     contour_arr.append(grip.filter_contours_output) #Pull out the result and assign it to countour_arr
     contours = grip.filter_contours_output
     num_contours = len(contour_arr[0])
-
+    print(num_contours)
     cv2.drawContours(frame, contours, -1, (0,255,0), 3) #Color the contours on the camera output
 
     contours_xs = [] #Set empty array
