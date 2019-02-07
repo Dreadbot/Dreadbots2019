@@ -64,6 +64,7 @@ void Robot::RobotInit()
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
   js2 = new frc::Joystick(1);        //Driver 2
+  js3 = new frc::Joystick(3);        //Backup Manual Controls
                                      //-------------Talons-------------------
   lFront = new WPI_TalonSRX(0);      //left front
   rFront = new WPI_TalonSRX(1);      //right front
@@ -156,7 +157,7 @@ void Robot::TeleopPeriodic()
   }
 
   if(CLIMB_ENABLED) {
-    stilts->teleopStilts(deployStiltsButton, retractStiltsButton, stilts->defaultStiltsSpeed);
+    stilts->teleopStilts(frontStiltsUpButton, frontStiltsDownButton, backStiltsUpButton, backStiltsDownButton, js3, stiltsDriveStick, stilts->defaultStiltsSpeed);
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
   buttonTimer++;
