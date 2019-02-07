@@ -40,24 +40,24 @@ int const downButton = 8;
 int const ballPickup = 1;
 int const hatchPickup = 4;
 //---------------------------------
-bool const DRIVE_ENABLED = false;
+bool const DRIVE_ENABLED = true;
 bool const LIFTER_ENABLED = false;
-bool const MANIPULATOR_ENABLED = true;
+bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = false;
 bool const CLIMB_ENABLED = false;
 
 //-------------Talons-------------------
-WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
-WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2);  //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3);  //right rear
+//WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
+//WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+//WPI_TalonSRX *lBack = new WPI_TalonSRX(2);  //left rear
+//WPI_TalonSRX *rBack = new WPI_TalonSRX(3);  //right rear
 //----------------------------------------
 
 //Lifter *lifter = new Lifter();
 
-AHRS *gyro;
-Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+//AHRS *gyro;
+//Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
 void Robot::RobotInit()
 {
@@ -111,6 +111,7 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+  SmartDashboard::PutNumber("Target Angle", 0);
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
@@ -128,7 +129,7 @@ void Robot::TeleopPeriodic()
     double targetAngle = 0.0;
     double currentAngle = gyro->GetYaw();
     targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
-    currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
+    SmartDashboard::PutNumber("Current Angle", currentAngle);
     drive->RotateToAngle(0.5, targetAngle, currentAngle);
     Climb();
   }
@@ -151,7 +152,7 @@ void Robot::TeleopPeriodic()
   }
   
   if(SOLENOID_TEST_ENABLED) {
-    ElectricSolenoidTest(solenoid);
+   // ElectricSolenoidTest(solenoid);
   }
 
   if(CLIMB_ENABLED) {

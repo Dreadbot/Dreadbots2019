@@ -68,8 +68,8 @@ int const retractStiltsButton = 5;
 //---------------------------------
 
 //-----------Solenoid--------------
-frc::Compressor *compressor = new frc::Compressor(0);
-frc::Solenoid *solenoid = new frc::Solenoid(4);
+//frc::Compressor *compressor = new frc::Compressor(0);
+//frc::Solenoid *solenoid = new frc::Solenoid(4);
 bool isSolOut = false;
 
 //-------------Talons-------------------
@@ -84,7 +84,6 @@ WPI_TalonSRX *driveStilts; //motor that drives the wheels on the stilts
 
 int buttonTimer = 0;
 int const BUTTON_TIMEOUT = 25;
-
 
 
 //------------Auton Variables-------
