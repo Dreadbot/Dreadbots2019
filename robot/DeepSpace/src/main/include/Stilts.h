@@ -11,7 +11,7 @@ class Stilts
         void setFrontToHeight(float height);//Height in inches
         void setBackToHeight(float height);//Height in inches
         void driveWheels(float speed);//Speed from -1 to 1
-        void teleopStilts(bool upButton, bool downButton, double speed);
+        void teleopStilts(bool frontUpButton, bool frontDownButton, bool backUpButton, bool backDownButton, frc::Joystick *stiltsJoystick, double stiltsDriveAxis, double stiltsSpeed);
         int getFrontHeight();
         int getBackHeight();
         int getDrivePosition();

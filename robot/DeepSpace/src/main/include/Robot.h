@@ -43,7 +43,7 @@ class Robot : public frc::TimedRobot {
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
 frc::Joystick *js2; //Driver 2
-
+frc::Joystick *js3; //Backup Manual Controls
 
 Ultra *frontUltra;
 Ultra *backUltra;
@@ -63,8 +63,12 @@ int const ballPickup = 1;
 int const hatchPickup = 4;
 int const manualOverrideButton = 3;
 int const climbButton = 10;
-int const deployStiltsButton = 7;
-int const retractStiltsButton = 5;
+//js3
+int const frontStiltsUpButton = 5;
+int const frontStiltsDownButton = 7;
+int const backStiltsUpButton = 6;
+int const backStiltsDownButton = 8;
+int const stiltsDriveStick = 3;
 //---------------------------------
 
 //-----------Solenoid--------------

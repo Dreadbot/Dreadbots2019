@@ -3,7 +3,44 @@
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
-/*----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------
+             ???$$                               ?ZZ?                         
+              ~??$$$$                             ZZZZZZ                        
+              ???$$$$$$.                        $ZZZZZZZZZ.                     
+              ???$$$$$$$$.                    .ZZZZZZZZZZZZ.                    
+              ???$$$$$$$$$.                  ZZZZZZZ??ZZZZZZZ                   
+             ???$$$$$$$$$$$$     ???????????ZZZZZZ??????ZZZZZZZ                 
+             ???$$$$$??$$$$$$$????????????ZZZZZZZ???   ???ZZZZZZ                
+             ???$$$$? :??$$$$$$??       .ZZZZZZ???      ???ZZZZZZZ              
+            =??$$$$$.   ??I$$$$$$.     ZZZZZZZ????.       ???ZZZZZZZ            
+            ???$$$$$     .??$$$$$$$   ZZZZZZ??? .??         ??IZZZZZZ           
+            ???$$$$$      ????$$$$$$ZZZZZZZ???    ?          ??ZZZZZZZ          
+            ???$$$$.         ???$$$$??ZZZZZZZ.               .ZZZZZZ??          
+           ???$$$$$.         ????$$$$???ZZZZZZ.        ?    ZZZZZZZ??           
+           ???$$$$$  ?     ??$$$$$$$$$???ZZZZZZZ.      ?  ,ZZZZZZ???            
+           ???$$$$.  ??     .$$$$$$$$$. ???ZZZZZ      ? .ZZZZZZZ??              
+          ???$$$$$??????       .$$        ??7.       ???ZZZZZZ???               
+          ???$$$$$?$$$$???                        .???ZZZZZZ$??                 
+          ???$$$$$$$$$$$????                    =????ZZZZZZ???                  
+          ???$$$$$$$$$$7  ??????             ??????ZZZZZZZ??                    
+         ???$$$$$$$$.       ???????????????????????ZZZZZ???                     
+         ???$$$$..              ?????????????     ???Z$??                       
+        .???$                                      ?????                        
+                                                     ?                          
+                                                                                
+                                                              
+    DDDDDDDDDDDDDD $DDDDDDD IDDDDDDDDDDDDDDD    .DDDDDDDDDDDZ DDDDDDDDDDDDDDDDD 
+   DDDDDDDDDDDDDD  DDDDDDD  DDDDDDDDDDDDDDDDD  DDDDDDDDDDDDD DDDDDDDDDDDDDDDDDD 
+   DDDDDDDDDDDDDD  DDDDDDD  DDDDDDDDDDDDDDDDD DDDDDDDDDDNDDD DDDDDDDDDDDDDDDDDI 
+   DDDDDDD        DDDDDDDO DDDDDDD    DDDDDDD DDDDDDD             DDDDDDD       
+  DDDDDDD+        DDDDDDD  DDDDDDD    DDDDDDD DDDDDDDDDD         +DDDDDDD       
+  DDDDDDDDDDDDDD  DDDDDDD .DDDDDDD DDDDDDDDD   DDDDDDDDDDDD      DDDDDDD        
+  DDDDDDDDDDDDDD DDDDDDD  DDDDDDDDDDDDDDDDD     IDDDDDDDDDDD     DDDDDDD        
+ DDDDDDDDDDDDDD .DDDDDDD  DDDDDDDDDDDDD?           7DDDDDDDD    DDDDDDDZ        
+ DDDDDDD        .DDDDDDD  DDDDDDIDDDDDDD     D       DDDDDDD    DDDDDDD         
+~DDDDDDD        DDDDDDD  DDDDDDD  DDDDDDD    DDDDDDDDDDDDDD     DDDDDDD         
+DDDDDDD         DDDDDDD. DDDDDDD  DDDDDDDD  7DDDDDDDDDDDDD     DDDDDDD   
+DDDDDDD        DDDDDDDD DDDDDDD   .DDDDDDDD DDDDDDDDDDDD       DDDDDDD*/
 
 #include "Robot.h"
 #include <iostream>
@@ -64,6 +101,7 @@ void Robot::RobotInit()
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
   js2 = new frc::Joystick(1);        //Driver 2
+  js3 = new frc::Joystick(3);        //Backup Manual Controls
                                      //-------------Talons-------------------
   lFront = new WPI_TalonSRX(0);      //left front
   rFront = new WPI_TalonSRX(1);      //right front
@@ -163,7 +201,7 @@ void Robot::TeleopPeriodic()
   }
 
   if(CLIMB_ENABLED) {
-    stilts->teleopStilts(deployStiltsButton, retractStiltsButton, stilts->defaultStiltsSpeed);
+    stilts->teleopStilts(frontStiltsUpButton, frontStiltsDownButton, backStiltsUpButton, backStiltsDownButton, js3, stiltsDriveStick, stilts->defaultStiltsSpeed);
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
   buttonTimer++;
