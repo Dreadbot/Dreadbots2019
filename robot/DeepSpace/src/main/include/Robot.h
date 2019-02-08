@@ -39,6 +39,7 @@ class Robot : public frc::TimedRobot {
   void TeleopManipulatorControl();
   void Climb();
   void ElectricSolenoidTest(frc::Solenoid *solenoid);
+  void DefenseMode();
 
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
@@ -49,6 +50,7 @@ Ultra *frontUltra;
 Ultra *backUltra;
 
 bool isXDown = false;
+bool isADown = false;
 
 //js1
 int const turboButton = 8;
@@ -56,6 +58,7 @@ int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
 int const solButton = 1;
+int const defenseButton = 2;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
@@ -92,6 +95,7 @@ double currentAngle;
 
 //-----------TeleopVariables---------
 int climbState;
+bool defenseMode = false;
 
 //-----------Objects----------------
 Lifter *lifter;
