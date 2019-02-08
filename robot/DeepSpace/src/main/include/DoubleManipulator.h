@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
+#include <frc/WPILib.h>
+#include <ctre/Phoenix.h>
 
 
 class DoubleManipulator {
@@ -13,7 +15,7 @@ class DoubleManipulator {
     int currentPosition = 0;
     bool pickingUp = false;
  public:
-  DoubleManipulator();
+  DoubleManipulator(TalonSRX &wrist_in, TalonSRX &intakewheels_in);
   void Init();
   void RotateWrist(int position);
   void SpinWheels(double motorSpeed);
@@ -22,4 +24,6 @@ class DoubleManipulator {
   void IncrementPosition();
   void SetBallPickup(bool value);
   bool CheckBallPickup();
+  TalonSRX& wrist;
+  TalonSRX& intakeWheels;
 };

@@ -80,6 +80,8 @@ WPI_TalonSRX *rBack; //right rear
 WPI_TalonSRX *frontStilts; //motor that pushes down the front stilts
 WPI_TalonSRX *backStilts; //motor that pushes down the back stilts
 WPI_TalonSRX *driveStilts; //motor that drives the wheels on the stilts
+TalonSRX *wrist; 
+TalonSRX *intakeWheels;
 //----------------------------------------//
 
 int buttonTimer = 0;

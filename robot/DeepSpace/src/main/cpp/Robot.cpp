@@ -40,9 +40,9 @@ int const downButton = 8;
 int const ballPickup = 1;
 int const hatchPickup = 4;
 //---------------------------------
-bool const DRIVE_ENABLED = true;
+bool const DRIVE_ENABLED = false;
 bool const LIFTER_ENABLED = false;
-bool const MANIPULATOR_ENABLED = false;
+bool const MANIPULATOR_ENABLED = true;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = false;
 bool const CLIMB_ENABLED = false;
@@ -72,6 +72,8 @@ void Robot::RobotInit()
   frontStilts = new WPI_TalonSRX(4); //motor that pushes down the front stilts
   backStilts = new WPI_TalonSRX(5);  //motor that pushes down the back stilts
   driveStilts = new WPI_TalonSRX(6); //motor that drives the wheels on the stilts
+  wrist = new WPI_TalonSRX(0); 
+  intakeWheels = new TalonSRX(8); 
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
 
@@ -80,6 +82,7 @@ void Robot::RobotInit()
   stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
   ultra = new Ultra();
+  manipulator = new DoubleManipulator(*wrist, *intakeWheels);
 }
 
 /**
@@ -111,19 +114,22 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+  std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
   if(MANIPULATOR_ENABLED) {
     manipulator->Init();
-    manipulator->SetBallPickup(false);
+    manipulator->SetBallPickup(true);
+    
   }
   buttonTimer = 0;
 }
 
 void Robot::TeleopPeriodic()
 {
+
   if (TURN_TO_ANGLE_ENABELED)
   {
     double targetAngle = 0.0;
@@ -142,6 +148,7 @@ void Robot::TeleopPeriodic()
 
   if (MANIPULATOR_ENABLED)
   {
+  
     TeleopManipulatorControl();
   }
 
