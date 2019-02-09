@@ -71,10 +71,10 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 			rBackSpeed = fabs(rBackSpeed) / rBackSpeed;
 		}	
 		
-		lFront -> Set(ControlMode::PercentOutput, lFrontSpeed*maxSpeed);
-		lBack -> Set(ControlMode::PercentOutput, lBackSpeed*maxSpeed);
-		rFront -> Set(ControlMode::PercentOutput, rFrontSpeed*maxSpeed);
-		rBack -> Set(ControlMode::PercentOutput, rBackSpeed*maxSpeed);
+		lFront -> Set(ControlMode::PercentOutput, lFrontSpeed*targetSpeed);
+		lBack -> Set(ControlMode::PercentOutput, lBackSpeed*targetSpeed);
+		rFront -> Set(ControlMode::PercentOutput, rFrontSpeed*targetSpeed);
+		rBack -> Set(ControlMode::PercentOutput, rBackSpeed*targetSpeed);
 		
 	}
 
