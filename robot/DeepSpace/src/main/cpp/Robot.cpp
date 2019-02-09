@@ -78,12 +78,16 @@ int const downButton = 8;
 int const ballPickup = 1;
 int const hatchPickup = 4;
 //---------------------------------
-bool const DRIVE_ENABLED = false;
-bool const LIFTER_ENABLED = false;
+
+//These booleans should always be true when pushing code. It's quite confusing 
+//if people push a false variable then someone else's code no longer runs
+
+bool const DRIVE_ENABLED = true;
+bool const LIFTER_ENABLED = true;
 bool const MANIPULATOR_ENABLED = true;
-bool const TURN_TO_ANGLE_ENABELED = false;
+bool const TURN_TO_ANGLE_ENABELED = true;
 bool const SOLENOID_TEST_ENABLED = true;
-bool const CLIMB_ENABLED = false;
+bool const CLIMB_ENABLED = true;
 
 //-------------Talons-------------------
 //WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front

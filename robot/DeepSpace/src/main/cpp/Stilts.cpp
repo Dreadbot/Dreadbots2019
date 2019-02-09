@@ -42,14 +42,14 @@ int Stilts::getDrivePosition()//returns the stilt drive encoder value in inches
 {
     return m_driveMotor.GetSelectedSensorPosition() * ticksToInches;
 }
-void Stilts::teleopStilts(bool frontUpButton, bool frontDownButton, bool backUpButton, bool backDownButton, double stiltsDriveAxis, double stiltsSpeed)
+void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDown, double stiltsDriveAxis, double stiltsSpeed)
 //Teleoperated stilts control, buttons for raising and lowering the stilts at a given speed, as well as driving the wheel
 {
-    if(frontUpButton)
+    if(frontUp)
     {
         m_frontMotor.Set(ControlMode::PercentOutput, stiltsSpeed);
     }
-    else if(frontDownButton)
+    else if(frontDown)
     {
         m_frontMotor.Set(ControlMode::PercentOutput, -stiltsSpeed);
     }
@@ -57,11 +57,11 @@ void Stilts::teleopStilts(bool frontUpButton, bool frontDownButton, bool backUpB
     {
         m_frontMotor.Set(ControlMode::PercentOutput, 0);
     }
-    if(backUpButton)
+    if(backUp)
     {
         m_backMotor.Set(ControlMode::PercentOutput, stiltsSpeed);
     }
-    else if(backDownButton)
+    else if(backDown)
     {
         m_backMotor.Set(ControlMode::PercentOutput, -stiltsSpeed);
     }

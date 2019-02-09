@@ -175,6 +175,7 @@ void Robot::DefenseMode()
 
   if(defenseMode)
   {
+    solenoid->Set(false);
     lifter->SetLift(0);
   }
 }
