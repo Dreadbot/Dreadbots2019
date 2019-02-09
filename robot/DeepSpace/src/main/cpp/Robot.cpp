@@ -204,6 +204,9 @@ void Robot::TeleopPeriodic()
        js3->GetRawAxis(stiltsDriveStick), stilts->defaultStiltsSpeed);
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
+  
+  CameraSwap();
+
   buttonTimer++;
 }
 

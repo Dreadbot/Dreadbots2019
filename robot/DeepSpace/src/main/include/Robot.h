@@ -40,6 +40,7 @@ class Robot : public frc::TimedRobot {
   void Climb();
   void ElectricSolenoidTest(frc::Solenoid *solenoid);
   void DefenseMode();
+  void CameraSwap();
 
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
@@ -49,18 +50,22 @@ frc::Joystick *js3; //Backup Manual Controls
 Ultra *frontUltra;
 Ultra *backUltra;
 
-bool isXDown = false;
+bool isSolButtonDown = false;
 bool isADown = false;
+bool isBackDown = false;
+
+int currentCamera = 0;
 
 //js1
 int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
-int const solButton = 1;
+int const toggleSol = 3;
 int const defenseButton = 2;
 int const engageSol = 3;
 int const disengageSol = 4;
+int const cameraButton = 9;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 

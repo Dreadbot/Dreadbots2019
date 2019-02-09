@@ -88,38 +88,47 @@ int Lifter::CheckHeight()
     int currentHeight;
     int currentRotation;
     currentRotation = liftMotor.GetSelectedSensorPosition()/TALON_TICKS_PER_ROTATION;
+
     if(currentRotation > -0.5 && currentRotation < 0.5)
     {
         currentHeight = 0;
     }
+
     else if(currentRotation > 0.5 && currentRotation < 1.5)
     {
         currentHeight = 1;
     }
+
     else if(currentRotation > 1.5 && currentRotation < 2.5)
     {
         currentHeight = 2;
     }
+
     else if(currentRotation > 2.5 && currentRotation < 3.5)
     {
         currentHeight = 3;
     }
+
     else if(currentRotation > 3.5 && currentRotation < 4.5)
     {
         currentHeight = 4;
     }
+
     else if(currentRotation > 4.5 && currentRotation < 5.5)
     {
         currentHeight = 5;
     }
+
     else if(currentRotation > 5.5 && currentRotation < 6.5)
     {
         currentHeight = 6;
     }
+
     else
     {
         currentHeight = -100;
     }
+    
     return currentHeight;
     frc::SmartDashboard::PutNumber("Current level", currentHeight); //needs to be changed to Shuffleboard
 }

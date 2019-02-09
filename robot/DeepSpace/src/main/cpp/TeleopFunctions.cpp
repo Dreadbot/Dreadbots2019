@@ -154,19 +154,19 @@ void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 void Robot::DefenseMode()
 {
   //toggle function for button "A" to retract all appendages and lock them in place
-  if (js1->GetRawButton(defenseButton) && defenseMode == false && Robot::isADown == false)
+  if (js1->GetRawButton(defenseButton) && defenseMode == false && Robot::isSolButtonDown == false)
   {
     defenseMode = true;
-    isADown = true;
+    isSolButtonDown = true;
   }
 
   else if (!js1->GetRawButton(defenseButton) && isSolOut == true)
     isADown = false;
 
-  else if (js1->GetRawButton(defenseButton) && defenseMode == true && isADown == false)
+  else if (js1->GetRawButton(defenseButton) && defenseMode == true && isSolButtonDown == false)
   {
     defenseMode = false;
-    isADown = true;
+    isSolButtonDown = true;
   }
 
   else if (!js1->GetRawButton(defenseButton) && isSolOut == false)
@@ -178,4 +178,38 @@ void Robot::DefenseMode()
     solenoid->Set(false);
     lifter->SetLift(0);
   }
+}
+
+void Robot::CameraSwap()
+{
+  //code to swap the camera feed from one camera to another by pressing "Back" on controller 1
+  if (js1->GetRawButton(cameraButton) && currentCamera == 0 && Robot::isBackDown == false)
+  {
+    currentCamera = 1;
+    isBackDown = true;
+  }
+
+  else if (!js1->GetRawButton(cameraButton))
+    isBackDown = false;
+
+  if (js1->GetRawButton(cameraButton) && currentCamera == 1 && Robot::isBackDown == false)
+  {
+    currentCamera = 0;
+    isBackDown = true;
+  }
+
+  else if (!js1->GetRawButton(cameraButton))
+    isBackDown = false;
+
+  SmartDashboard::PutNumber("Current Camera", currentCamera);
+
+  /*if (js1->GetRawButton(cameraButton) && currentCamera == 2 && Robot::isBackDown == false)
+  {
+    currentCamera = 0;
+    isBackDown = true;
+  }
+
+  else if (!js1->GetRawButton(cameraButton))
+    isBackDown = false;
+  */
 }
