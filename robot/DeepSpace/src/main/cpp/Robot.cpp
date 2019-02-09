@@ -75,8 +75,10 @@ int const joystickRot = 2;
 //js2
 int const upButton = 6; 
 int const downButton = 8;
+int const lowerManipulator = 7;
+int const raiseManipulator = 5;
 int const ballPickup = 1;
-int const hatchPickup = 4;
+int const shootBall = 2;
 //---------------------------------
 
 //These booleans should always be true when pushing code. It's quite confusing 
@@ -116,7 +118,7 @@ void Robot::RobotInit()
   backStilts = new WPI_TalonSRX(5);  //motor that pushes down the back stilts
   driveStilts = new WPI_TalonSRX(6); //motor that drives the wheels on the stilts
   wrist = new WPI_TalonSRX(0); 
-  intakeWheels = new TalonSRX(8); 
+  intakeWheels = new WPI_TalonSRX(8); 
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
 
@@ -126,7 +128,13 @@ void Robot::RobotInit()
   stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
   ultra = new Ultra();
+
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
+  if(MANIPULATOR_ENABLED) {
+    manipulator->Init();
+    //manipulator->SetBallPickup(true);
+    
+  }
 }
 
 /**
@@ -161,12 +169,12 @@ void Robot::TeleopInit()
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
+  buttonTimer = 0;
+
   if(MANIPULATOR_ENABLED) {
-    manipulator->Init();
-    manipulator->SetBallPickup(true);
+    manipulator->RotateWrist(0);
     
   }
-  buttonTimer = 0;
 }
 
 void Robot::TeleopPeriodic() 
@@ -187,9 +195,9 @@ void Robot::TeleopPeriodic()
     TeleopLifterControl();
     TeleopManipulatorControl();
 
-    if(SOLENOID_TEST_ENABLED)
-      ElectricSolenoidTest(solenoid);
-
+    if(SOLENOID_TEST_ENABLED){
+      //ElectricSolenoidTest(solenoid);
+    }
   }
 
   if (DRIVE_ENABLED)

@@ -69,10 +69,12 @@ int const cameraButton = 9;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
-int const ballPickup = 1;
-int const hatchPickup = 4;
+int const lowerManipulator = 5;
+int const raiseManipulator = 7;
 int const manualOverrideButton = 3;
 int const climbButton = 10;
+int const ballPickup = 1;
+int const shootBall = 2;
 //js3
 int const frontStiltsUpButton = 5;
 int const frontStiltsDownButton = 7;
@@ -82,6 +84,8 @@ int const stiltsDriveStick = 3;
 //---------------------------------
 
 //-----------Solenoid--------------
+
+//If you comment these out, please uncomment them before pushing to avoid compilation errors for other people
 frc::Compressor *compressor = new frc::Compressor(0);
 frc::Solenoid *solenoid = new frc::Solenoid(4);
 bool isSolOut = false;
@@ -94,8 +98,8 @@ WPI_TalonSRX *rBack; //right rear
 WPI_TalonSRX *frontStilts; //motor that pushes down the front stilts
 WPI_TalonSRX *backStilts; //motor that pushes down the back stilts
 WPI_TalonSRX *driveStilts; //motor that drives the wheels on the stilts
-TalonSRX *wrist; 
-TalonSRX *intakeWheels;
+WPI_TalonSRX *wrist; 
+WPI_TalonSRX *intakeWheels;
 //----------------------------------------//
 
 int buttonTimer = 0;

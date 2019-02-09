@@ -15,7 +15,7 @@ class DoubleManipulator {
     int currentPosition = 0;
     bool pickingUp = false;
  public:
-  DoubleManipulator(TalonSRX &wrist_in, TalonSRX &intakewheels_in);
+  DoubleManipulator(WPI_TalonSRX &wrist_in, WPI_TalonSRX &intakewheels_in);
   void Init();
   void RotateWrist(int position);
   void SpinWheels(double motorSpeed);
@@ -24,6 +24,8 @@ class DoubleManipulator {
   void IncrementPosition();
   void SetBallPickup(bool value);
   bool CheckBallPickup();
-  TalonSRX& wrist;
-  TalonSRX& intakeWheels;
+  int GetCurrentPosition();
+  void SetCurrentPosition(int position);
+  WPI_TalonSRX& wrist;
+  WPI_TalonSRX& intakeWheels;
 };
