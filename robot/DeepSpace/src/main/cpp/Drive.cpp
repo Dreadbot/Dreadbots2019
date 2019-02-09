@@ -116,25 +116,20 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 						remainingAngle = (targetAngle - currentAngle);
 					} 
 					else if (remainingAngle >= -20 && remainingAngle < -angleSlop){
-						rotSpeed = -1;
+						rotSpeed = 0.5;
 						rFront -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						lFront -> Set(ControlMode :: PercentOutput, rotSpeed);
 						lBack -> Set(ControlMode :: PercentOutput, rotSpeed);
 						rBack -> Set(ControlMode :: PercentOutput, -rotSpeed);
 						remainingAngle = (targetAngle - currentAngle);
 					}
-					else if (remainingAngle = angleSlop){
-						rFront -> Set(ControlMode :: PercentOutput, 0);
-						lFront -> Set(ControlMode :: PercentOutput, 0);
-						lBack -> Set(ControlMode :: PercentOutput, 0);
-						rBack -> Set(ControlMode :: PercentOutput, 0);
-					}
-					else if (remainingAngle = -angleSlop){
-						rFront -> Set(ControlMode :: PercentOutput, 0);
-						lFront -> Set(ControlMode :: PercentOutput, 0);
-						lBack -> Set(ControlMode :: PercentOutput, 0);
-						rBack -> Set(ControlMode :: PercentOutput, 0);
-					}
+					
+				}
+				else {
+					rFront -> Set(ControlMode :: PercentOutput, 0);
+					lFront -> Set(ControlMode :: PercentOutput, 0);
+					lBack -> Set(ControlMode :: PercentOutput, 0);
+					rBack -> Set(ControlMode :: PercentOutput, 0);
 				}
 				//else if goToTarget
 				// add different function where we travel to the vison target

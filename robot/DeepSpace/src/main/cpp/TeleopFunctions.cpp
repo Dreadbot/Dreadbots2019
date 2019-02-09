@@ -122,8 +122,8 @@ void Robot::Climb()
 }
 void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 {
-  //toggle function for button "A" to fire solenoid
-  if (js1->GetRawButton(solButton) && isSolOut == false && Robot::isXDown == false)
+  //toggle function for button "X" to fire solenoid
+  /*if (js1->GetRawButton(solButton) && isSolOut == false && Robot::isXDown == false)
   {
     solenoid->Set(true);
     isSolOut = true;
@@ -142,6 +142,13 @@ void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 
   else if (!js1->GetRawButton(solButton) && isSolOut == false)
     isXDown = false;
+    */
+  if(js1->GetRawButton(engageSol))
+    solenoid->Set(true);
+  
+  if(js1->GetRawButton(disengageSol))
+    solenoid->Set(false);
+
 }
 
 void Robot::DefenseMode()
