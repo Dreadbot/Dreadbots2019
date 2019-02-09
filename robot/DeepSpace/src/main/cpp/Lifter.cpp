@@ -15,7 +15,7 @@
 #include "Robot.h"
 
 
-int const ENCODER_ID = 10;
+int const ENCODER_ID = 8;
 
 WPI_TalonSRX liftMotor = {ENCODER_ID};
 double levels [] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
