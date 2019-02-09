@@ -78,9 +78,9 @@ int const downButton = 8;
 int const ballPickup = 1;
 int const hatchPickup = 4;
 //---------------------------------
-bool const DRIVE_ENABLED = true;
+bool const DRIVE_ENABLED = false;
 bool const LIFTER_ENABLED = false;
-bool const MANIPULATOR_ENABLED = false;
+bool const MANIPULATOR_ENABLED = true;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = true;
 bool const CLIMB_ENABLED = false;
@@ -111,6 +111,8 @@ void Robot::RobotInit()
   frontStilts = new WPI_TalonSRX(4); //motor that pushes down the front stilts
   backStilts = new WPI_TalonSRX(5);  //motor that pushes down the back stilts
   driveStilts = new WPI_TalonSRX(6); //motor that drives the wheels on the stilts
+  wrist = new WPI_TalonSRX(0); 
+  intakeWheels = new TalonSRX(8); 
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
 
@@ -120,6 +122,7 @@ void Robot::RobotInit()
   stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
   ultra = new Ultra();
+  manipulator = new DoubleManipulator(*wrist, *intakeWheels);
 }
 
 /**
@@ -149,13 +152,15 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+  std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
   if(MANIPULATOR_ENABLED) {
     manipulator->Init();
-    manipulator->SetBallPickup(false);
+    manipulator->SetBallPickup(true);
+    
   }
   buttonTimer = 0;
 }
@@ -166,13 +171,21 @@ void Robot::TeleopPeriodic()
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
   currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
-  drive->RotateToAngle(0.5, targetAngle, currentAngle);
+
+  if (TURN_TO_ANGLE_ENABELED)
+  {
+    drive->RotateToAngle(0.5, targetAngle, currentAngle);
+  }
   
   if(!defenseMode)
-  {
+  {  
     Climb();
     TeleopLifterControl();
     TeleopManipulatorControl();
+
+    if(SOLENOID_TEST_ENABLED)
+      ElectricSolenoidTest(solenoid);
+
   }
 
   if (DRIVE_ENABLED)
@@ -181,9 +194,6 @@ void Robot::TeleopPeriodic()
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
 
-  if(SOLENOID_TEST_ENABLED) {
-    ElectricSolenoidTest(solenoid);
-  }
 
   if(CLIMB_ENABLED) {
     stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton),

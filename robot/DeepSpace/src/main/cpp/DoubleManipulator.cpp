@@ -14,10 +14,10 @@
 const int WRIST_ID = 0;
 const int WHEEL_ID = 1;
 double positions[] = {0.0, 5.0, 10.0};
-TalonSRX wrist = {WRIST_ID};
-TalonSRX intakeWheels = {WHEEL_ID};
+//TalonSRX wrist = {WRIST_ID};
+//TalonSRX intakeWheels = {WHEEL_ID};
 
-DoubleManipulator::DoubleManipulator() {}
+DoubleManipulator::DoubleManipulator(TalonSRX &wrist_in, TalonSRX &intakeWheels_in) : wrist(wrist_in), intakeWheels(intakeWheels_in) {}
 
 void DoubleManipulator::Init()
 {

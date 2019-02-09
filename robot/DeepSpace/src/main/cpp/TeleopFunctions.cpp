@@ -44,11 +44,11 @@ void Robot::TeleopLifterControl()
 
 void Robot::TeleopManipulatorControl()
 {
-  // std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
-  // std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
+  //std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
+  //std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
   if (!js2->GetRawButton(manualOverrideButton))
   {
-    if (js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckBallPickup())
+    if (js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckBallPickup())
     {
       std::cout << "button pressed" << std::endl;
       buttonTimer = 0;
