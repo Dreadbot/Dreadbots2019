@@ -8,6 +8,105 @@ Drive::Drive(WPI_TalonSRX *lFront_in, WPI_TalonSRX *lBack_in, WPI_TalonSRX *rFro
     rFront = rFront_in;
     rBack = rBack_in;
 }
+//Mec drive with ramp up or down speed
+void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton) //homemade mecanum drive!
+	{
+		double noMove = 0.2; //Dead area of the axes
+		double maxSpeed = .5; //normal (not turbo)
+		double rampUpFactor = 1.2; //how fast to increment speed
+		double currentSpeed = rFront->GetMotorOutputPercent(); //how fast are we going right now
+
+		if (fabs(xAxis) < noMove)
+		{	
+			xAxis = 0.0;
+		}
+		if (fabs(yAxis) < noMove)
+		{ 
+			yAxis = 0.0;
+		}
+		if (fabs(rot) < noMove)
+		{
+			rot = 0.0;
+		}	
+		if (turboButton)
+		{	
+			maxSpeed = 1;
+		}
+		else if (slowButton)
+		{
+			maxSpeed = .3;
+		}
+		else
+		{	
+			maxSpeed = .5;
+		}
+
+		//Set our target speed. If the current speed is 
+		//less than max speed, increment current speed by ramp
+		if(currentSpeed < maxSpeed)
+		{
+			targetSpeed = currentSpeed * rampUpFactor
+		}
+
+
+		double lFrontSpeed = -yAxis - xAxis - rot;
+		double rFrontSpeed = +yAxis - xAxis - rot;
+		double rBackSpeed = +yAxis + xAxis - rot;
+		double lBackSpeed = -yAxis + xAxis - rot;
+
+		if (fabs(lFrontSpeed) > 1)
+		{
+			lFrontSpeed = fabs(lFrontSpeed) / lFrontSpeed;
+		}	
+		if (fabs(lBackSpeed) > 1)
+		{
+			lBackSpeed = fabs(lBackSpeed) / lBackSpeed;
+		}	
+		if (fabs(rFrontSpeed) > 1)
+		{
+			rFrontSpeed = fabs(rFrontSpeed) / rFrontSpeed;
+		}	
+		if (fabs(rBackSpeed) > 1)
+		{
+			rBackSpeed = fabs(rBackSpeed) / rBackSpeed;
+		}	
+		
+		lFront -> Set(ControlMode::PercentOutput, lFrontSpeed*maxSpeed);
+		lBack -> Set(ControlMode::PercentOutput, lBackSpeed*maxSpeed);
+		rFront -> Set(ControlMode::PercentOutput, rFrontSpeed*maxSpeed);
+		rBack -> Set(ControlMode::PercentOutput, rBackSpeed*maxSpeed);
+		
+	}
+
+	void Drive::DriveStraight(double speed, double currentAngle)
+	{
+		leftDifference = currentAngle*.05;
+		rightDifference = currentAngle*.05;
+
+		if(currentAngle < 0 - slop)
+		{
+			lFront -> Set(ControlMode :: PercentOutput, -speed);
+			rFront -> Set(ControlMode :: PercentOutput, speed+leftDifference);
+			lBack -> Set(ControlMode :: PercentOutput, -speed);
+			rBack -> Set(ControlMode :: PercentOutput, speed+leftDifference);
+		}
+
+		else if(currentAngle > 0 + slop)
+		{
+			lFront -> Set(ControlMode :: PercentOutput, -speed+rightDifference);
+			rFront -> Set(ControlMode :: PercentOutput, speed);
+			lBack -> Set(ControlMode :: PercentOutput, -speed+rightDifference);
+			rBack -> Set(ControlMode :: PercentOutput, speed);
+		}
+
+		else
+		{
+			rFront -> Set(ControlMode :: PercentOutput, speed);
+			lFront -> Set(ControlMode :: PercentOutput, -speed);
+			lBack -> Set(ControlMode :: PercentOutput, -speed);
+			rBack -> Set(ControlMode :: PercentOutput, speed);
+		}
+	} 
 void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton) //homemade mecanum drive!
 	{
 		double noMove = 0.2; //Dead area of the axes
@@ -150,7 +249,33 @@ void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
 			rBack->Set(ControlMode::Position, strafeDistance);
 	}
 }
-
+void Drive::RampUpSpeed(double currentSpeed, double targetSpeed)
+{
+	if(currentSpeed = 0)
+	{
+		currentSpeed = 0.3;//how do we know if we want to go forwards or backwords
+		if(currentSpeed < targetSpeed)
+		{
+		currentSpeed = currentSpeed * 1.2;
+		}
+		else if (currentSpeed >= targetSpeed)
+		{
+		currentSpeed = targetSpeed;
+		}
+	}
+	else
+	{
+		if(currentSpeed < targetSpeed)
+		{
+		currentSpeed = currentSpeed * 1.2;
+		}
+		else if (currentSpeed >= targetSpeed)
+		{
+		currentSpeed = targetSpeed;
+		}
+	}
+	
+}
 
 const float driveGearRatio = 5;
 const float driveGearDiameter = 3.5;

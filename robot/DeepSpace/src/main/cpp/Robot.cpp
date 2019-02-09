@@ -78,12 +78,13 @@ int const downButton = 8;
 int const ballPickup = 1;
 int const hatchPickup = 4;
 //---------------------------------
-bool const DRIVE_ENABLED = false;
+bool const DRIVE_ENABLED = true;
 bool const LIFTER_ENABLED = false;
-bool const MANIPULATOR_ENABLED = true;
+bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
-bool const SOLENOID_TEST_ENABLED = true;
+bool const SOLENOID_TEST_ENABLED = false;
 bool const CLIMB_ENABLED = false;
+bool const RAMP_UP_ENABLED = true;
 
 //-------------Talons-------------------
 //WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -171,7 +172,13 @@ void Robot::TeleopPeriodic()
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
   currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
+  double currentSpeed = rFront->GetMotorOutputPercent();
+  SmartDashboard::PutNumber("Current Speed", currentSpeed);
 
+  if (RAMP_UP_ENABLED)
+  {
+    drive->RampUpSpeed(currentSpeed, maxSpeed);
+  }
   if (TURN_TO_ANGLE_ENABELED)
   {
     drive->RotateToAngle(0.5, targetAngle, currentAngle);
