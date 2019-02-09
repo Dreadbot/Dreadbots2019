@@ -11,12 +11,24 @@ class SparkDrive
 
         void DriveStraight(double speed, double currentAngle);
 
+        void pidDrive(double inches);
+
+        double getRotations();
     private:
         rev::CANSparkMax *lFront;
         rev::CANSparkMax *lBack;
         rev::CANSparkMax *rFront;
         rev::CANSparkMax *rBack;
 
+        rev::CANEncoder *lFrontEncoder;
+        rev::CANEncoder *rFrontEncoder;
+        rev::CANEncoder *lBackEncoder;
+        rev::CANEncoder*rBackEncoder;
+
+        rev::CANPIDController *lFrontPID;
+        rev::CANPIDController *lBackPID;
+        rev::CANPIDController *rFrontPID;
+        rev::CANPIDController *rBackPID;
         double teleMaxSpeed = 0.5;
 
         double leftDifference;
