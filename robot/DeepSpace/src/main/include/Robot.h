@@ -22,7 +22,7 @@
 #include <AHRS.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
-
+#include <SparkDrive.h>
 double const TALON_TICKS_PER_ROTATION = 4096;
 float const LEVEL_3_HEIGHT = 21.5;
 
@@ -95,6 +95,10 @@ WPI_TalonSRX *lFront; //left front
 WPI_TalonSRX *rFront; //right front
 WPI_TalonSRX *lBack; //left rear
 WPI_TalonSRX *rBack; //right rear
+rev::CANSparkMax *lFrontSpark;
+rev::CANSparkMax *rFrontSpark;
+rev::CANSparkMax *lBackSpark;
+rev::CANSparkMax *rBackSpark;
 WPI_TalonSRX *frontStilts; //motor that pushes down the front stilts
 WPI_TalonSRX *backStilts; //motor that pushes down the back stilts
 WPI_TalonSRX *driveStilts; //motor that drives the wheels on the stilts
@@ -116,6 +120,7 @@ bool defenseMode = false;
 //-----------Objects----------------
 Lifter *lifter;
 Drive *drive;
+SparkDrive *sparkDrive;
 DoubleManipulator *manipulator;
 Stilts *stilts;
 Ultra *ultra;

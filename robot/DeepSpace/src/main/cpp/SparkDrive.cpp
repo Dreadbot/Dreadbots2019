@@ -1,22 +1,15 @@
 #include "SparkDrive.h"
+#include <iostream>
 double const inchesToRotations = 1;
-SparkDrive::SparkDrive(rev::CANSparkMax *lFront_in, rev::CANSparkMax *lBack_in, rev::CANSparkMax *rFront_in, rev::CANSparkMax *rBack_in)
+
+SparkDrive::SparkDrive(rev::CANSparkMax *lFront_in, rev::CANSparkMax *lBack_in, rev::CANSparkMax *rFront_in, rev::CANSparkMax *rBack_in) 
+: lFrontEncoder(lFront_in->GetEncoder()), rFrontEncoder(rFront_in->GetEncoder()), lBackEncoder(lBack_in->GetEncoder()), rBackEncoder(rBack_in->GetEncoder()), lFrontPID(lFront_in->GetPIDController()), rFrontPID(rFront_in->GetPIDController()), lBackPID(lBack_in->GetPIDController()), rBackPID(rBack_in->GetPIDController())
 {
     lFront = lFront_in;
     lBack = lBack_in;
     rFront = rFront_in;
     rBack = rBack_in;
-
-	rev::CANEncoder lFrontEncoder = lFront -> GetEncoder();
-	rev::CANEncoder rFrontEncoder = rFront -> GetEncoder();
-	rev::CANEncoder lBackEncoder = lBack -> GetEncoder();
-	rev::CANEncoder rBackEncoder = rBack -> GetEncoder();
-
-	rev::CANPIDController lFrontPID = lFront -> GetPIDController();
-	rev::CANPIDController rFrontPID = rFront -> GetPIDController();
-	rev::CANPIDController lBackPID = lBack -> GetPIDController();
-	rev::CANPIDController rBackPID = rBack -> GetPIDController();
-
+	
 	lFrontPID.SetP(0.2);
     lFrontPID.SetI(1e-4);
     lFrontPID.SetD(1);
@@ -44,8 +37,8 @@ SparkDrive::SparkDrive(rev::CANSparkMax *lFront_in, rev::CANSparkMax *lBack_in, 
     rBackPID.SetIZone(0.1);
     rBackPID.SetFF(0);
     rBackPID.SetOutputRange(-1, 1);
-
 }
+
 void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton) //homemade mecanum drive!
 	{
 		double noMove = 0.2; //Dead area of the axes
@@ -123,12 +116,29 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 	}
 	void SparkDrive::pidDrive(double inches)
 	{
-		lFrontPID -> SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
-		rFrontPID -> SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
-		lBackPID -> SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
-		rBackPID -> SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
+		lFrontPID.SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
+		rFrontPID.SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
+		lBackPID.SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
+		rBackPID.SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
 	}
-	double SparkDrive::getRotations()
+	double SparkDrive::getlFrontRotations()
 	{
-		double rotations[4] = {lFrontEncoder -> GetPosition(), rFrontEncoder -> GetPosition(), lBackEncoder -> GetPosition(), rBackEncoder -> GetPosition()};
+		double rotations = lFrontEncoder.GetPosition();
+		return rotations;
+	}
+	double SparkDrive::getrfrontRotations()
+	{
+		double rotations = rFrontEncoder.GetPosition();
+		return rotations;
+	}
+	double SparkDrive::getlBackRotations()
+	{
+		double rotations = lBackEncoder.GetPosition();
+		return rotations;
+	}
+	double SparkDrive::getrBackRotations()
+	{
+		double rotations = rBackEncoder.GetPosition();
+		std::cout << rotations << std::endl;
+		return rotations;
 	}
