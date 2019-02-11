@@ -1,3 +1,4 @@
+#include <iostream>
 #include <Drive.h>
 #include <AHRS.h>
 
@@ -15,6 +16,7 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 		double maxSpeed = .5; //normal (not turbo)
 		double rampUpFactor = 1.2; //how fast to increment speed
 		double currentSpeed = rFront->GetMotorOutputPercent(); //how fast are we going right now
+		double targetSpeed = 0.0; //speed we want to go to
 
 		if (fabs(xAxis) < noMove)
 		{	
@@ -43,10 +45,25 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 
 		//Set our target speed. If the current speed is 
 		//less than max speed, increment current speed by ramp
-		if(currentSpeed < maxSpeed)
+		if (currentSpeed == 0)
 		{
-			targetSpeed = currentSpeed * rampUpFactor
+			targetSpeed = 0.3;
 		}
+		else if (currentSpeed < maxSpeed)
+		{
+			targetSpeed = currentSpeed * rampUpFactor;
+			
+			if (targetSpeed > maxSpeed)
+			{
+				targetSpeed = maxSpeed;
+			}
+			std::cout << "TargetSpeed = " << targetSpeed << std::endl;
+		}
+		else
+		{
+			targetSpeed = maxSpeed;
+		}
+
 
 
 		double lFrontSpeed = -yAxis - xAxis - rot;
@@ -153,35 +170,6 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 		rBack -> Set(ControlMode::PercentOutput, rBackSpeed*maxSpeed);
 	}
 
-	void Drive::DriveStraight(double speed, double currentAngle)
-	{
-		leftDifference = currentAngle*.05;
-		rightDifference = currentAngle*.05;
-
-		if(currentAngle < 0 - slop)
-		{
-			lFront -> Set(ControlMode :: PercentOutput, -speed);
-			rFront -> Set(ControlMode :: PercentOutput, speed+leftDifference);
-			lBack -> Set(ControlMode :: PercentOutput, -speed);
-			rBack -> Set(ControlMode :: PercentOutput, speed+leftDifference);
-		}
-
-		else if(currentAngle > 0 + slop)
-		{
-			lFront -> Set(ControlMode :: PercentOutput, -speed+rightDifference);
-			rFront -> Set(ControlMode :: PercentOutput, speed);
-			lBack -> Set(ControlMode :: PercentOutput, -speed+rightDifference);
-			rBack -> Set(ControlMode :: PercentOutput, speed);
-		}
-
-		else
-		{
-			rFront -> Set(ControlMode :: PercentOutput, speed);
-			lFront -> Set(ControlMode :: PercentOutput, -speed);
-			lBack -> Set(ControlMode :: PercentOutput, -speed);
-			rBack -> Set(ControlMode :: PercentOutput, speed);
-		}
-	} 
 	 void Drive::RotateToAngle(double speed, double targetAngle, double currentAngle){
 		double rotSpeed = speed;
 		double angleSlop = 3;
