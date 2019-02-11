@@ -63,6 +63,7 @@ DDDDDDD        DDDDDDDD DDDDDDD   .DDDDDDDD DDDDDDDDDDDD       DDDDDDD*/
 #include <frc/Ultrasonic.h>
 #include <Ultrasonic.h>
 
+
 int currentLevel = 0;
 int buttonTimer = 0;
 
@@ -80,11 +81,12 @@ int const raiseManipulator = 5;
 int const ballPickup = 1;
 int const shootBall = 2;
 //---------------------------------
+//When pushing code, these should be true so everyone else's code works when they pull
 bool const DRIVE_ENABLED = true;
 bool const LIFTER_ENABLED = true;
 bool const MANIPULATOR_ENABLED = true;
-bool const TURN_TO_ANGLE_ENABELED = false;
-bool const SOLENOID_TEST_ENABLED = false;
+bool const TURN_TO_ANGLE_ENABELED = true;
+bool const SOLENOID_TEST_ENABLED = true;
 bool const CLIMB_ENABLED = true;
 
 //-------------Talons-------------------

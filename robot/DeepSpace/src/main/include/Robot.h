@@ -41,6 +41,7 @@ class Robot : public frc::TimedRobot {
   void ElectricSolenoidTest(frc::Solenoid *solenoid);
   void DefenseMode();
   void CameraSwap();
+  void AutoAlign();
 
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
@@ -112,6 +113,8 @@ int const BUTTON_TIMEOUT = 25;
 
 //------------Auton Variables-------
 double currentAngle;
+double x1, y1, x2, y2, cameraAngle, cameraLength;
+Drive::StrafeDirection strafeDirection;
 
 //-----------TeleopVariables---------
 int climbState;
