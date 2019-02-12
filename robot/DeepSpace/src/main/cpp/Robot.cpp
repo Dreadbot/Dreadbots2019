@@ -175,10 +175,10 @@ void Robot::TeleopPeriodic()
   double currentSpeed = rFront->GetMotorOutputPercent();
   SmartDashboard::PutNumber("Current Speed", currentSpeed);
 
-  if (RAMP_UP_ENABLED)
-  {
-    drive->RampUpSpeed(currentSpeed, maxSpeed);
-  }
+  //if (RAMP_UP_ENABLED)
+ //{
+   // drive->RampUpSpeed(currentSpeed, maxSpeed);
+  //}
   if (TURN_TO_ANGLE_ENABELED)
   {
     drive->RotateToAngle(0.5, targetAngle, currentAngle);
@@ -197,7 +197,7 @@ void Robot::TeleopPeriodic()
 
   if (DRIVE_ENABLED)
   {
-    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
 
