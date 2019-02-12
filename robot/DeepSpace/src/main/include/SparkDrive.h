@@ -11,6 +11,8 @@ class SparkDrive
 
         void DriveStraight(double speed, double currentAngle);
 
+        void RotateToAngle(double speed, double targetAngle, double currentAngle);
+
         void pidDrive(double inches);
 
         double getlFrontRotations();
