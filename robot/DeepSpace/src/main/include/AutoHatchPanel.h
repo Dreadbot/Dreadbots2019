@@ -11,6 +11,7 @@ class AutoHatchPanel
     void alignToTarget();
     void driveToTarget();
     void placePanel(int level);
+    void GrabPanel();
   private:
     Lifter lifter{};
     HatchPanelSuction suction{};
