@@ -8,4 +8,4 @@ class HatchPanelSuction
     private:
         frc::Solenoid leftSol{0};
         frc::Solenoid rightSol{1};
-}
+};
