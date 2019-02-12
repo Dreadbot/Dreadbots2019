@@ -103,6 +103,14 @@ bool const CLIMB_ENABLED = true;
 
 void Robot::RobotInit()
 {
+  
+    positionDecider.AddDefault("Left", 0);
+    positionDecider.AddObject("Center", 1);
+    positionDecider.AddObject("Right", 2);
+
+    gamePieceDecider.AddDefault("Hatch", 0);
+    gamePieceDecider.AddObject("Ball", 1);
+
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
   js2 = new frc::Joystick(1);        //Driver 2
