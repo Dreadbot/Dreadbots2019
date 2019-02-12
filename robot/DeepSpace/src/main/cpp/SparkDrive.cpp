@@ -114,6 +114,7 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 			rBack -> Set(speed);
 		}
 	}
+	
 	 void SparkDrive::RotateToAngle(double speed, double targetAngle, double currentAngle){
 		double rotSpeed = speed;
 		double angleSlop = 3;
@@ -165,6 +166,28 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 				//else if goToTarget
 				// add different function where we travel to the vison target
 	 }
+
+
+	void SparkDrive::StrafeStraight(double speed, SparkDrive::StrafeDirection dir) {
+		switch(dir)
+		{
+		case SparkDrive::StrafeDirection::left:
+			lFront -> Set(-speed);
+			rFront -> Set(speed);
+			lBack -> Set(speed);
+			rBack -> Set(-speed);
+			break;
+		case SparkDrive::StrafeDirection::right:
+			lFront -> Set(speed);
+			rFront -> Set(-speed);
+			lBack -> Set(-speed);
+			rBack -> Set(speed);
+			break;
+		default:
+			break;
+		}
+	}
+
 	void SparkDrive::pidDrive(double inches)
 	{
 		lFrontPID.SetReference(inches * inchesToRotations, rev::ControlType::kPosition);

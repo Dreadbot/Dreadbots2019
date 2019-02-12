@@ -13,6 +13,9 @@ class SparkDrive
 
         void RotateToAngle(double speed, double targetAngle, double currentAngle);
 
+        enum StrafeDirection{left, right};
+        void StrafeStraight(double speed, StrafeDirection dir);
+
         void pidDrive(double inches);
 
         double getlFrontRotations();
