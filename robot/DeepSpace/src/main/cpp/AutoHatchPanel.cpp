@@ -7,9 +7,13 @@
 
 AutoHatchPanel::AutoHatchPanel() {}
 
-void AutoHatchPanel::alignToTarget() {}
+void AutoHatchPanel::alignToTarget() {
+
+}
 
 void AutoHatchPanel::driveToTarget() {}
 
-void AutoHatchPanel::placePanel() {}
+void AutoHatchPanel::placePanel(int level) {
+    lifter.SetLift(level);
+}
 

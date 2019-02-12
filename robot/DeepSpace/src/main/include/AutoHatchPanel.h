@@ -1,6 +1,8 @@
 #pragma once
 
 #include "frc/WPILib.h"
+#include "Lifter.h"
+#include "HatchPanelSuction.h"
 
 class AutoHatchPanel
 {
@@ -8,5 +10,8 @@ class AutoHatchPanel
     AutoHatchPanel();
     void alignToTarget();
     void driveToTarget();
-    void placePanel();
+    void placePanel(int level);
+  private:
+    Lifter lifter{};
+    HatchPanelSuction suction{};
 };
