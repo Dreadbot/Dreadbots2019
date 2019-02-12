@@ -63,6 +63,7 @@ DDDDDDD        DDDDDDDD DDDDDDD   .DDDDDDDD DDDDDDDDDDDD       DDDDDDD*/
 #include <frc/Ultrasonic.h>
 #include <Ultrasonic.h>
 
+
 int currentLevel = 0;
 int buttonTimer = 0;
 
@@ -75,16 +76,18 @@ int const joystickRot = 2;
 //js2
 int const upButton = 6; 
 int const downButton = 8;
+int const lowerManipulator = 7;
+int const raiseManipulator = 5;
 int const ballPickup = 1;
-int const hatchPickup = 4;
+int const shootBall = 2;
 //---------------------------------
+//When pushing code, these should be true so everyone else's code works when they pull
 bool const DRIVE_ENABLED = true;
-bool const LIFTER_ENABLED = false;
-bool const MANIPULATOR_ENABLED = false;
-bool const TURN_TO_ANGLE_ENABELED = false;
-bool const SOLENOID_TEST_ENABLED = false;
-bool const CLIMB_ENABLED = false;
-bool const RAMP_UP_ENABLED = true;
+bool const LIFTER_ENABLED = true;
+bool const MANIPULATOR_ENABLED = true;
+bool const TURN_TO_ANGLE_ENABELED = true;
+bool const SOLENOID_TEST_ENABLED = true;
+bool const CLIMB_ENABLED = true;
 
 //-------------Talons-------------------
 //WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -109,21 +112,31 @@ void Robot::RobotInit()
   rFront = new WPI_TalonSRX(1);      //right front
   lBack = new WPI_TalonSRX(2);       //left rear
   rBack = new WPI_TalonSRX(3);       //right rear
-  frontStilts = new WPI_TalonSRX(4); //motor that pushes down the front stilts
-  backStilts = new WPI_TalonSRX(5);  //motor that pushes down the back stilts
-  driveStilts = new WPI_TalonSRX(6); //motor that drives the wheels on the stilts
-  wrist = new WPI_TalonSRX(0); 
-  intakeWheels = new TalonSRX(8); 
+                                     //-------------Sparks-------------------
+  lFrontSpark = new rev::CANSparkMax(0, rev::CANSparkMax::MotorType::kBrushless);
+  rFrontSpark = new rev::CANSparkMax(1, rev::CANSparkMax::MotorType::kBrushless);
+  lBackSpark = new rev::CANSparkMax(2, rev::CANSparkMax::MotorType::kBrushless);
+  rBackSpark = new rev::CANSparkMax(3, rev::CANSparkMax::MotorType::kBrushless);
+                                     //-------Talons pt.2: Electric Boogaloo-----
+  frontStilts = new WPI_TalonSRX(5); //motor that pushes down the front stilts
+  backStilts = new WPI_TalonSRX(7);  //motor that pushes down the back stilts
+  driveStilts = new WPI_TalonSRX(9); //motor that drives the wheels on the stilts
+  wrist = new WPI_TalonSRX(4);       //motor that rotates the manipulator wrist
+  intakeWheels = new WPI_TalonSRX(6);//motor that spins the intake wheels on the manipulator
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
-
-
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
+  sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
   stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
+
+  if(MANIPULATOR_ENABLED) {
+    manipulator->Init();
+    //manipulator->SetBallPickup(true);
+  }
 }
 
 /**
@@ -158,12 +171,11 @@ void Robot::TeleopInit()
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
-  if(MANIPULATOR_ENABLED) {
-    manipulator->Init();
-    manipulator->SetBallPickup(true);
-    
-  }
   buttonTimer = 0;
+
+  if(MANIPULATOR_ENABLED) {
+    manipulator->RotateWrist(0); 
+  }
 }
 
 void Robot::TeleopPeriodic() 
@@ -181,23 +193,36 @@ void Robot::TeleopPeriodic()
   //}
   if (TURN_TO_ANGLE_ENABELED)
   {
-    drive->RotateToAngle(0.5, targetAngle, currentAngle);
+     double targetAngle = 0.0;
+     double currentAngle = gyro->GetYaw();
+     drive->RotateToAngle(0.5, targetAngle, currentAngle);
+     targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
+     currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
   }
   
   if(!defenseMode)
-  {  
-    Climb();
-    TeleopLifterControl();
-    TeleopManipulatorControl();
-
-    if(SOLENOID_TEST_ENABLED)
-      ElectricSolenoidTest(solenoid);
-
+  { 
+    if(CLIMB_ENABLED)
+    {
+      Climb();
+    }
+    if(LIFTER_ENABLED)
+    {
+      TeleopLifterControl();
+    }
+    if(MANIPULATOR_ENABLED)
+    {
+      TeleopManipulatorControl();
+    }
+    if(SOLENOID_TEST_ENABLED){
+      //ElectricSolenoidTest(solenoid);
+    }
   }
 
   if (DRIVE_ENABLED)
   {
     drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
 
@@ -207,6 +232,9 @@ void Robot::TeleopPeriodic()
        js3->GetRawAxis(stiltsDriveStick), stilts->defaultStiltsSpeed);
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
+  
+  CameraSwap();
+
   buttonTimer++;
 }
 

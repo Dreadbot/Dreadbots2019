@@ -48,19 +48,34 @@ void Robot::TeleopManipulatorControl()
   //std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
   if (!js2->GetRawButton(manualOverrideButton))
   {
-    if (js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && !manipulator->CheckBallPickup())
+    if (js2->GetRawButton(lowerManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() > 0)
     {
       std::cout << "button pressed" << std::endl;
       buttonTimer = 0;
-      manipulator->RotateWrist(1);
-      manipulator->SpinWheels(0.5);
+      manipulator->RotateWrist(manipulator->GetCurrentPosition() - 1);
       manipulator->SetBallPickup(true);
+      manipulator->SpinWheels(0.5);
     }
-    if (js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT && manipulator->CheckBallPickup())
+    if (js2->GetRawButton(raiseManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() < 3)
     {
-      buttonTimer = 0;
-      manipulator->RotateWrist(2);
-      manipulator->SetBallPickup(false);
+      if(manipulator->GetCurrentPosition() + 1 == 3){
+        std::cout << "shruged" << std::endl;
+        Robot::lifter->Shrug();
+        manipulator->RotateWrist(manipulator->GetCurrentPosition() + 1);
+      } else{
+        buttonTimer = 0;
+        manipulator->RotateWrist(manipulator->GetCurrentPosition() + 1);
+        manipulator->SetBallPickup(false);
+        //manipulator->SpinWheels(0);
+      }
+    }
+    if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT){
+      manipulator->SpinWheels(0.4);
+    }
+    else if(js2->GetRawButton(shootBall) && buttonTimer >= BUTTON_TIMEOUT){
+      manipulator->SpinWheels(-0.4);
+    }
+    else{
       manipulator->SpinWheels(0);
     }
   }
@@ -154,19 +169,19 @@ void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 void Robot::DefenseMode()
 {
   //toggle function for button "A" to retract all appendages and lock them in place
-  if (js1->GetRawButton(defenseButton) && defenseMode == false && Robot::isADown == false)
+  if (js1->GetRawButton(defenseButton) && defenseMode == false && Robot::isSolButtonDown == false)
   {
     defenseMode = true;
-    isADown = true;
+    isSolButtonDown = true;
   }
 
   else if (!js1->GetRawButton(defenseButton) && isSolOut == true)
     isADown = false;
 
-  else if (js1->GetRawButton(defenseButton) && defenseMode == true && isADown == false)
+  else if (js1->GetRawButton(defenseButton) && defenseMode == true && isSolButtonDown == false)
   {
     defenseMode = false;
-    isADown = true;
+    isSolButtonDown = true;
   }
 
   else if (!js1->GetRawButton(defenseButton) && isSolOut == false)
@@ -175,6 +190,41 @@ void Robot::DefenseMode()
 
   if(defenseMode)
   {
+    solenoid->Set(false);
     lifter->SetLift(0);
   }
+}
+
+void Robot::CameraSwap()
+{
+  //code to swap the camera feed from one camera to another by pressing "Back" on controller 1
+  if (js1->GetRawButton(cameraButton) && currentCamera == 0 && Robot::isBackDown == false)
+  {
+    currentCamera = 1;
+    isBackDown = true;
+  }
+
+  else if (!js1->GetRawButton(cameraButton))
+    isBackDown = false;
+
+  if (js1->GetRawButton(cameraButton) && currentCamera == 1 && Robot::isBackDown == false)
+  {
+    currentCamera = 0;
+    isBackDown = true;
+  }
+
+  else if (!js1->GetRawButton(cameraButton))
+    isBackDown = false;
+
+  SmartDashboard::PutNumber("Current Camera", currentCamera);
+
+  /*if (js1->GetRawButton(cameraButton) && currentCamera == 2 && Robot::isBackDown == false)
+  {
+    currentCamera = 0;
+    isBackDown = true;
+  }
+
+  else if (!js1->GetRawButton(cameraButton))
+    isBackDown = false;
+  */
 }
