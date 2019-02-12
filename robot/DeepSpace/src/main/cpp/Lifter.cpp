@@ -13,7 +13,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 #include "Robot.h"
-#include <array.h>
+#include <array>
 
 
 int const ENCODER_ID = 8;
@@ -99,7 +99,7 @@ int Lifter::CheckHeight()
     int currentRotation;
     currentRotation = liftMotor.GetSelectedSensorPosition()/TALON_TICKS_PER_ROTATION;
 
-    for(int i = 0; i < levels.size(); i++){
+    for (int i = 0; i < (sizeof(levels))/8; i++) {
         if(currentRotation > levels[i] - slop && currentRotation < levels[i] + slop){
             currentHeight = i;
         }
