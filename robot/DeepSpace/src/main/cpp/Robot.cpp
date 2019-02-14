@@ -153,7 +153,7 @@ void Robot::RobotInit()
  * autonomous, teleoperated and test.
  *
  * <p> This runs after the mode specific periodic functions, but before
- * LiveWindow and SmartDashboard integrated updating.
+ * LiveWindow and SmartDashboard integrated updating
  */
 void Robot::RobotPeriodic() 
 {
@@ -176,6 +176,8 @@ void Robot::TeleopInit()
 {
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
+  SmartDashboard::PutBoolean("Vision Target Found", false);
+  
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
@@ -194,8 +196,16 @@ void Robot::TeleopPeriodic()
   currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
   double currentSpeed = rFront->GetMotorOutputPercent();
   SmartDashboard::PutNumber("Current Speed", currentSpeed);
-
-
+  SmartDashboard::PutBoolean("Vision Target Found", IsVisionTargetFound());
+  
+  // if (IsVisionTargetFound())
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", true);
+  // }
+  // else
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", false);
+  // }
   if (TURN_TO_ANGLE_ENABELED)
   {
      double targetAngle = 0.0;
@@ -241,6 +251,12 @@ void Robot::TeleopPeriodic()
   CameraSwap();
 
   buttonTimer++;
+}
+
+bool Robot::IsVisionTargetFound()
+{
+  //Need code here that evaluates the data from the camera and lets us know if target is found
+  return true;
 }
 
 void Robot::TestPeriodic() 

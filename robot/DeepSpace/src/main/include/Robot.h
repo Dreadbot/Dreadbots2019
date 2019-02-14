@@ -47,6 +47,7 @@ class Robot : public frc::TimedRobot {
   void DefenseMode();
   void CameraSwap();
   void AutoAlign();
+  bool IsVisionTargetFound();
 
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
