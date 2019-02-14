@@ -1,6 +1,6 @@
 #include "SparkDrive.h"
 #include <iostream>
-double const inchesToRotations = 1;
+double const inchesToRotations = .4134152;
 
 SparkDrive::SparkDrive(rev::CANSparkMax *lFront_in, rev::CANSparkMax *lBack_in, rev::CANSparkMax *rFront_in, rev::CANSparkMax *rBack_in) 
 : lFrontEncoder(lFront_in->GetEncoder()), rFrontEncoder(rFront_in->GetEncoder()), lBackEncoder(lBack_in->GetEncoder()), rBackEncoder(rBack_in->GetEncoder()), lFrontPID(lFront_in->GetPIDController()), rFrontPID(rFront_in->GetPIDController()), lBackPID(lBack_in->GetPIDController()), rBackPID(rBack_in->GetPIDController())
