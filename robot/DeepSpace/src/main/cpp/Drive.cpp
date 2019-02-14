@@ -15,7 +15,7 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 		double noMove = 0.2; //Dead area of the axes
 		double maxSpeed = .5; //normal (not turbo)
 		double rampUpFactor = 1.2; //how fast to increment speed
-		   
+		double currentSpeed = rFront->GetMotorOutputPercent(); //how fast are we going right now
 		double targetSpeed = 0.21; //speed we want to go to
 
 		if (fabs(xAxis) < noMove)
@@ -42,7 +42,10 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 		{	
 			maxSpeed = .5;
 		}
-
+		currentSpeed = currentSpeed + (lFront->GetMotorOutputPercent());
+		currentSpeed = currentSpeed + (rBack->GetMotorOutputPercent());
+		currentSpeed = currentSpeed + (lBack->GetMotorOutputPercent());
+		currentSpeed = currentSpeed / 4; 
 		//Set our target speed. If the current speed is 
 		//less than max speed, increment current speed by ramp
 		if (currentSpeed == 0.0)
