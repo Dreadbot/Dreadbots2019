@@ -1,6 +1,6 @@
 #include "SparkDrive.h"
 #include <iostream>
-double const inchesToRotations = 1;
+double const inchesToRotations = .4134152;
 
 SparkDrive::SparkDrive(rev::CANSparkMax *lFront_in, rev::CANSparkMax *lBack_in, rev::CANSparkMax *rFront_in, rev::CANSparkMax *rBack_in) 
 : lFrontEncoder(lFront_in->GetEncoder()), rFrontEncoder(rFront_in->GetEncoder()), lBackEncoder(lBack_in->GetEncoder()), rBackEncoder(rBack_in->GetEncoder()), lFrontPID(lFront_in->GetPIDController()), rFrontPID(rFront_in->GetPIDController()), lBackPID(lBack_in->GetPIDController()), rBackPID(rBack_in->GetPIDController())
@@ -114,6 +114,80 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 			rBack -> Set(speed);
 		}
 	}
+	
+	 void SparkDrive::RotateToAngle(double speed, double targetAngle, double currentAngle){
+		double rotSpeed = speed;
+		double angleSlop = 3;
+		double remainingAngle = targetAngle - currentAngle;
+		//targetAngle / fabs(currentAngle);
+
+				if (fabs(remainingAngle) > angleSlop)
+				{
+					if (remainingAngle > 20){
+						rotSpeed = 1;
+						rFront -> Set(rotSpeed);
+						lFront -> Set(-rotSpeed);
+						lBack -> Set(-rotSpeed);
+						rBack -> Set(rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					}
+					else if (remainingAngle <= 20 && remainingAngle > angleSlop){
+						rotSpeed = 0.5;
+						rFront -> Set(rotSpeed);
+						lFront -> Set(-rotSpeed);
+						lBack -> Set(-rotSpeed);
+						rBack -> Set(rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					}
+					else if (remainingAngle < -20){
+						rotSpeed = 1;
+						rFront -> Set(-rotSpeed);
+						lFront -> Set(rotSpeed);
+						lBack -> Set(rotSpeed);
+						rBack -> Set(-rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					} 
+					else if (remainingAngle >= -20 && remainingAngle < -angleSlop){
+						rotSpeed = 0.5;
+						rFront -> Set(-rotSpeed);
+						lFront -> Set(rotSpeed);
+						lBack -> Set(rotSpeed);
+						rBack -> Set(-rotSpeed);
+						remainingAngle = (targetAngle - currentAngle);
+					}
+					
+				}
+				else {
+					rFront -> Set(0);
+					lFront -> Set(0);
+					lBack -> Set(0);
+					rBack -> Set(0);
+				}
+				//else if goToTarget
+				// add different function where we travel to the vison target
+	 }
+
+
+	void SparkDrive::StrafeStraight(double speed, SparkDrive::StrafeDirection dir) {
+		switch(dir)
+		{
+		case SparkDrive::StrafeDirection::left:
+			lFront -> Set(-speed);
+			rFront -> Set(speed);
+			lBack -> Set(speed);
+			rBack -> Set(-speed);
+			break;
+		case SparkDrive::StrafeDirection::right:
+			lFront -> Set(speed);
+			rFront -> Set(-speed);
+			lBack -> Set(-speed);
+			rBack -> Set(speed);
+			break;
+		default:
+			break;
+		}
+	}
+
 	void SparkDrive::pidDrive(double inches)
 	{
 		lFrontPID.SetReference(inches * inchesToRotations, rev::ControlType::kPosition);
@@ -139,6 +213,5 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 	double SparkDrive::getrBackRotations()
 	{
 		double rotations = rBackEncoder.GetPosition();
-		std::cout << rotations << std::endl;
 		return rotations;
 	}

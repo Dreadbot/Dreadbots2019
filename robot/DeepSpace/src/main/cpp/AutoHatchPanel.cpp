@@ -7,9 +7,22 @@
 
 AutoHatchPanel::AutoHatchPanel() {}
 
-void AutoHatchPanel::alignToTarget() {}
+void AutoHatchPanel::alignToTarget() {
+
+}
 
 void AutoHatchPanel::driveToTarget() {}
 
-void AutoHatchPanel::placePanel() {}
+void AutoHatchPanel::placePanel(int level) {
+    lifter.SetLift(level);
+    suction.SetHatchPanelSuction(false);
+}
+
+void AutoHatchPanel::GrabPanel() {
+    if(lifter.GetCurrentLevel() > 0) {
+        lifter.SetLift(0);
+    }
+
+    suction.SetHatchPanelSuction(true);
+}
 

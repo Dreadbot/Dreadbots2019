@@ -83,11 +83,11 @@ int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
 bool const DRIVE_ENABLED = true;
-bool const LIFTER_ENABLED = true;
-bool const MANIPULATOR_ENABLED = true;
-bool const TURN_TO_ANGLE_ENABELED = true;
-bool const SOLENOID_TEST_ENABLED = true;
-bool const CLIMB_ENABLED = true;
+bool const LIFTER_ENABLED = false;
+bool const MANIPULATOR_ENABLED = false;
+bool const TURN_TO_ANGLE_ENABELED = false;
+bool const SOLENOID_TEST_ENABLED = false;
+bool const CLIMB_ENABLED = false;
 
 //-------------Talons-------------------
 //WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -103,6 +103,14 @@ bool const CLIMB_ENABLED = true;
 
 void Robot::RobotInit()
 {
+  
+    positionDecider.AddDefault("Left", 0);
+    positionDecider.AddObject("Center", 1);
+    positionDecider.AddObject("Right", 2);
+
+    gamePieceDecider.AddDefault("Hatch", 0);
+    gamePieceDecider.AddObject("Ball", 1);
+
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
   js2 = new frc::Joystick(1);        //Driver 2
@@ -180,7 +188,13 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 { 
- 
+  double targetAngle = 0.0;
+  double currentAngle = gyro->GetYaw();
+  targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
+  currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
+  double currentSpeed = rFront->GetMotorOutputPercent();
+  SmartDashboard::PutNumber("Current Speed", currentSpeed);
+
 
   if (TURN_TO_ANGLE_ENABELED)
   {
@@ -212,7 +226,8 @@ void Robot::TeleopPeriodic()
 
   if (DRIVE_ENABLED)
   {
-    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
 

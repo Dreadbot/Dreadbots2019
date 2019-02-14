@@ -7,6 +7,8 @@ class Drive
     public:
         Drive(WPI_TalonSRX *lFront_in, WPI_TalonSRX *lBack_in, WPI_TalonSRX *rFront_in, WPI_TalonSRX *rBack_in);
 
+        void MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton);
+
         void MecDrive(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton);
 
         void DriveStraight(double speed, double currentAngle);
@@ -17,6 +19,8 @@ class Drive
         void StrafeToDistance(StrafeDirection direction, int strafeDistance);
 
         int CalculateDistance(float inches);
+
+        void RampUpSpeed(double currentSpeed, double targetSpeed);
     private:
         WPI_TalonSRX *lFront;
         WPI_TalonSRX *lBack;

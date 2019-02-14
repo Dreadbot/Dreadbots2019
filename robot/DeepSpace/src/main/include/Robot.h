@@ -37,6 +37,11 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void TeleopLifterControl();
   void TeleopManipulatorControl();
+  void AutonBall(int position);
+  void AutonHatch(int position);
+  int AutonPositionDecider();
+  int AutonGamePieceDecider();
+  void RunAuton();
   void Climb();
   void ElectricSolenoidTest(frc::Solenoid *solenoid);
   void DefenseMode();
@@ -116,6 +121,10 @@ double currentAngle;
 double x1, y1, x2, y2, cameraAngle, cameraLength;
 Drive::StrafeDirection strafeDirection;
 
+int autoState;
+frc::SendableChooser<int> positionDecider;
+frc::SendableChooser<int> gamePieceDecider;
+   
 //-----------TeleopVariables---------
 int climbState;
 bool defenseMode = false;
