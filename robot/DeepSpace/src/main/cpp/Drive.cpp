@@ -15,8 +15,8 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 		double noMove = 0.2; //Dead area of the axes
 		double maxSpeed = .5; //normal (not turbo)
 		double rampUpFactor = 1.2; //how fast to increment speed
-		double currentSpeed = rFront->GetMotorOutputPercent(); //how fast are we going right now
-		double targetSpeed = 0.0; //speed we want to go to
+		   
+		double targetSpeed = 0.21; //speed we want to go to
 
 		if (fabs(xAxis) < noMove)
 		{	
@@ -45,7 +45,7 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 
 		//Set our target speed. If the current speed is 
 		//less than max speed, increment current speed by ramp
-		if (currentSpeed == 0)
+		if (currentSpeed == 0.0)
 		{
 			targetSpeed = 0.3;
 		}
@@ -57,7 +57,7 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 			{
 				targetSpeed = maxSpeed;
 			}
-			std::cout << "TargetSpeed = " << targetSpeed << std::endl;
+			std::cout << "TargetSpeed = " << targetSpeed << "  CurrentSpeed = " << currentSpeed << std::endl;
 		}
 		else
 		{
@@ -128,6 +128,7 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 	{
 		double noMove = 0.2; //Dead area of the axes
 		double maxSpeed = .5; //normal speed (not turbo)
+		double currentSpeed = rFront->GetMotorOutputPercent();
 
 		if (fabs(xAxis) < noMove)
 			xAxis = 0.0;
@@ -168,6 +169,7 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 		lBack -> Set(ControlMode::PercentOutput, lBackSpeed*maxSpeed);
 		rFront -> Set(ControlMode::PercentOutput, rFrontSpeed*maxSpeed);
 		rBack -> Set(ControlMode::PercentOutput, rBackSpeed*maxSpeed);
+		std::cout << "CurrentSpeed = " << currentSpeed << std::endl;
 	}
 
 	 void Drive::RotateToAngle(double speed, double targetAngle, double currentAngle){
@@ -237,33 +239,8 @@ void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
 			rBack->Set(ControlMode::Position, strafeDistance);
 	}
 }
-void Drive::RampUpSpeed(double currentSpeed, double targetSpeed)
-{
-	if(currentSpeed = 0)
-	{
-		currentSpeed = 0.3;//how do we know if we want to go forwards or backwords
-		if(currentSpeed < targetSpeed)
-		{
-		currentSpeed = currentSpeed * 1.2;
-		}
-		else if (currentSpeed >= targetSpeed)
-		{
-		currentSpeed = targetSpeed;
-		}
-	}
-	else
-	{
-		if(currentSpeed < targetSpeed)
-		{
-		currentSpeed = currentSpeed * 1.2;
-		}
-		else if (currentSpeed >= targetSpeed)
-		{
-		currentSpeed = targetSpeed;
-		}
-	}
-	
-}
+
+
 
 const float driveGearRatio = 5;
 const float driveGearDiameter = 3.5;
