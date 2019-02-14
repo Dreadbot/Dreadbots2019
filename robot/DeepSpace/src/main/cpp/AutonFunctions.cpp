@@ -26,3 +26,70 @@ void Robot::AutoAlign()
 
     drive->StrafeToDistance(strafeDirection, 5);
 }
+void Robot::AutonHatch(int position)
+{
+    if(position > 3)
+    {
+        std::cout << "invalid position number" <<  std::endl;
+    }
+
+    else if(position == 0)
+    {
+        if(autoState == 1 && sparkDrive->getlFrontRotations() >= 1)
+        {
+            autoState = 2;
+        }
+        else if(autoState == 2 && sparkDrive->getlFrontRotations() >= 2)
+        {
+            autoState = 3;
+        }
+        else if(autoState == 3)
+        {
+            autoState = 4;
+        }
+        else if(autoState == 4)
+        {
+            autoState == 5;
+        }
+
+        if(autoState == 1)
+        {
+            sparkDrive->pidDrive(3);
+        }
+        if(autoState == 2)
+        {  
+            sparkDrive->RotateToAngle(0.5, 90, gyro->GetYaw());
+        }
+        if(autoState == 3)
+        {
+            sparkDrive->pidDrive(4);
+        }
+        if(autoState == 4)
+        {
+            solenoid->Set(false);
+        }
+    }
+}
+void Robot::AutonBall(int position)
+{
+    
+}
+int Robot::AutonPositionDecider()
+{
+    return positionDecider.GetSelected();
+}
+int Robot::AutonGamePieceDecider()
+{
+    return gamePieceDecider.GetSelected();
+}
+void Robot::RunAuton()
+{
+    if(AutonGamePieceDecider() == 0)
+    {
+        AutonHatch(AutonPositionDecider());        
+    }
+    if(AutonGamePieceDecider() == 1)
+    {
+        AutonBall(AutonPositionDecider());
+    }
+}
