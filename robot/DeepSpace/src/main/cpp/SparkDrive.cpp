@@ -119,13 +119,20 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 		}
 	}
 
-	void SparkDrive::StrafeStraight(double currentAngle, double targetAngle, double xSpeed) //real one
+	void Drive::StrafeStraight(double currentAngle, double targetAngle, double xSpeed) //real one
 	{
-	double difference = currentAngle - targetAngle; //(-) = left, (+) = right
+	double difference = targetAngle - currentAngle; //(-) = left, (+) = right
 	//double rightDifference = currentAngle - targetAngle;
-	double rotSpeed = difference / 30;
-
-	MecDrive(xSpeed, 0, rotSpeed, true, false);
+		if(difference > 5)
+		{
+		double rotSpeed = difference / 30;	
+		MecDrive(xSpeed, 0, rotSpeed, true, false);
+		}
+		else if(difference < 5)
+		{
+		double rotSpeed = difference / 30;
+		MecDrive(xSpeed, 0, rotSpeed, true, false);                                                                                                                                          
+		}
 	}
 	
 	 void SparkDrive::RotateToAngle(double speed, double targetAngle, double currentAngle){
