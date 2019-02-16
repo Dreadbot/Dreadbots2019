@@ -1,6 +1,9 @@
 #include "SparkDrive.h"
 #include <iostream>
+#include "AHRS.h"
 double const inchesToRotations = .4134152;
+
+AHRS *gyro;
 
 SparkDrive::SparkDrive(rev::CANSparkMax *lFront_in, rev::CANSparkMax *lBack_in, rev::CANSparkMax *rFront_in, rev::CANSparkMax *rBack_in) 
 : lFrontEncoder(lFront_in->GetEncoder()), rFrontEncoder(rFront_in->GetEncoder()), lBackEncoder(lBack_in->GetEncoder()), rBackEncoder(rBack_in->GetEncoder()), lFrontPID(lFront_in->GetPIDController()), rFrontPID(rFront_in->GetPIDController()), lBackPID(lBack_in->GetPIDController()), rBackPID(rBack_in->GetPIDController())
@@ -85,6 +88,7 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 		rBack -> Set(rBackSpeed*maxSpeed);
 	}
 
+//for function to work, gyro must be zeroed
 	void SparkDrive::DriveStraight(double speed, double currentAngle)
 	{
 		leftDifference = currentAngle*.05;
@@ -113,6 +117,15 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 			lBack -> Set(-speed);
 			rBack -> Set(speed);
 		}
+	}
+
+	void SparkDrive::StrafeStraight(double currentAngle, double targetAngle, double xSpeed) //real one
+	{
+	double difference = currentAngle - targetAngle; //(-) = left, (+) = right
+	//double rightDifference = currentAngle - targetAngle;
+	double rotSpeed = difference / 30;
+
+	MecDrive(xSpeed, 0, rotSpeed, true, false);
 	}
 	
 	 void SparkDrive::RotateToAngle(double speed, double targetAngle, double currentAngle){
@@ -168,7 +181,8 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 	 }
 
 
-	void SparkDrive::StrafeStraight(double speed, SparkDrive::StrafeDirection dir) {
+	void SparkDrive::StrafeStraight(double speed, SparkDrive::StrafeDirection dir) //regular strafe
+	{
 		switch(dir)
 		{
 		case SparkDrive::StrafeDirection::left:

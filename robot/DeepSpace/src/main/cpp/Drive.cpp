@@ -226,6 +226,28 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 				//else if goToTarget
 				// add different function where we travel to the vison target
 	 }
+void Drive::Strafe(std::string side)
+	{
+		double autonSpeed = 0.0;
+		if(side == "left")
+		{
+			lFront ->Set(ControlMode :: PercentOutput, autonSpeed);
+			lBack ->Set(ControlMode :: PercentOutput, -autonSpeed);
+			rFront ->Set(ControlMode :: PercentOutput, autonSpeed);
+			rBack ->Set(ControlMode :: PercentOutput, -autonSpeed);
+		}
+		else if(side == "right")
+		{
+			lFront ->Set(ControlMode :: PercentOutput, -autonSpeed);
+			lBack ->Set(ControlMode :: PercentOutput, autonSpeed);
+			rFront ->Set(ControlMode :: PercentOutput, -autonSpeed);
+			rBack ->Set(ControlMode :: PercentOutput, autonSpeed);
+		}
+	}
+void Drive::StrafeStraight(std::string side)
+	{
+
+	}
 void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
 {
 	switch(direction)
