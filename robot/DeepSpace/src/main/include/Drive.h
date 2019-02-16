@@ -15,6 +15,9 @@ class Drive
        
         void RotateToAngle(double speed, double targetAngle, double currentAngle);
 
+        void Strafe(std::string side);
+	    void StrafeStraight(double currentAngle, double targetAngle, double xSpeed);
+
         enum StrafeDirection{LEFT, RIGHT};
         void StrafeToDistance(StrafeDirection direction, int strafeDistance);
 
@@ -26,6 +29,8 @@ class Drive
         WPI_TalonSRX *lBack;
         WPI_TalonSRX *rFront;
         WPI_TalonSRX *rBack;
+
+        //AHRS *gyro;
 
         double teleMaxSpeed = 0.5;
 

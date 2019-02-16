@@ -153,7 +153,7 @@ void Robot::RobotInit()
  * autonomous, teleoperated and test.
  *
  * <p> This runs after the mode specific periodic functions, but before
- * LiveWindow and SmartDashboard integrated updating.
+ * LiveWindow and SmartDashboard integrated updating
  */
 void Robot::RobotPeriodic() 
 {
@@ -169,13 +169,16 @@ void Robot::AutonomousPeriodic()
 {
   currentAngle = gyro->GetYaw();
 
-  drive->DriveStraight(.3, currentAngle);
+  //drive->DriveStraight(.3, currentAngle);
+  drive->StrafeStraight(currentAngle, 0, 0.25);
 }
 
 void Robot::TeleopInit()
 {
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
+  SmartDashboard::PutBoolean("Vision Target Found", false);
+  
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
@@ -194,7 +197,16 @@ void Robot::TeleopPeriodic()
   currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
   double currentSpeed = rFront->GetMotorOutputPercent();
   SmartDashboard::PutNumber("Current Speed", currentSpeed);
-
+  SmartDashboard::PutBoolean("Vision Target Found", IsVisionTargetFound());
+  
+  // if (IsVisionTargetFound())
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", true);
+  // }
+  // else
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", false);
+  // }
 
   if (TURN_TO_ANGLE_ENABELED)
   {
@@ -226,7 +238,10 @@ void Robot::TeleopPeriodic()
 
   if (DRIVE_ENABLED)
   {
-    drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //MecDrive2 DOES NOT WORK with rotating right
+    //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+
     //sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
@@ -241,6 +256,11 @@ void Robot::TeleopPeriodic()
   CameraSwap();
 
   buttonTimer++;
+}
+
+bool Robot::IsVisionTargetFound()
+{
+  return true;
 }
 
 void Robot::TestPeriodic() 

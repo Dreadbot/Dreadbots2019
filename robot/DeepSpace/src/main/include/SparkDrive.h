@@ -11,6 +11,8 @@ class SparkDrive
 
         void DriveStraight(double speed, double currentAngle);
 
+        void StrafeStraight(double currentAngle, double targetAngle, double xSpeed);
+
         void RotateToAngle(double speed, double targetAngle, double currentAngle);
 
         enum StrafeDirection{left, right};
@@ -40,6 +42,8 @@ class SparkDrive
         rev::CANSparkMax *rBack;
 
         double teleMaxSpeed = 0.5;
+
+        bool done = false;
 
         double leftDifference;
         double rightDifference;

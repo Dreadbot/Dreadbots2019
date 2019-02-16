@@ -21,7 +21,7 @@ void Robot::AutoAlign()
 
     if(x1 > 330)
     {
-
+        //strafeDirection = LEFT;
     }
 
     drive->StrafeToDistance(strafeDirection, 5);
