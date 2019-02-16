@@ -169,7 +169,8 @@ void Robot::AutonomousPeriodic()
 {
   currentAngle = gyro->GetYaw();
 
-  drive->DriveStraight(.3, currentAngle);
+  //drive->DriveStraight(.3, currentAngle);
+  drive->StrafeStraight(currentAngle, 0, 0.25);
 }
 
 void Robot::TeleopInit()
@@ -206,7 +207,7 @@ void Robot::TeleopPeriodic()
   // {
   //   SmartDashboard::PutBoolean("Vision Target Found", false);
   // }
-  
+
   if (TURN_TO_ANGLE_ENABELED)
   {
      double targetAngle = 0.0;
@@ -237,7 +238,10 @@ void Robot::TeleopPeriodic()
 
   if (DRIVE_ENABLED)
   {
-    drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //MecDrive2 DOES NOT WORK with rotating right
+    //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+
     //sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
@@ -256,7 +260,6 @@ void Robot::TeleopPeriodic()
 
 bool Robot::IsVisionTargetFound()
 {
-  //Need code here that evaluates the data from the camera and lets us know if target is found
   return true;
 }
 

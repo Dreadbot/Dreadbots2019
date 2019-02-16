@@ -244,9 +244,20 @@ void Drive::Strafe(std::string side)
 			rBack ->Set(ControlMode :: PercentOutput, autonSpeed);
 		}
 	}
-void Drive::StrafeStraight(std::string side)
+	void Drive::StrafeStraight(double currentAngle, double targetAngle, double xSpeed) //real one
 	{
-
+	double difference = targetAngle - currentAngle; //(-) = left, (+) = right
+	//double rightDifference = currentAngle - targetAngle;
+		if(difference > 5)
+		{
+		double rotSpeed = difference / 30;	
+		MecDrive(xSpeed, 0, rotSpeed, true, false);
+		}
+		else if(difference < 5)
+		{
+		double rotSpeed = difference / 30;
+		MecDrive(xSpeed, 0, rotSpeed, true, false);                                                                                                                                          
+		}
 	}
 void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
 {
