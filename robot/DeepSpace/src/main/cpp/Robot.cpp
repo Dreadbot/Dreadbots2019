@@ -105,12 +105,12 @@ void Robot::RobotInit()
 {
     //CameraServer::GetInstance()->StartAutomaticCapture();
 
-    positionDecider.AddDefault("Left", 0);
-    positionDecider.AddObject("Center", 1);
-    positionDecider.AddObject("Right", 2);
+    positionDecider.SetDefaultOption("Left", 0);
+    positionDecider.AddOption("Center", 1);
+    positionDecider.AddOption("Right", 2);
 
-    gamePieceDecider.AddDefault("Hatch", 0);
-    gamePieceDecider.AddObject("Ball", 1);
+    gamePieceDecider.SetDefaultOption("Hatch", 0);
+    gamePieceDecider.AddOption("Ball", 1);
 
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
