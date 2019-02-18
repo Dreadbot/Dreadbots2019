@@ -48,6 +48,7 @@ class Robot : public frc::TimedRobot {
   void CameraSwap();
   void AutoAlign();
   bool IsVisionTargetFound();
+  void StrafeToAlign(std::string direction);
 
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
@@ -73,6 +74,7 @@ int const defenseButton = 2;
 int const engageSol = 3;
 int const disengageSol = 4;
 int const cameraButton = 9;
+int const alignMacro = 5;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
@@ -98,10 +100,10 @@ frc::Solenoid *solenoid = new frc::Solenoid(4);
 bool isSolOut = false;
 
 //-------------Talons-------------------
-//WPI_TalonSRX *lFront; //left front
-//WPI_TalonSRX *rFront; //right front
-//WPI_TalonSRX *lBack; //left rear
-//WPI_TalonSRX *rBack; //right rear
+WPI_TalonSRX *lFront; //left front
+WPI_TalonSRX *rFront; //right front
+WPI_TalonSRX *lBack; //left rear
+WPI_TalonSRX *rBack; //right rear
 rev::CANSparkMax *lFrontSpark;
 rev::CANSparkMax *rFrontSpark;
 rev::CANSparkMax *lBackSpark;

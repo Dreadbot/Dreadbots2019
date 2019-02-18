@@ -73,6 +73,7 @@ int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
+int const alignMacro = 5;
 //js2
 int const upButton = 6; 
 int const downButton = 8;
@@ -82,12 +83,13 @@ int const ballPickup = 1;
 int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
-bool const DRIVE_ENABLED = true;
-bool const LIFTER_ENABLED = true;
-bool const MANIPULATOR_ENABLED = true;
+bool const DRIVE_ENABLED = false;
+bool const LIFTER_ENABLED = false;
+bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = false;
-bool const CLIMB_ENABLED = true;
+bool const CLIMB_ENABLED = false;
+bool const VISION_ENABLED = true;
 
 //-------------Talons-------------------
 //WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -117,10 +119,10 @@ void Robot::RobotInit()
   js2 = new frc::Joystick(1);        //Driver 2
   js3 = new frc::Joystick(2);        //Backup Manual Controls
                                      //-------------Talons-------------------
-  // lFront = new WPI_TalonSRX(0);      //left front
-  // rFront = new WPI_TalonSRX(1);      //right front
-  // lBack = new WPI_TalonSRX(2);       //left rear
-  // rBack = new WPI_TalonSRX(3);       //right rear
+  lFront = new WPI_TalonSRX(0);      //left front
+  rFront = new WPI_TalonSRX(1);      //right front
+  lBack = new WPI_TalonSRX(2);       //left rear
+  rBack = new WPI_TalonSRX(3);       //right rear
                                      //-------------Sparks-------------------
   lFrontSpark = new rev::CANSparkMax(0, rev::CANSparkMax::MotorType::kBrushless);
   rFrontSpark = new rev::CANSparkMax(1, rev::CANSparkMax::MotorType::kBrushless);
@@ -135,7 +137,7 @@ void Robot::RobotInit()
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
   lifter = new Lifter();
-  //drive = new Drive(lFront, lBack, rFront, rBack);
+  drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
   stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
@@ -192,6 +194,12 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 { 
+  if(VISION_ENABLED)
+  {
+    std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
+    std::cout << "direction: " << direction << std::endl;
+    StrafeToAlign(direction);
+  }
   lifter->TesterLift(0);
   double targetAngle = 0.0;
   double currentAngle = gyro->GetYaw();

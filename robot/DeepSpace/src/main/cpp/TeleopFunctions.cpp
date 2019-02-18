@@ -3,6 +3,7 @@
 #include "frc/WPILib.h"
 #include "DoubleManipulator.h"
 #include <Stilts.h>
+#include <string.h>
 
 void Robot::TeleopLifterControl()
 {
@@ -229,4 +230,26 @@ void Robot::CameraSwap()
   else if (!js1->GetRawButton(cameraButton))
     isBackDown = false;
   */
+}
+
+void Robot::StrafeToAlign (std::string direction)
+{
+  if(js1->GetRawButton(alignMacro))
+  {
+    if(direction == "correct")
+    {
+      drive->MecDrive(0, 0, 0, false, false);
+    }
+    else if (direction == "right")
+    {
+      drive->MecDrive(.4, 0, 0, true, false);
+    }
+    else if(direction == "left")
+    {
+      drive->MecDrive(-0.4, 0, 0, true, false);
+    }
+  }
+  else{
+    drive->MecDrive(0, 0, 0, false, false);
+  }
 }
