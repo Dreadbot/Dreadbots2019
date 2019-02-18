@@ -117,10 +117,10 @@ void Robot::RobotInit()
   js2 = new frc::Joystick(1);        //Driver 2
   js3 = new frc::Joystick(2);        //Backup Manual Controls
                                      //-------------Talons-------------------
-  // lFront = new WPI_TalonSRX(0);      //left front
-  // rFront = new WPI_TalonSRX(1);      //right front
-  // lBack = new WPI_TalonSRX(2);       //left rear
-  // rBack = new WPI_TalonSRX(3);       //right rear
+  lFront = new WPI_TalonSRX(0);      //left front
+  rFront = new WPI_TalonSRX(1);      //right front
+  lBack = new WPI_TalonSRX(2);       //left rear
+  rBack = new WPI_TalonSRX(3);       //right rear
                                      //-------------Sparks-------------------
   lFrontSpark = new rev::CANSparkMax(0, rev::CANSparkMax::MotorType::kBrushless);
   rFrontSpark = new rev::CANSparkMax(1, rev::CANSparkMax::MotorType::kBrushless);
@@ -135,7 +135,7 @@ void Robot::RobotInit()
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
   lifter = new Lifter();
-  //drive = new Drive(lFront, lBack, rFront, rBack);
+  drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
   stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
   gyro->ZeroYaw();
@@ -172,6 +172,7 @@ void Robot::AutonomousPeriodic()
   currentAngle = gyro->GetYaw();
 
   //drive->DriveStraight(.3, currentAngle);
+ // drive->StrafeStraight(currentAngle, 0, 0.25);
 }
 
 void Robot::TeleopInit()
@@ -197,18 +198,26 @@ void Robot::TeleopPeriodic()
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
   currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
-  //double currentSpeed = rFront->GetMotorOutputPercent();
-  //SmartDashboard::PutNumber("Current Speed", currentSpeed);
-  //I'm typing with my hands
-  //if (RAMP_UP_ENABLED)
- //{
-   // drive->RampUpSpeed(currentSpeed, maxSpeed);
-  //}
+  double currentSpeed = rFront->GetMotorOutputPercent();
+  SmartDashboard::PutNumber("Current Speed", currentSpeed);
+  SmartDashboard::PutBoolean("Vision Target Found", IsVisionTargetFound());
+  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceDownBack());
+  SmartDashboard::PutNumber("Ultra Front Distace", ultra->getDistanceDownFront());
+  
+  // if (IsVisionTargetFound())
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", true);
+  // }
+  // else
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", false);
+  // }
+
   if (TURN_TO_ANGLE_ENABELED)
   {
      double targetAngle = 0.0;
      double currentAngle = gyro->GetYaw();
-     //drive->RotateToAngle(0.5, targetAngle, currentAngle);
+     drive->RotateToAngle(0.5, targetAngle, currentAngle);
      targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
      currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
   }
@@ -245,8 +254,11 @@ void Robot::TeleopPeriodic()
 
   if (DRIVE_ENABLED)
   {
+    //MecDrive2 DOES NOT WORK with rotating right
     //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+
+    //sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
 

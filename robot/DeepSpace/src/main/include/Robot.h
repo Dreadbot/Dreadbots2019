@@ -98,10 +98,10 @@ frc::Solenoid *solenoid = new frc::Solenoid(4);
 bool isSolOut = false;
 
 //-------------Talons-------------------
-//WPI_TalonSRX *lFront; //left front
-//WPI_TalonSRX *rFront; //right front
-//WPI_TalonSRX *lBack; //left rear
-//WPI_TalonSRX *rBack; //right rear
+WPI_TalonSRX *lFront; //left front
+WPI_TalonSRX *rFront; //right front
+WPI_TalonSRX *lBack; //left rear
+WPI_TalonSRX *rBack; //right rear
 rev::CANSparkMax *lFrontSpark;
 rev::CANSparkMax *rFrontSpark;
 rev::CANSparkMax *lBackSpark;
