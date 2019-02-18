@@ -87,7 +87,7 @@ bool const DRIVE_ENABLED = false;
 bool const LIFTER_ENABLED = false;
 bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
-bool const SOLENOID_TEST_ENABLED = false;
+bool const SOLENOID_TEST_ENABLED = true;
 bool const CLIMB_ENABLED = false;
 bool const VISION_ENABLED = true;
 
@@ -257,12 +257,22 @@ void Robot::TeleopPeriodic()
     {
       TeleopManipulatorControl();
     }
-    if(SOLENOID_TEST_ENABLED){
+    if(SOLENOID_TEST_ENABLED)
+    {
       //ElectricSolenoidTest(solenoid);
+      if(js1->GetRawButton(engageSol)) 
+      {
+     // std::cout << "engaging sol" << std::endl;
+      manipulator->GrabPanel(solenoid);
+      }
+      else if(js1->GetRawButton(disengageSol))
+      {
+     // std::cout << "disengaging sol" << std::endl;
+      manipulator->ReleasePanel(solenoid); 
+      } 
     }
   }
-
-  if (DRIVE_ENABLED)
+ if (DRIVE_ENABLED)
   {
     //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
     //sparkDrive->MecDrive(js1->GetRawAxis(joy    stickX), -(js1->GetRawAxis(joystickY)),
