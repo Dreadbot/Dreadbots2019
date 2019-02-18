@@ -83,7 +83,7 @@ int const ballPickup = 1;
 int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
-bool const DRIVE_ENABLED = false;
+bool const DRIVE_ENABLED = true;
 bool const LIFTER_ENABLED = false;
 bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
@@ -262,12 +262,12 @@ void Robot::TeleopPeriodic()
       //ElectricSolenoidTest(solenoid);
       if(js1->GetRawButton(engageSol)) 
       {
-     // std::cout << "engaging sol" << std::endl;
+      std::cout << "engaging sol" << std::endl;
       manipulator->GrabPanel(solenoid);
       }
       else if(js1->GetRawButton(disengageSol))
       {
-     // std::cout << "disengaging sol" << std::endl;
+      std::cout << "disengaging sol" << std::endl;
       manipulator->ReleasePanel(solenoid); 
       } 
     }
@@ -275,8 +275,8 @@ void Robot::TeleopPeriodic()
  if (DRIVE_ENABLED)
   {
     //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    //sparkDrive->MecDrive(js1->GetRawAxis(joy    stickX), -(js1->GetRawAxis(joystickY)),
-              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton);
+    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
 
 
