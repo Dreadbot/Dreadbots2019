@@ -74,8 +74,8 @@ int const alignMacro = 5;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
-int const lowerManipulator = 5;
-int const raiseManipulator = 7;
+int const lowerManipulator = 7;
+int const raiseManipulator = 5;
 int const manualOverrideButton = 3;
 int const climbButton = 10;
 int const ballPickup = 1;

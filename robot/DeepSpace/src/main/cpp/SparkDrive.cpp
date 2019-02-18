@@ -60,7 +60,7 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 			maxSpeed = 1;
 
 		else if (slowButton)
-			maxSpeed = .3;
+			maxSpeed = .2;
 
 		else
 			maxSpeed = .5;
@@ -82,10 +82,10 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 		if (fabs(rBackSpeed) > 1)
 			rBackSpeed = fabs(rBackSpeed) / rBackSpeed;
 
-		lFront -> Set(lFrontSpeed*maxSpeed);
-		lBack -> Set(lBackSpeed*maxSpeed);
-		rFront -> Set(rFrontSpeed*maxSpeed);
-		rBack -> Set(rBackSpeed*maxSpeed);
+		lFront -> Set(-1*lFrontSpeed*maxSpeed);
+		lBack -> Set(-1*lBackSpeed*maxSpeed);
+		rFront -> Set(-1*rFrontSpeed*maxSpeed);
+		rBack -> Set(-1*rBackSpeed*maxSpeed);
 	}
 
 //for function to work, gyro must be zeroed

@@ -50,7 +50,7 @@ Lifter::Lifter() {
 
 void Lifter::TesterLift(double position)
 {
-    std::cout << "Currently at: " << liftMotor.GetSelectedSensorPosition() << std::endl;
+    //std::cout << "Currently at: " << liftMotor.GetSelectedSensorPosition() << std::endl;
     //std::cout << "going to: " << position << std::endl;
 }
 void Lifter::SetLift(int level) 

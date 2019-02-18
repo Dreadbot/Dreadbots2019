@@ -189,7 +189,8 @@ void Robot::TeleopInit()
   buttonTimer = 0;
 
   if(MANIPULATOR_ENABLED) {
-    manipulator->RotateWrist(0); 
+    //manipulator->RotateWrist(0); 
+
   }
 }
 
@@ -236,7 +237,7 @@ void Robot::TeleopPeriodic()
   { 
     if(CLIMB_ENABLED)
     {
-      Climb();
+      //Climb();
     }
     if(LIFTER_ENABLED)
     {
@@ -274,7 +275,10 @@ void Robot::TeleopPeriodic()
   }
  if (DRIVE_ENABLED)
   {
+    //MecDrive2 DOES NOT WORK with rotating right
+    //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
     //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+
     sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
@@ -298,18 +302,18 @@ void Robot::TeleopPeriodic()
     {
        if(js3->GetRawButton(2))
        {
-         stilts->setBackToHeight(3);
-         stilts->setFrontToHeight(3);
+         stilts->ThreeStageHeight(6);
+         stilts->ThreeStageHeight(6);
        }
        else if(js3->GetRawButton(3))
        {
-         stilts->setBackToHeight(0);
-         stilts->setFrontToHeight(0);
+         stilts->ThreeStageHeight(0);
+         stilts->ThreeStageHeight(0);
        }
        else if(js3->GetRawButton(4))
        {
-          stilts->setBackToHeight(-3);
-          stilts->setFrontToHeight(-3);
+          stilts->ThreeStageHeight(-3);
+          stilts->ThreeStageHeight(-3);
        }
     }
   }
