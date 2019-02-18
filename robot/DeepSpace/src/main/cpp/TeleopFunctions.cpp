@@ -95,7 +95,7 @@ void Robot::Climb()
       {
         climbState = 2; //Drive the stilt wheel
       }
-      else if (climbState == 2 && frontUltra->getDistanceDownFront() <= 5)
+      else if (climbState == 2 && frontUltra->getDistanceLeftFront() <= 5)
       {
         climbState = 3; //Retract front
       }

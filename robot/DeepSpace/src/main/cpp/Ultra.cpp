@@ -13,7 +13,7 @@ float Ultra::getDistanceLeftFront()
 {
     m_leftFront->GetRangeInches();
 }
-float Ultra::getDistanceRightBack()
+float Ultra::getDistanceRightFront()
 {
     m_rightFront->GetRangeInches();
 }
