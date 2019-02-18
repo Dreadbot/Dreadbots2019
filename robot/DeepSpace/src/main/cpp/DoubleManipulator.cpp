@@ -19,7 +19,8 @@
 //const int WRIST_ID = 0;
 //const int WHEEL_ID = 1;
 const int SAFETY_TIMEOUT_SECONDS = 5;
-double positions[] = {0, 5.0, 10.0, 15.0};
+const int GEAR_RATIO = 70;
+double positions[] = {0, -5.0, -10.0, -15.0};
 //TalonSRX wrist = {WRIST_ID};
 //TalonSRX intakeWheels = {WHEEL_ID};
 
@@ -30,13 +31,19 @@ void DoubleManipulator::Init()
     wrist.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
 
     wrist.SetSensorPhase(true);
-    wrist.ConfigClosedLoopPeakOutput(0, .5);
+    wrist.ConfigClosedLoopPeakOutput(0, 1);
     currentPosition = 0;
     wrist.SetSelectedSensorPosition(0);
 
     wrist.SetSafetyEnabled(false);
     // liftMotor.StopMotor();
     wrist.SetExpiration(SAFETY_TIMEOUT_SECONDS);
+    wrist.Config_kP(0, 0.7);
+    wrist.Config_kI(0, 1e-4);
+    wrist.Config_kD(0, 1);
+    wrist.Set(ControlMode::Position, 0);
+    currentPosition = 0;
+    wrist.Set(ControlMode::PercentOutput, 0);
 
     //intakeWheels.SetSensorPhase(true);
     //intakeWheels.SetSelectedSensorPosition(0);
@@ -49,7 +56,7 @@ void DoubleManipulator::RotateWrist(int position)
     std::cout << "moving to position: " << (positions[position] * TALON_TICKS_PER_ROTATION) << std::endl;
     std::cout << "Motor Position: " << wrist.GetSelectedSensorPosition() << std::endl;
     currentPosition = position;
-    wrist.Set(ControlMode::Position, (positions[position] * TALON_TICKS_PER_ROTATION));
+    wrist.Set(ControlMode::Position, ((positions[position] * TALON_TICKS_PER_ROTATION)*GEAR_RATIO));
 }
 
 void DoubleManipulator::SpinWheels(double motorSpeed)
