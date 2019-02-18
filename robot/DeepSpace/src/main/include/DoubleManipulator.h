@@ -19,8 +19,8 @@ class DoubleManipulator {
   void Init();
   void RotateWrist(int position);
   void SpinWheels(double motorSpeed);
-  void GrabPanel();
-  void ReleasePanel();
+  void GrabPanel(Solenoid *sol);
+  void ReleasePanel(Solenoid *sol);
   void IncrementPosition();
   void SetBallPickup(bool value);
   bool CheckBallPickup();

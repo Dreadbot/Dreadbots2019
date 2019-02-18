@@ -21,7 +21,7 @@
 #include "AutoHatchPanel.h"
 #include <AHRS.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/shuffleboard/Shuffleboard.h> 
+#include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
 #include <SparkDrive.h>
 double const TALON_TICKS_PER_ROTATION = 4096;
 float const LEVEL_3_HEIGHT = 21.5;
@@ -49,7 +49,6 @@ class Robot : public frc::TimedRobot {
   void AutoAlign();
   bool IsVisionTargetFound();
   void StrafeToAlign(std::string direction);
-
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
 frc::Joystick *js2; //Driver 2

@@ -5,11 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+#include "Robot.h"
 #include "DoubleManipulator.h"
 
 #include "ctre/Phoenix.h"
 #include "frc/WPILib.h"
-#include "Robot.h"
 
 //const int WRIST_ID = 0;
 //const int WHEEL_ID = 1;
@@ -52,14 +52,14 @@ void DoubleManipulator::SpinWheels(double motorSpeed)
     intakeWheels.Set(ControlMode::PercentOutput, motorSpeed);
 }
 
-void DoubleManipulator::GrabPanel()
+void DoubleManipulator::GrabPanel(Solenoid *sol)
 {
-    //uses 1 solenoid
+    sol->Set(true);
 }
 
-void DoubleManipulator::ReleasePanel()
+void DoubleManipulator::ReleasePanel(Solenoid *sol)
 {
-    //uses 1 solenoid
+    sol->Set(false);
 }
 
 void DoubleManipulator::SetBallPickup(bool value)
