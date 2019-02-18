@@ -127,11 +127,11 @@ void Robot::RobotInit()
   lBackSpark = new rev::CANSparkMax(2, rev::CANSparkMax::MotorType::kBrushless);
   rBackSpark = new rev::CANSparkMax(3, rev::CANSparkMax::MotorType::kBrushless);
                                      //-------Talons pt.2: Electric Boogaloo-----
-  frontStilts = new WPI_TalonSRX(5); //motor that pushes down the front stilts
-  backStilts = new WPI_TalonSRX(7);  //motor that pushes down the back stilts
-  driveStilts = new WPI_TalonSRX(9); //motor that drives the wheels on the stilts
   wrist = new WPI_TalonSRX(4);       //motor that rotates the manipulator wrist
-  intakeWheels = new WPI_TalonSRX(6);//motor that spins the intake wheels on the manipulator
+  intakeWheels = new WPI_TalonSRX(5);//motor that spins the intake wheels on the manipulator
+  backStilts = new WPI_TalonSRX(6);  //motor that pushes down the back stilts
+  driveStilts = new WPI_TalonSRX(7); //motor that drives the wheels on the stilts
+  frontStilts = new WPI_TalonSRX(9); //motor that pushes down the front stilts
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
   lifter = new Lifter();
