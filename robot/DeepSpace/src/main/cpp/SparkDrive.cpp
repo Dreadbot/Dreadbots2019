@@ -118,8 +118,8 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 			rBack -> Set(speed);
 		}
 	}
-/*
-	void Drive::StrafeStraight(double currentAngle, double targetAngle, double xSpeed) //real one
+
+	void SparkDrive::StrafeStraight(double currentAngle, double targetAngle, double xSpeed) //real one
 	{
 	double difference = targetAngle - currentAngle; //(-) = left, (+) = right
 	//double rightDifference = currentAngle - targetAngle;
@@ -134,7 +134,7 @@ void SparkDrive::MecDrive(double xAxis, double yAxis, double rot, bool turboButt
 		MecDrive(xSpeed, 0, rotSpeed, true, false);                                                                                                                                          
 		}
 	}
-	*/
+	
 	 void SparkDrive::RotateToAngle(double speed, double targetAngle, double currentAngle){
 		double rotSpeed = speed;
 		double angleSlop = 3;
