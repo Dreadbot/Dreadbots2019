@@ -209,10 +209,10 @@ void Robot::TeleopPeriodic()
   double currentSpeed = rFront->GetMotorOutputPercent();
   SmartDashboard::PutNumber("Current Speed", currentSpeed);
   SmartDashboard::PutBoolean("Vision Target Found", IsVisionTargetFound());
-  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceLeftFront());
-  SmartDashboard::PutNumber("Ultra Front Distace", ultra->getDistanceRightFront());
-  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceLeftBack());
-  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceRightBack());
+  SmartDashboard::PutNumber("Ultra LF Distance", ultra->getDistanceLeftFront());
+  SmartDashboard::PutNumber("Ultra RF Distace", ultra->getDistanceRightFront());
+  SmartDashboard::PutNumber("Ultra LB Distance", ultra->getDistanceLeftBack());
+  SmartDashboard::PutNumber("Ultra RB Distance", ultra->getDistanceRightBack());
   
   // if (IsVisionTargetFound())
   // {

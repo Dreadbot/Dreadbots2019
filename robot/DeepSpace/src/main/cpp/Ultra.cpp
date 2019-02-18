@@ -11,17 +11,17 @@ Ultra::Ultra()
 }
 float Ultra::getDistanceLeftFront()
 {
-    m_leftFront->GetRangeInches();
+    return m_leftFront->GetRangeInches();
 }
 float Ultra::getDistanceRightFront()
 {
-    m_rightFront->GetRangeInches();
+    return m_rightFront->GetRangeInches();
 }
 float Ultra::getDistanceLeftBack()
 {
-    m_leftBack->GetRangeInches();
+    return m_leftBack->GetRangeInches();
 }
 float Ultra::getDistanceRightBack()
 {
-    m_rightBack->GetRangeInches();
+    return m_rightBack->GetRangeInches();
 }
