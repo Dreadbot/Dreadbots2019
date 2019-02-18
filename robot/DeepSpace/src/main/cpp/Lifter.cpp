@@ -30,10 +30,29 @@ float const PI = 3.14159265358979823846264288;
 
 
 Lifter::Lifter() {
+    liftMotor.ConfigNominalOutputForward(0,0);
+    liftMotor.ConfigNominalOutputReverse(0,0);
+    liftMotor.ConfigPeakOutputForward(1,0);
+    liftMotor.ConfigPeakOutputReverse(-1,0);
 
+    liftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
+    liftMotor.SetSensorPhase(true);
+
+    liftMotor.SetSafetyEnabled(false);
+    liftMotor.SetSelectedSensorPosition(0);
+
+    liftMotor.Config_kP(0, 0.5);
+    liftMotor.Config_kI(0, 1e-4);
+    liftMotor.Config_kD(0, 1);
+    liftMotor.Set(ControlMode::Position, 0);
+    liftMotor.Set(ControlMode::PercentOutput, 0);
 }
 
-    
+void Lifter::TesterLift(double position)
+{
+    std::cout << "Currently at: " << liftMotor.GetSelectedSensorPosition() << std::endl;
+    //std::cout << "going to: " << position << std::endl;
+}
 void Lifter::SetLift(int level) 
 {
     /* std::cout << "Raised lift to ";
@@ -42,11 +61,14 @@ void Lifter::SetLift(int level)
      std::cout << TALON_TICKS_PER_ROTATION << std::endl;
      std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
     liftMotor.Set(ControlMode::Position, levels[level]*TALON_TICKS_PER_ROTATION);*/
-    liftMotor.Set(ControlMode::Position, InchesLift(levels[level]) );
-    liftMotor.SetSafetyEnabled(false);
+    liftMotor.Set(ControlMode::Position, InchesLift(levels[level]));
+   // std::cout << "Lift Encoder Position: " << liftMotor.GetSelectedSensorPosition() << std::endl;
+    std::cout << "Being set to: " << InchesLift(levels[level]) << std::endl;
+    std::cout << "Level: " << level << std::endl;
+    //liftMotor.SetSafetyEnabled(false);
     // // liftMotor.StopMotor();
     // liftMotor.SetExpiration(1);
-    std::cout << InchesLift(levels[level]) << std::endl;
+    
 }
 
 void Lifter::Shrug(){
@@ -56,6 +78,8 @@ void Lifter::Shrug(){
 
 void Lifter::MoveLift(double motorSpeed)
 {
+    //std::cout << "Position: " << liftMotor.GetSelectedSensorPosition() << std::endl;
+    //std::cout <<"Velocity: "<< liftMotor.GetSelectedSensorVelocity() << std::endl;
     double speed = 0;
     double liftPosition = GetEncoderPosition();
 
@@ -128,7 +152,7 @@ int Lifter::GetCurrentLevel()
 int Lifter::InchesLift(float inches)
 {
     int ticks = (int) ( inches * ( ( TALON_TICKS_PER_ROTATION * LIFT_GEAR_RATIO ) / ( DIAMETER_LIFT * PI ) ) );
-    return ticks;
+    return ticks/31;//fudge factor based on observation of Test Robit, not set in stone
 }
 
 void Lifter::SetCurrentLevel(int level){

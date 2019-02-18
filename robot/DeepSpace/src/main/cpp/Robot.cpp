@@ -83,11 +83,11 @@ int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
 bool const DRIVE_ENABLED = true;
-bool const LIFTER_ENABLED = false;
-bool const MANIPULATOR_ENABLED = false;
+bool const LIFTER_ENABLED = true;
+bool const MANIPULATOR_ENABLED = true;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = false;
-bool const CLIMB_ENABLED = false;
+bool const CLIMB_ENABLED = true;
 
 //-------------Talons-------------------
 //WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -103,7 +103,8 @@ bool const CLIMB_ENABLED = false;
 
 void Robot::RobotInit()
 {
-  
+    //CameraServer::GetInstance()->StartAutomaticCapture();
+
     positionDecider.AddDefault("Left", 0);
     positionDecider.AddObject("Center", 1);
     positionDecider.AddObject("Right", 2);
@@ -114,7 +115,7 @@ void Robot::RobotInit()
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
   js2 = new frc::Joystick(1);        //Driver 2
-  js3 = new frc::Joystick(3);        //Backup Manual Controls
+  js3 = new frc::Joystick(2);        //Backup Manual Controls
                                      //-------------Talons-------------------
   lFront = new WPI_TalonSRX(0);      //left front
   rFront = new WPI_TalonSRX(1);      //right front
@@ -163,6 +164,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit() 
 {
   gyro->ZeroYaw();
+  lifter->SetLift(0);
 }
 
 void Robot::AutonomousPeriodic() 
@@ -170,7 +172,7 @@ void Robot::AutonomousPeriodic()
   currentAngle = gyro->GetYaw();
 
   //drive->DriveStraight(.3, currentAngle);
-  drive->StrafeStraight(currentAngle, 0, 0.25);
+ // drive->StrafeStraight(currentAngle, 0, 0.25);
 }
 
 void Robot::TeleopInit()
@@ -178,7 +180,7 @@ void Robot::TeleopInit()
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   SmartDashboard::PutBoolean("Vision Target Found", false);
-  
+  autoClimbing = true;
   if(LIFTER_ENABLED) {
     lifter->LiftInit();
   }
@@ -191,6 +193,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 { 
+  lifter->TesterLift(0);
   double targetAngle = 0.0;
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
@@ -198,6 +201,8 @@ void Robot::TeleopPeriodic()
   double currentSpeed = rFront->GetMotorOutputPercent();
   SmartDashboard::PutNumber("Current Speed", currentSpeed);
   SmartDashboard::PutBoolean("Vision Target Found", IsVisionTargetFound());
+  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceDownBack());
+  SmartDashboard::PutNumber("Ultra Front Distace", ultra->getDistanceDownFront());
   
   // if (IsVisionTargetFound())
   // {
@@ -226,6 +231,17 @@ void Robot::TeleopPeriodic()
     if(LIFTER_ENABLED)
     {
       TeleopLifterControl();
+     /* if(js2->GetRawButton(upButton))
+      {
+        lifter->TesterLift(50);
+      }
+      else if(js2->GetRawButton(downButton))
+      {
+        lifter->TesterLift(50);
+      }
+      else{
+        lifter->TesterLift(0);
+      }*/
     }
     if(MANIPULATOR_ENABLED)
     {
@@ -248,8 +264,37 @@ void Robot::TeleopPeriodic()
 
 
   if(CLIMB_ENABLED) {
-    stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton),
-       js3->GetRawAxis(stiltsDriveStick), stilts->defaultStiltsSpeed);
+    if(!autoClimbing)
+    {
+      stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton),
+       js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
+       std::cout << "Front Encoder Position: " << frontStilts->GetSelectedSensorPosition() << ", ";
+       std::cout << stilts->getFrontHeight() << std::endl;
+       std::cout << "Back Encoder Position: " << backStilts->GetSelectedSensorPosition() << ", ";
+       std::cout << stilts->getBackHeight() << std::endl;
+    }
+    if(js3->GetRawButton(10))
+    {
+      autoClimbing = false;
+    }
+    if(autoClimbing)
+    {
+       if(js3->GetRawButton(2))
+       {
+         stilts->setBackToHeight(3);
+         stilts->setFrontToHeight(3);
+       }
+       else if(js3->GetRawButton(3))
+       {
+         stilts->setBackToHeight(0);
+         stilts->setFrontToHeight(0);
+       }
+       else if(js3->GetRawButton(4))
+       {
+          stilts->setBackToHeight(-3);
+          stilts->setFrontToHeight(-3);
+       }
+    }
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
   

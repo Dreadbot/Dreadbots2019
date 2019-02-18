@@ -25,4 +25,5 @@ class Lifter
     int GetCurrentLevel();
     void Shrug();
     void SetCurrentLevel(int level);
+    void TesterLift(double position);
 };

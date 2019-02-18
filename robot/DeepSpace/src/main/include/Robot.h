@@ -85,8 +85,8 @@ int const shootBall = 2;
 //js3
 int const frontStiltsUpButton = 5;
 int const frontStiltsDownButton = 7;
-int const backStiltsUpButton = 6;
-int const backStiltsDownButton = 8;
+int const backStiltsUpButton = 8;
+int const backStiltsDownButton = 6;
 int const stiltsDriveStick = 3;
 //---------------------------------
 
@@ -129,6 +129,7 @@ frc::SendableChooser<int> gamePieceDecider;
 //-----------TeleopVariables---------
 int climbState;
 bool defenseMode = false;
+bool autoClimbing = true;
 
 //-----------Objects----------------
 Lifter *lifter;

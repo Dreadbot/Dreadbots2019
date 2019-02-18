@@ -11,12 +11,13 @@ class Stilts
         void setFrontToHeight(float height);//Height in inches
         void setBackToHeight(float height);//Height in inches
         void driveWheels(float speed);//Speed from -1 to 1
-        void teleopStilts(bool frontUpButton, bool frontDownButton, bool backUpButton, bool backDownButton, double stiltsDriveAxis, double stiltsSpeed);
+        void teleopStilts(bool frontUpButton, bool frontDownButton, bool backUpButton, bool backDownButton, double stiltsDriveAxis, double frontSpeed, double backSpeed);
         int getFrontHeight();
         int getBackHeight();
         int getDrivePosition();
         TalonSRX& m_driveMotor;
         TalonSRX& m_backMotor;
         TalonSRX& m_frontMotor;
-        double defaultStiltsSpeed;
+        double defaultFrontSpeed = 0.8;
+        double defaultBackSpeed = 0.4;
 };
