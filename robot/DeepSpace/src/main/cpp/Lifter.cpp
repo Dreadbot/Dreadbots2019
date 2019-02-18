@@ -19,12 +19,12 @@
 int const ENCODER_ID = 8;
 
 WPI_TalonSRX liftMotor = {ENCODER_ID};
-double levels [] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+double levels [] = {0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -30.0}; //in inches
 double slop = 0.5;
 double motorSpeed = 0;
-double MAXLIFTROTATION = 1000000000;
-double MINLIFTROTATION = -10000000; //set to just under zero for actual lift
-float const LIFT_GEAR_RATIO = 175;
+double MAXLIFTROTATION = 100000000000;
+double MINLIFTROTATION = -100000; //set to just under zero for actual lift
+float const LIFT_GEAR_RATIO = 70;
 float const DIAMETER_LIFT = 1.5;
 float const PI = 3.14159265358979823846264288;
 
@@ -61,14 +61,12 @@ void Lifter::SetLift(int level)
      std::cout << TALON_TICKS_PER_ROTATION << std::endl;
      std::cout << levels[level]*TALON_TICKS_PER_ROTATION << std::endl;
     liftMotor.Set(ControlMode::Position, levels[level]*TALON_TICKS_PER_ROTATION);*/
-    liftMotor.Set(ControlMode::Position, InchesLift(levels[level]));
-   // std::cout << "Lift Encoder Position: " << liftMotor.GetSelectedSensorPosition() << std::endl;
-    std::cout << "Being set to: " << InchesLift(levels[level]) << std::endl;
-    std::cout << "Level: " << level << std::endl;
-    //liftMotor.SetSafetyEnabled(false);
+    liftMotor.Set(ControlMode::Position, 10000);
+        //liftMotor.Set(ControlMode::Position, InchesLift(levels[level]) );
+    liftMotor.SetSafetyEnabled(false);
     // // liftMotor.StopMotor();
     // liftMotor.SetExpiration(1);
-    
+    std::cout << "lifter set to: " << InchesLift(levels[level]) << std::endl;
 }
 
 void Lifter::Shrug(){
@@ -78,8 +76,8 @@ void Lifter::Shrug(){
 
 void Lifter::MoveLift(double motorSpeed)
 {
-    //std::cout << "Position: " << liftMotor.GetSelectedSensorPosition() << std::endl;
-    //std::cout <<"Velocity: "<< liftMotor.GetSelectedSensorVelocity() << std::endl;
+    std::cout << "manual lift enabled" << std::endl;
+
     double speed = 0;
     double liftPosition = GetEncoderPosition();
 
@@ -117,7 +115,6 @@ int Lifter::GetEncoderPosition()
 
 int Lifter::CheckHeight()
 {
-    //0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0 
     //these are the current rotations for the different levels, once we have a bot they will need to be changed
     int currentHeight;
     int currentRotation;
