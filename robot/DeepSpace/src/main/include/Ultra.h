@@ -7,8 +7,12 @@ class Ultra
 {
     public:
         Ultra();
-        float getDistanceDownFront();
-        float getDistanceDownBack();
-        frc::Ultrasonic *m_downFront = new frc::Ultrasonic(0, 1);
-        frc::Ultrasonic *m_downBack = new frc::Ultrasonic(2, 3);
+        float getDistanceLeftFront();
+        float getDistanceRightFront();
+        float getDistanceLeftBack();
+        float getDistanceRightBack();
+        frc::Ultrasonic *m_leftFront = new frc::Ultrasonic(0, 1);
+        frc::Ultrasonic *m_rightFront = new frc::Ultrasonic(2, 3);
+        frc::Ultrasonic *m_leftBack = new frc::Ultrasonic(4,5);
+        frc::Ultrasonic *m_rightBack = new frc::Ultrasonic(6,7);
 };
