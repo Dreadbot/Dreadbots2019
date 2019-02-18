@@ -55,9 +55,6 @@ frc::Joystick *js1; //Driver 1
 frc::Joystick *js2; //Driver 2
 frc::Joystick *js3; //Backup Manual Controls
 
-Ultra *frontUltra;
-Ultra *backUltra;
-
 bool isSolButtonDown = false;
 bool isADown = false;
 bool isBackDown = false;
