@@ -13,11 +13,10 @@ void Robot::TeleopLifterControl()
   {
     if (js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6)
     {
-      //lifter->SetLift(0);
       buttonTimer = 0;
       lifter->IncreaseCurrentLevel();
       //std::cout << "UpButton Pressed" << std::endl;
-        //lifter->SetLift(lifter->GetCurrentLevel());
+      lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
     if (js2->GetRawButton(downButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() > 0)
@@ -97,7 +96,7 @@ void Robot::Climb()
       {
         climbState = 2; //Drive the stilt wheel
       }
-      else if (climbState == 2 && frontUltra->getDistanceDownFront() <= 5)
+      else if (climbState == 2 && frontUltra->getDistanceLeftFront() <= 5)
       {
         climbState = 3; //Retract front
       }

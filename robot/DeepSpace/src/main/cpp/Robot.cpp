@@ -92,10 +92,10 @@ bool const CLIMB_ENABLED = false;
 bool const VISION_ENABLED = true;
 
 //-------------Talons-------------------
-//WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
-//WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-//WPI_TalonSRX *lBack = new WPI_TalonSRX(2);  //left rear
-//WPI_TalonSRX *rBack = new WPI_TalonSRX(3);  //right rear
+// WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
+// WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+// WPI_TalonSRX *lBack = new WPI_TalonSRX(2);  //left rear
+// WPI_TalonSRX *rBack = new WPI_TalonSRX(3);  //right rear
 //----------------------------------------
 
 //Lifter *lifter = new Lifter();
@@ -107,12 +107,12 @@ void Robot::RobotInit()
 {
     //CameraServer::GetInstance()->StartAutomaticCapture();
 
-    positionDecider.AddDefault("Left", 0);
-    positionDecider.AddObject("Center", 1);
-    positionDecider.AddObject("Right", 2);
+    positionDecider.SetDefaultOption("Left", 0);
+    positionDecider.AddOption("Center", 1);
+    positionDecider.AddOption("Right", 2);
 
-    gamePieceDecider.AddDefault("Hatch", 0);
-    gamePieceDecider.AddObject("Ball", 1);
+    gamePieceDecider.SetDefaultOption("Hatch", 0);
+    gamePieceDecider.AddOption("Ball", 1);
 
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
@@ -129,11 +129,11 @@ void Robot::RobotInit()
   lBackSpark = new rev::CANSparkMax(2, rev::CANSparkMax::MotorType::kBrushless);
   rBackSpark = new rev::CANSparkMax(3, rev::CANSparkMax::MotorType::kBrushless);
                                      //-------Talons pt.2: Electric Boogaloo-----
-  frontStilts = new WPI_TalonSRX(5); //motor that pushes down the front stilts
-  backStilts = new WPI_TalonSRX(7);  //motor that pushes down the back stilts
-  driveStilts = new WPI_TalonSRX(9); //motor that drives the wheels on the stilts
   wrist = new WPI_TalonSRX(4);       //motor that rotates the manipulator wrist
-  intakeWheels = new WPI_TalonSRX(6);//motor that spins the intake wheels on the manipulator
+  intakeWheels = new WPI_TalonSRX(5);//motor that spins the intake wheels on the manipulator
+  backStilts = new WPI_TalonSRX(6);  //motor that pushes down the back stilts
+  driveStilts = new WPI_TalonSRX(7); //motor that drives the wheels on the stilts
+  frontStilts = new WPI_TalonSRX(9); //motor that pushes down the front stilts
   //-----------Other Objects---------------
   gyro = new AHRS(SPI::Port::kMXP);
   lifter = new Lifter();
@@ -174,6 +174,7 @@ void Robot::AutonomousPeriodic()
   currentAngle = gyro->GetYaw();
 
   //drive->DriveStraight(.3, currentAngle);
+  //drive->StrafeStraight(currentAngle, 0, 0.5);
 }
 
 void Robot::TeleopInit()
@@ -205,18 +206,28 @@ void Robot::TeleopPeriodic()
   double currentAngle = gyro->GetYaw();
   targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
   currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
-  //double currentSpeed = rFront->GetMotorOutputPercent();
-  //SmartDashboard::PutNumber("Current Speed", currentSpeed);
-  //I'm typing with my hands
-  //if (RAMP_UP_ENABLED)
- //{
-   // drive->RampUpSpeed(currentSpeed, maxSpeed);
-  //}
+  double currentSpeed = rFront->GetMotorOutputPercent();
+  SmartDashboard::PutNumber("Current Speed", currentSpeed);
+  SmartDashboard::PutBoolean("Vision Target Found", IsVisionTargetFound());
+  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceLeftFront());
+  SmartDashboard::PutNumber("Ultra Front Distace", ultra->getDistanceRightFront());
+  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceLeftBack());
+  SmartDashboard::PutNumber("Ultra Back Distance", ultra->getDistanceRightBack());
+  
+  // if (IsVisionTargetFound())
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", true);
+  // }
+  // else
+  // {
+  //   SmartDashboard::PutBoolean("Vision Target Found", false);
+  // }
+
   if (TURN_TO_ANGLE_ENABELED)
   {
      double targetAngle = 0.0;
      double currentAngle = gyro->GetYaw();
-     //drive->RotateToAngle(0.5, targetAngle, currentAngle);
+     drive->RotateToAngle(0.5, targetAngle, currentAngle);
      targetAngle = SmartDashboard::GetNumber("Target Angle", 50.0);
      currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
   }
@@ -253,9 +264,9 @@ void Robot::TeleopPeriodic()
 
   if (DRIVE_ENABLED)
   {
-    //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+    //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //sparkDrive->MecDrive(js1->GetRawAxis(joy    stickX), -(js1->GetRawAxis(joystickY)),
+              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton);
   }
 
 

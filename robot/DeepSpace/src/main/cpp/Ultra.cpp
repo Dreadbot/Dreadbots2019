@@ -4,14 +4,24 @@
 
 Ultra::Ultra()
 {
-    m_downFront->SetAutomaticMode(true);
-    m_downBack->SetAutomaticMode(true);
+    m_leftFront->SetAutomaticMode(true);
+    m_rightFront->SetAutomaticMode(true);
+    m_leftBack->SetAutomaticMode(true);
+    m_rightBack->SetAutomaticMode(true);
 }
-float Ultra::getDistanceDownBack()
+float Ultra::getDistanceLeftFront()
 {
-    m_downBack->GetRangeInches();
+    m_leftFront->GetRangeInches();
 }
-float Ultra::getDistanceDownFront()
+float Ultra::getDistanceRightFront()
 {
-    m_downFront->GetRangeInches();
+    m_rightFront->GetRangeInches();
+}
+float Ultra::getDistanceLeftBack()
+{
+    m_leftBack->GetRangeInches();
+}
+float Ultra::getDistanceRightBack()
+{
+    m_rightBack->GetRangeInches();
 }
