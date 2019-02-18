@@ -21,7 +21,7 @@
 #include "AutoHatchPanel.h"
 #include <AHRS.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
+#include <frc/shuffleboard/Shuffleboard.h> 
 #include <SparkDrive.h>
 double const TALON_TICKS_PER_ROTATION = 4096;
 float const LEVEL_3_HEIGHT = 21.5;

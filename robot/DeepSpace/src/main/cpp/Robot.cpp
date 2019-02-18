@@ -90,16 +90,16 @@ bool const SOLENOID_TEST_ENABLED = false;
 bool const CLIMB_ENABLED = true;
 
 //-------------Talons-------------------
-WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
-WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
-WPI_TalonSRX *lBack = new WPI_TalonSRX(2);  //left rear
-WPI_TalonSRX *rBack = new WPI_TalonSRX(3);  //right rear
+// WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
+// WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
+// WPI_TalonSRX *lBack = new WPI_TalonSRX(2);  //left rear
+// WPI_TalonSRX *rBack = new WPI_TalonSRX(3);  //right rear
 //----------------------------------------
 
 //Lifter *lifter = new Lifter();
 
 //AHRS *gyro;
-Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+//Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
 void Robot::RobotInit()
 {
@@ -172,7 +172,7 @@ void Robot::AutonomousPeriodic()
   currentAngle = gyro->GetYaw();
 
   //drive->DriveStraight(.3, currentAngle);
- // drive->StrafeStraight(currentAngle, 0, 0.25);
+  //drive->StrafeStraight(currentAngle, 0, 0.5);
 }
 
 void Robot::TeleopInit()
@@ -254,9 +254,9 @@ void Robot::TeleopPeriodic()
 
   if (DRIVE_ENABLED)
   {
-    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
     //sparkDrive->MecDrive(js1->GetRawAxis(joy    stickX), -(js1->GetRawAxis(joystickY)),
-              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
+              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton);
   }
 
 
