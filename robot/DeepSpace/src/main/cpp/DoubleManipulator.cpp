@@ -54,12 +54,12 @@ void DoubleManipulator::SpinWheels(double motorSpeed)
 
 void DoubleManipulator::GrabPanel(Solenoid *sol)
 {
-    sol->Set(true);
+    sol->Set(false);
 }
 
 void DoubleManipulator::ReleasePanel(Solenoid *sol)
 {
-    sol->Set(false);
+    sol->Set(true);
 }
 
 void DoubleManipulator::SetBallPickup(bool value)
