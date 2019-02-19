@@ -61,8 +61,6 @@ DDDDDDD        DDDDDDDD DDDDDDD   .DDDDDDDD DDDDDDDDDDDD       DDDDDDD*/
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
-#include <Ultrasonic.h>
-
 
 int currentLevel = 0;
 int buttonTimer = 0;
@@ -88,14 +86,9 @@ bool const LIFTER_ENABLED = true;
 bool const MANIPULATOR_ENABLED = true;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = true;
-<<<<<<< HEAD
-bool const CLIMB_ENABLED = true;
-bool const VISION_ENABLED = false;
-=======
 bool const CLIMB_ENABLED = false;
 bool const VISION_ENABLED = false;
 bool const BALL_PICKUP_ENABLED = true;
->>>>>>> 1e46ab383826c9841ba0a941b7a0b37a6eedc308
 
 //-------------Talons-------------------
 // WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
