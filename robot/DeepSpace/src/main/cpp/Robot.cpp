@@ -84,12 +84,13 @@ int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
 bool const DRIVE_ENABLED = true;
-bool const LIFTER_ENABLED = false;
-bool const MANIPULATOR_ENABLED = false;
+bool const LIFTER_ENABLED = true;
+bool const MANIPULATOR_ENABLED = true;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = true;
 bool const CLIMB_ENABLED = false;
-bool const VISION_ENABLED = true;
+bool const VISION_ENABLED = false;
+bool const BALL_PICKUP_ENABLED = true;
 
 //-------------Talons-------------------
 // WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -272,6 +273,8 @@ void Robot::TeleopPeriodic()
       manipulator->ReleasePanel(solenoid); 
       } 
     }
+    if(BALL_PICKUP_ENABLED)
+      BallPickup(js2->GetRawButton(ballPickup), js2->GetRawButton(shootBall));
   }
  if (DRIVE_ENABLED)
   {
