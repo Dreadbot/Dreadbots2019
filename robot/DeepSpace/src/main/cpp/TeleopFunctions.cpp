@@ -267,3 +267,13 @@ void Robot::StrafeToAlign (std::string direction)
     drive->MecDrive(0, 0, 0, false, false);
   }
 }
+
+void Robot::BallPickup(bool in, bool out)
+{
+  if(in)
+    intakeWheels->Set(-.5);
+  else if(out)
+    intakeWheels->Set(1);
+  else 
+    intakeWheels->Set(0);
+}

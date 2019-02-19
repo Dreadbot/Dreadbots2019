@@ -49,6 +49,7 @@ class Robot : public frc::TimedRobot {
   void AutoAlign();
   bool IsVisionTargetFound();
   void StrafeToAlign(std::string direction);
+  void BallPickup(bool in, bool out);
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
 frc::Joystick *js2; //Driver 2
