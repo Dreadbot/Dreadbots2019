@@ -65,7 +65,6 @@ int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
-int const toggleSol = 3;
 int const defenseButton = 2;
 int const engageSol = 3;
 int const disengageSol = 4;
