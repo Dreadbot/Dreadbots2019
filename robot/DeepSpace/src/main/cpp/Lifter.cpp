@@ -19,13 +19,13 @@
 int const ENCODER_ID = 8;
 
 WPI_TalonSRX liftMotor = {ENCODER_ID};
-double levels [] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+double levels [] = {0.0, 8.0, 16.0, 24.0, 32.0, 40.0, 48.0};
 double slop = 0.5;
 double motorSpeed = 0;
-double MAXLIFTROTATION = 1000000000;
-double MINLIFTROTATION = -10000000; //set to just under zero for actual lift
-float const LIFT_GEAR_RATIO = 175;
-float const DIAMETER_LIFT = 1.5;
+double MAXLIFTROTATION = 4900000;
+double MINLIFTROTATION = -10000; //set to just under zero for actual lift
+float const LIFT_GEAR_RATIO = 70;
+float const DIAMETER_LIFT = 1.2;
 float const PI = 3.14159265358979823846264288;
 
 
@@ -106,6 +106,10 @@ void Lifter::LiftInit()
 //    liftMotor.ConfigClosedLoopPeakOutput(0, .1);
 
     liftMotor.SetSelectedSensorPosition(0);
+    std::cout << "Being set to: " << InchesLift(levels[1]) << std::endl;
+    std::cout << "Being set to: " << InchesLift(levels[2]) << std::endl;
+    std::cout << "Being set to: " << InchesLift(levels[3]) << std::endl;
+    std::cout << "Being set to: " << InchesLift(levels[4]) << std::endl;
 }
 
 int Lifter::GetEncoderPosition()
@@ -117,7 +121,7 @@ int Lifter::GetEncoderPosition()
 
 int Lifter::CheckHeight()
 {
-    //0.0, 1.0, 3.5, 5.0, 6.4, 7.0, 15.0 
+
     //these are the current rotations for the different levels, once we have a bot they will need to be changed
     int currentHeight;
     int currentRotation;
@@ -152,7 +156,7 @@ int Lifter::GetCurrentLevel()
 int Lifter::InchesLift(float inches)
 {
     int ticks = (int) ( inches * ( ( TALON_TICKS_PER_ROTATION * LIFT_GEAR_RATIO ) / ( DIAMETER_LIFT * PI ) ) );
-    return ticks/31;//fudge factor based on observation of Test Robit, not set in stone
+    return ticks/192;//fudge factor based on observation of Test Robit, not set in stone
 }
 
 void Lifter::SetCurrentLevel(int level){

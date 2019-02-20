@@ -8,8 +8,8 @@
 void Robot::TeleopLifterControl()
 {
   //lifter->TesterLift(0);
-  //std::cout << lifter->GetEncoderPosition() << std::endl;
-  if (js2->GetRawButton(manualOverrideButton))
+  std::cout << lifter->GetEncoderPosition() << std::endl;
+  if (!js2->GetRawButton(manualOverrideButton))
   {
     if (js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6)
     {
