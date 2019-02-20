@@ -2,8 +2,8 @@
 #include <Stilts.h>
 #include <ctre/Phoenix.h>
 #include <iostream>
-double backCoefficientP = 0.3;
-double frontCoefficientP = 0.9;
+double backCoefficientP = 0.2;
+double frontCoefficientP = 0.2;
 double inchesToTicks = 57444;//153184
 double ticksToInches = 0.000017408;
 Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor) : m_backMotor(backMotor), m_driveMotor(driveMotor), m_frontMotor(frontMotor)
@@ -57,10 +57,14 @@ Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor) 
     
 }
 void Stilts::setFrontToHeight(float height)//sets the front stilt to height in inches using encoders
-{
+{//Practice Robot-------------------------------------------
+/*
     m_frontMotor.Set(ControlMode::Position, -1*height*inchesToTicks);
+    std::cout << "Front stilts set to: " << -1*height*inchesToTicks << std::endl;
+    //this value flipped to account for the encoder flipped*/
+//Comp Robot------------------------------------------------
+    m_frontMotor.Set(ControlMode::Position, height*inchesToTicks);
     std::cout << "Front stilts set to: " << height*inchesToTicks << std::endl;
-    //this value flipped to account for the encoder flipped
 } 
 void Stilts::setBackToHeight(float height)//sets the back stilts to height in inches using encoders
 {
@@ -135,7 +139,8 @@ void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDo
     }
     else
     {
-        m_frontMotor.Set(ControlMode::Position, m_frontMotor.GetSelectedSensorPosition());
+        m_frontMotor.Set(ControlMode::PercentOutput, 0);
+        //m_frontMotor.Set(ControlMode::Position, m_frontMotor.GetSelectedSensorPosition());
     }
     if(backUp)
     {

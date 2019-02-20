@@ -72,7 +72,7 @@ void Lifter::SetLift(int level)
 }
 
 void Lifter::Shrug(){
-    liftMotor.Set(ControlMode::Position, TALON_TICKS_PER_ROTATION * 1);
+    liftMotor.Set(ControlMode::Position, InchesLift(4));
     SetCurrentLevel(0);
 }
 
