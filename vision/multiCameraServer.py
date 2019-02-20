@@ -312,7 +312,7 @@ if __name__ == "__main__":
             if ret is True:
                 grip.process(frame)
                 line = grip.filter_lines_output[0]
-
+                
                 print("Trying lines")
 
                 x1 = line.x1
