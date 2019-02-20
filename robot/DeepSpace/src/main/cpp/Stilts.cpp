@@ -9,9 +9,9 @@ double ticksToInches = 0.000017408;
 Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor) : m_backMotor(backMotor), m_driveMotor(driveMotor), m_frontMotor(frontMotor)
 {
     m_frontMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
-    m_frontMotor.SetSensorPhase(false);
+    m_frontMotor.SetSensorPhase(false);//Prototype bot is false!!
     m_backMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
-    m_backMotor.SetSensorPhase(true);
+    m_backMotor.SetSensorPhase(false);//Prototype bot is true!!
     m_driveMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
     m_driveMotor.SetSensorPhase(true);
 
@@ -57,14 +57,9 @@ Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor) 
     
 }
 void Stilts::setFrontToHeight(float height)//sets the front stilt to height in inches using encoders
-{//Practice Robot-------------------------------------------
-/*
+{
     m_frontMotor.Set(ControlMode::Position, -1*height*inchesToTicks);
     std::cout << "Front stilts set to: " << -1*height*inchesToTicks << std::endl;
-    //this value flipped to account for the encoder flipped*/
-//Comp Robot------------------------------------------------
-    m_frontMotor.Set(ControlMode::Position, height*inchesToTicks);
-    std::cout << "Front stilts set to: " << height*inchesToTicks << std::endl;
 } 
 void Stilts::setBackToHeight(float height)//sets the back stilts to height in inches using encoders
 {
@@ -152,7 +147,8 @@ void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDo
     }
     else
     {
-        m_backMotor.Set(ControlMode::Position, m_backMotor.GetSelectedSensorPosition());
+        m_backMotor.Set(ControlMode::PercentOutput, 0);
+        //m_backMotor.Set(ControlMode::Position, m_backMotor.GetSelectedSensorPosition());
     }
     if(stiltsDriveAxis >= 0.1 || stiltsDriveAxis <= -0.1)
     {

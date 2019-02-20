@@ -31,11 +31,11 @@ void Robot::TeleopLifterControl()
   {
     if (js2->GetRawButton(upButton))
     {
-      lifter->MoveLift(0.5);
+      lifter->MoveLift(1);
     }
     else if (js2->GetRawButton(downButton))
     {
-      lifter->MoveLift(-0.5);
+      lifter->MoveLift(-1);
     }
     else
     {
@@ -77,10 +77,10 @@ void Robot::TeleopManipulatorControl()
         //manipulator->SpinWheels(0);
     }
     if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT){
-      manipulator->SpinWheels(0.4);
+      manipulator->SpinWheels(0.6);
     }
     else if(js2->GetRawButton(shootBall) && buttonTimer >= BUTTON_TIMEOUT){
-      manipulator->SpinWheels(-0.4);
+      manipulator->SpinWheels(-1);
     }
     else{
       manipulator->SpinWheels(0);

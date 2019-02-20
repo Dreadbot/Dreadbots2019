@@ -81,8 +81,8 @@ int const ballPickup = 1;
 int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
-bool const DRIVE_ENABLED = false;
-bool const LIFTER_ENABLED = false;
+bool const DRIVE_ENABLED = true;
+bool const LIFTER_ENABLED = true;
 bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = true;
@@ -189,8 +189,8 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 { 
-  std::cout << "Back: " << stilts->getBackHeight() << std::endl;
-  std::cout << "Front: " << stilts->getFrontHeight() << std::endl;
+  std::cout << "Back: " << backStilts->GetSelectedSensorPosition() << std::endl;
+  std::cout << "Front: " << frontStilts->GetSelectedSensorPosition() << std::endl;
   if(VISION_ENABLED)
   {
     std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
