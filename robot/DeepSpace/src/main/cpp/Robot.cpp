@@ -61,8 +61,6 @@ DDDDDDD        DDDDDDDD DDDDDDD   .DDDDDDDD DDDDDDDDDDDD       DDDDDDD*/
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
-#include <Ultrasonic.h>
-
 
 int currentLevel = 0;
 int buttonTimer = 0;
@@ -88,8 +86,9 @@ bool const LIFTER_ENABLED = false;
 bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = true;
-bool const CLIMB_ENABLED = false;
-bool const VISION_ENABLED = true;
+bool const CLIMB_ENABLED = true;
+bool const VISION_ENABLED = false;
+bool const BALL_PICKUP_ENABLED = true;
 
 //-------------Talons-------------------
 // WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
@@ -143,11 +142,6 @@ void Robot::RobotInit()
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
-
-  if(MANIPULATOR_ENABLED) {
-    manipulator->Init();
-    //manipulator->SetBallPickup(true);
-  }
 }
 
 /**
@@ -189,12 +183,15 @@ void Robot::TeleopInit()
   buttonTimer = 0;
 
   if(MANIPULATOR_ENABLED) {
-    manipulator->RotateWrist(0); 
+    manipulator->Init();
+    //manipulator->SetBallPickup(true);
   }
 }
 
 void Robot::TeleopPeriodic() 
 { 
+  std::cout << "Back: " << stilts->getBackHeight() << std::endl;
+  std::cout << "Front: " << stilts->getFrontHeight() << std::endl;
   if(VISION_ENABLED)
   {
     std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
@@ -236,7 +233,7 @@ void Robot::TeleopPeriodic()
   { 
     if(CLIMB_ENABLED)
     {
-      Climb();
+      //Climb();
     }
     if(LIFTER_ENABLED)
     {
@@ -244,8 +241,7 @@ void Robot::TeleopPeriodic()
      /* if(js2->GetRawButton(upButton))
       {
         lifter->TesterLift(50);
-      }
-      else if(js2->GetRawButton(downButton))
+      }gbButton(downButton))
       {
         lifter->TesterLift(50);
       }
@@ -262,21 +258,26 @@ void Robot::TeleopPeriodic()
       //ElectricSolenoidTest(solenoid);
       if(js1->GetRawButton(engageSol)) 
       {
-     // std::cout << "engaging sol" << std::endl;
+      std::cout << "engaging sol" << std::endl;
       manipulator->GrabPanel(solenoid);
       }
       else if(js1->GetRawButton(disengageSol))
       {
-     // std::cout << "disengaging sol" << std::endl;
+      std::cout << "disengaging sol" << std::endl;
       manipulator->ReleasePanel(solenoid); 
       } 
     }
+    if(BALL_PICKUP_ENABLED)
+      BallPickup(js2->GetRawButton(ballPickup), js2->GetRawButton(shootBall));
   }
  if (DRIVE_ENABLED)
   {
+    //MecDrive2 DOES NOT WORK with rotating right
+    //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
     //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    //sparkDrive->MecDrive(js1->GetRawAxis(joy    stickX), -(js1->GetRawAxis(joystickY)),
-              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton);
+
+    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
   }
 
 
@@ -298,18 +299,18 @@ void Robot::TeleopPeriodic()
     {
        if(js3->GetRawButton(2))
        {
-         stilts->setBackToHeight(3);
-         stilts->setFrontToHeight(3);
+         stilts->setFrontToHeight(6);
+         stilts->setBackToHeight(6);
        }
        else if(js3->GetRawButton(3))
        {
-         stilts->setBackToHeight(0);
          stilts->setFrontToHeight(0);
+         stilts->setBackToHeight(0);
        }
        else if(js3->GetRawButton(4))
        {
-          stilts->setBackToHeight(-3);
-          stilts->setFrontToHeight(-3);
+          stilts->ThreeStageHeight(-3);
+          stilts->ThreeStageHeight(-3);
        }
     }
   }

@@ -49,6 +49,7 @@ class Robot : public frc::TimedRobot {
   void AutoAlign();
   bool IsVisionTargetFound();
   void StrafeToAlign(std::string direction);
+  void BallPickup(bool in, bool out);
 //----------USB Controllers--------
 frc::Joystick *js1; //Driver 1
 frc::Joystick *js2; //Driver 2
@@ -65,7 +66,6 @@ int const turboButton = 8;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
-int const toggleSol = 3;
 int const defenseButton = 2;
 int const engageSol = 3;
 int const disengageSol = 4;
@@ -74,8 +74,8 @@ int const alignMacro = 5;
 //js2
 int const upButton = 6; 
 int const downButton = 8; 
-int const lowerManipulator = 5;
-int const raiseManipulator = 7;
+int const lowerManipulator = 7;
+int const raiseManipulator = 5;
 int const manualOverrideButton = 3;
 int const climbButton = 10;
 int const ballPickup = 1;

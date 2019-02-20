@@ -8,7 +8,7 @@
 void Robot::TeleopLifterControl()
 {
   //lifter->TesterLift(0);
-  //std::cout << lifter->GetEncoderPosition() << std::endl;
+  std::cout << lifter->GetEncoderPosition() << std::endl;
   if (!js2->GetRawButton(manualOverrideButton))
   {
     if (js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6)
@@ -45,31 +45,36 @@ void Robot::TeleopLifterControl()
 }
 
 void Robot::TeleopManipulatorControl()
-{
+ { 
+  //std::cout << wrist->GetSelectedSensorPosition() << std::endl;
   //std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
   //std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
   if (!js2->GetRawButton(manualOverrideButton))
   {
-    if (js2->GetRawButton(lowerManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() > 0)
+    if (js2->GetRawButton(lowerManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() < 3)
     {
-      std::cout << "button pressed" << std::endl;
-      buttonTimer = 0;
-      manipulator->RotateWrist(manipulator->GetCurrentPosition() - 1);
-      manipulator->SetBallPickup(true);
-      manipulator->SpinWheels(0.5);
-    }
-    if (js2->GetRawButton(raiseManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() < 3)
-    {
-      if(manipulator->GetCurrentPosition() + 1 == 3){
-        std::cout << "shruged" << std::endl;
-        Robot::lifter->Shrug();
+      manipulator->wrist.ConfigClosedLoopPeakOutput(0, 0.5);
+      std::cout << manipulator->GetCurrentPosition() << std::endl;
+      if(manipulator->GetCurrentPosition() == 2){
+        std::cout << "shrugged" << std::endl;
+        lifter->Shrug();
+
         manipulator->RotateWrist(manipulator->GetCurrentPosition() + 1);
       } else{
+        std::cout << "button pressed" << std::endl;
         buttonTimer = 0;
         manipulator->RotateWrist(manipulator->GetCurrentPosition() + 1);
+        manipulator->SetBallPickup(true);
+        manipulator->SpinWheels(0.5);
+      }
+    }
+    if (js2->GetRawButton(raiseManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() > 0)
+    {
+        manipulator->wrist.ConfigClosedLoopPeakOutput(0, 0.9);
+        buttonTimer = 0;
+        manipulator->RotateWrist(manipulator->GetCurrentPosition() - 1);
         manipulator->SetBallPickup(false);
         //manipulator->SpinWheels(0);
-      }
     }
     if(js2->GetRawButton(ballPickup) && buttonTimer >= BUTTON_TIMEOUT){
       manipulator->SpinWheels(0.4);
@@ -79,6 +84,20 @@ void Robot::TeleopManipulatorControl()
     }
     else{
       manipulator->SpinWheels(0);
+    }
+  }
+  else {
+    if(js2->GetRawButton(raiseManipulator))
+    {
+      wrist->Set(ControlMode::PercentOutput, 0.7);
+    }
+    else if(js2->GetRawButton(lowerManipulator))
+    {
+      wrist->Set(ControlMode::PercentOutput, -0.7);
+    }
+    else
+    {
+      wrist->Set(ControlMode::PercentOutput, 0);
     }
   }
 }
@@ -251,4 +270,14 @@ void Robot::StrafeToAlign (std::string direction)
   else{
     drive->MecDrive(0, 0, 0, false, false);
   }
+}
+
+void Robot::BallPickup(bool in, bool out)
+{
+  if(in)
+    intakeWheels->Set(-.5);
+  else if(out)
+    intakeWheels->Set(1);
+  else 
+    intakeWheels->Set(0);
 }

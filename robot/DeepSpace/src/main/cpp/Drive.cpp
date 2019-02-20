@@ -172,7 +172,7 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 		lBack -> Set(ControlMode::PercentOutput, lBackSpeed*maxSpeed);
 		rFront -> Set(ControlMode::PercentOutput, rFrontSpeed*maxSpeed);
 		rBack -> Set(ControlMode::PercentOutput, rBackSpeed*maxSpeed);
-		std::cout << "CurrentSpeed = " << currentSpeed << std::endl;
+		//std::cout << "CurrentSpeed = " << currentSpeed << std::endl;
 	}
 
 	 void Drive::RotateToAngle(double speed, double targetAngle, double currentAngle){
