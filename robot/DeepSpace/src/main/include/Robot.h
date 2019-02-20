@@ -123,6 +123,8 @@ Drive::StrafeDirection strafeDirection;
 int autoState;
 frc::SendableChooser<int> positionDecider;
 frc::SendableChooser<int> gamePieceDecider;
+
+double strafeDifference;
    
 //-----------TeleopVariables---------
 int climbState;

@@ -19,7 +19,7 @@ class Drive
 	    void StrafeStraight(double currentAngle, double targetAngle, double xSpeed);
 
         enum StrafeDirection{LEFT, RIGHT};
-        void StrafeToDistance(StrafeDirection direction, int strafeDistance);
+        void StrafeToDistance(StrafeDirection direction, float rotations);
 
         int CalculateDistance(float inches);
 

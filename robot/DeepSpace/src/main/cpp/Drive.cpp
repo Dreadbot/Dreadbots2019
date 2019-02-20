@@ -259,24 +259,6 @@ void Drive::Strafe(std::string side)
 		MecDrive(xSpeed, 0, rotSpeed, true, false);                                                                                                                                          
 		}
 	}
-void Drive::StrafeToDistance(StrafeDirection direction, int strafeDistance)
-{
-	switch(direction)
-	{
-		case LEFT:
-			lFront->Set(ControlMode::Position, -strafeDistance);
-			rFront->Set(ControlMode::Position, strafeDistance);
-			lBack->Set(ControlMode::Position, strafeDistance);
-			rBack->Set(ControlMode::Position, -strafeDistance);
-		case RIGHT:
-			lFront->Set(ControlMode::Position, strafeDistance);
-			rFront->Set(ControlMode::Position, -strafeDistance);
-			lBack->Set(ControlMode::Position, -strafeDistance);
-			rBack->Set(ControlMode::Position, strafeDistance);
-	}
-}
-
-
 
 const float driveGearRatio = 5;
 const float driveGearDiameter = 3.5;
@@ -284,9 +266,9 @@ const double pi = 3.1415;
 const  int ticksPerRotation = 4096;
 const float inchesPerRotation = 1; //dummy value, pls change later (NOTE: THIS IS SPECIFIC TO THE DRIVE GEARS)
 
-int strafeDistance(float rotations) //finding rotations to inches - comment once THIS mystery has been solved
+float strafeDistance(float rotations) //finding rotations to inches - comment once THIS mystery has been solved
 {
-	int driveTicks = (int) (rotations * ticksPerRotation * driveGearRatio);
+	float driveTicks = (float) (rotations * ticksPerRotation * driveGearRatio);
 	return driveTicks;
 }
 
@@ -295,3 +277,21 @@ int strafeDistance(float rotations) //finding rotations to inches - comment once
 // 	int driveTicks = (int) ((inches / inchesPerRotation) * ticksPerRotation * driveGearRatio);
 // 	return driveTicks;
 // }
+
+void Drive::StrafeToDistance(StrafeDirection direction, float rotations)
+{
+	float tick = strafeDistance(rotations);
+	switch(direction)
+	{
+		case LEFT:
+			lFront->Set(ControlMode::Position, -tick);
+			rFront->Set(ControlMode::Position, tick);
+			lBack->Set(ControlMode::Position, tick);
+			rBack->Set(ControlMode::Position, -tick);
+		case RIGHT:
+			lFront->Set(ControlMode::Position, tick);
+			rFront->Set(ControlMode::Position, -tick);
+			lBack->Set(ControlMode::Position, -tick);
+			rBack->Set(ControlMode::Position, tick);
+	}
+}
