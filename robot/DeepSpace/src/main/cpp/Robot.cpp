@@ -100,7 +100,7 @@ bool const BALL_PICKUP_ENABLED = true;
 //Lifter *lifter = new Lifter();
 
 //AHRS *gyro;
-//Drive *drive = new Drive(lFront, lBack, rFront, rBack);
+Drive *drive = new Drive(lFront, lBack, rFront, rBack);
 
 void Robot::RobotInit()
 {
