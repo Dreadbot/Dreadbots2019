@@ -61,8 +61,6 @@ DDDDDDD        DDDDDDDD DDDDDDD   .DDDDDDDD DDDDDDDDDDDD       DDDDDDD*/
 #include "DoubleManipulator.h"
 #include <Ultra.h>
 #include <frc/Ultrasonic.h>
-#include <Ultrasonic.h>
-
 
 int currentLevel = 0;
 int buttonTimer = 0;
@@ -83,9 +81,9 @@ int const ballPickup = 1;
 int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
-bool const DRIVE_ENABLED = true;
-bool const LIFTER_ENABLED = true;
-bool const MANIPULATOR_ENABLED = true;
+bool const DRIVE_ENABLED = false;
+bool const LIFTER_ENABLED = false;
+bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = true;
 bool const CLIMB_ENABLED = true;
@@ -144,11 +142,6 @@ void Robot::RobotInit()
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
-
-  if(MANIPULATOR_ENABLED) {
-    manipulator->Init();
-    //manipulator->SetBallPickup(true);
-  }
 }
 
 /**
@@ -190,13 +183,15 @@ void Robot::TeleopInit()
   buttonTimer = 0;
 
   if(MANIPULATOR_ENABLED) {
-    //manipulator->RotateWrist(0); 
-
+    manipulator->Init();
+    //manipulator->SetBallPickup(true);
   }
 }
 
 void Robot::TeleopPeriodic() 
 { 
+  std::cout << "Back: " << stilts->getBackHeight() << std::endl;
+  std::cout << "Front: " << stilts->getFrontHeight() << std::endl;
   if(VISION_ENABLED)
   {
     std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
@@ -246,8 +241,7 @@ void Robot::TeleopPeriodic()
      /* if(js2->GetRawButton(upButton))
       {
         lifter->TesterLift(50);
-      }
-      else if(js2->GetRawButton(downButton))
+      }gbButton(downButton))
       {
         lifter->TesterLift(50);
       }
@@ -305,13 +299,13 @@ void Robot::TeleopPeriodic()
     {
        if(js3->GetRawButton(2))
        {
-         stilts->ThreeStageHeight(6);
-         stilts->ThreeStageHeight(6);
+         stilts->setFrontToHeight(6);
+         stilts->setBackToHeight(6);
        }
        else if(js3->GetRawButton(3))
        {
-         stilts->ThreeStageHeight(0);
-         stilts->ThreeStageHeight(0);
+         stilts->setFrontToHeight(0);
+         stilts->setBackToHeight(0);
        }
        else if(js3->GetRawButton(4))
        {
