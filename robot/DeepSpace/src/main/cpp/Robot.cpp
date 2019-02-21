@@ -190,8 +190,8 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 { 
-  std::cout << "Back: " << backStilts->GetSelectedSensorPosition() << std::endl;
-  std::cout << "Front: " << frontStilts->GetSelectedSensorPosition() << std::endl;
+  std::cout << "Back Stilts: " << backStilts->GetSelectedSensorPosition() << std::endl;
+  std::cout << "Front Stilts: " << frontStilts->GetSelectedSensorPosition() << std::endl;
   if(VISION_ENABLED)
   {
     std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
@@ -301,8 +301,8 @@ void Robot::TeleopPeriodic()
     {
        if(js3->GetRawButton(2))
        {
-         stilts->setFrontToHeight(6);
-         stilts->setBackToHeight(6);
+         stilts->threeStageHeight(12);
+         stilts->threeStageHeight(12);
        }
        else if(js3->GetRawButton(3))
        {
@@ -311,8 +311,8 @@ void Robot::TeleopPeriodic()
        }
        else if(js3->GetRawButton(4))
        {
-          stilts->ThreeStageHeight(-3);
-          stilts->ThreeStageHeight(-3);
+          stilts->threeStageHeight(-3);
+          stilts->threeStageHeight(-3);
        }
     }
   }

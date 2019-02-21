@@ -3,15 +3,25 @@
 #include <ctre/Phoenix.h>
 #include <iostream>
 double backCoefficientP = 0.2;
-double frontCoefficientP = 0.2;
+double frontCoefficientP = 0.4;
 double inchesToTicks = 57444;//153184
 double ticksToInches = 0.000017408;
 Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor) : m_backMotor(backMotor), m_driveMotor(driveMotor), m_frontMotor(frontMotor)
 {
+    const bool prototypeRobot = true;
+
     m_frontMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
-    m_frontMotor.SetSensorPhase(false);//Prototype bot is false!!
+    m_frontMotor.SetSensorPhase(false);
     m_backMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
-    m_backMotor.SetSensorPhase(false);//Prototype bot is true!!
+    //Prototype bot is true, competition bot is false
+    if(prototypeRobot)
+    {
+        m_backMotor.SetSensorPhase(true);
+    }
+    else
+    {
+        m_backMotor.SetSensorPhase(false);
+    }
     m_driveMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
     m_driveMotor.SetSensorPhase(true);
 
@@ -71,18 +81,18 @@ void Stilts::driveWheels(float speed)// turns the drive stilts at a set speed
     m_driveMotor.Set(ControlMode::PercentOutput, speed);
     std::cout << "Stilt wheels set to: " << speed << "%" << std::endl;
 }
-void Stilts::ThreeStageHeight(float height)
+void Stilts::threeStageHeight(float height)
 {
     std::cout << "Three Stage Height started" << std::endl;
     int state = 1;
     
     while(state != 4)
     {
-        if(getFrontHeight() >= height * -0.25 && getBackHeight() >= height * 0.25)
+        if(state == 1 && getFrontHeight() >= height * 0.25 && getBackHeight() >= height * 0.25)
             state = 2;
-        else if(getFrontHeight() >= height * -0.5 && getBackHeight() >= height * 0.5)
+        else if(state == 2 && getFrontHeight() >= height * 0.5 && getBackHeight() >= height * 0.5)
             state = 3;
-        else if(getFrontHeight() >= height * -0.95 && getBackHeight() >= height * 0.95)
+        else if(state == 3 && getFrontHeight() >= height * 0.95 && getBackHeight() >= height * 0.95)
             state = 4;
 
         if(state == 1)
@@ -101,14 +111,14 @@ void Stilts::ThreeStageHeight(float height)
             setBackToHeight(height);
         }
 
-        std::cout << "State: " << state << " Inches: " << getFrontHeight() << ", " << getBackHeight() << " Trigger: " << height * 0.25 << " Target: " << height / 3 << std::endl;
+        std::cout << "State: " << state << " Inches: " << getFrontHeight() << ", " << getBackHeight() << std::endl;
         
     }
     //The difference between the state triggers and what the PID is trying to get to exists to make it less precise.
 }
 double Stilts::getFrontHeight()//returns the front stilt encoder value in inches
 {
-    return m_frontMotor.GetSelectedSensorPosition() * ticksToInches;
+    return m_frontMotor.GetSelectedSensorPosition() * -1*ticksToInches;
 }
 double Stilts::getBackHeight()// returns the back stilt encoder value in inches
 {
@@ -134,8 +144,8 @@ void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDo
     }
     else
     {
-        m_frontMotor.Set(ControlMode::PercentOutput, 0);
-        //m_frontMotor.Set(ControlMode::Position, m_frontMotor.GetSelectedSensorPosition());
+        //m_frontMotor.Set(ControlMode::PercentOutput, 0);
+        m_frontMotor.Set(ControlMode::Position, m_frontMotor.GetSelectedSensorPosition());
     }
     if(backUp)
     {
@@ -147,8 +157,8 @@ void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDo
     }
     else
     {
-        m_backMotor.Set(ControlMode::PercentOutput, 0);
-        //m_backMotor.Set(ControlMode::Position, m_backMotor.GetSelectedSensorPosition());
+       // m_backMotor.Set(ControlMode::PercentOutput, 0);
+        m_backMotor.Set(ControlMode::Position, m_backMotor.GetSelectedSensorPosition());
     }
     if(stiltsDriveAxis >= 0.1 || stiltsDriveAxis <= -0.1)
     {

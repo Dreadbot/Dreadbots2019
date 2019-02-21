@@ -12,7 +12,7 @@ class Stilts
         void setBackToHeight(float height);//Height in inches
         void driveWheels(float speed);//Speed from -1 to 1
         void teleopStilts(bool frontUpButton, bool frontDownButton, bool backUpButton, bool backDownButton, double stiltsDriveAxis, double frontSpeed, double backSpeed);
-        void ThreeStageHeight(float height);
+        void threeStageHeight(float height);
         double getFrontHeight();
         double getBackHeight();
         double getDrivePosition();
