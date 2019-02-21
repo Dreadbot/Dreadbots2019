@@ -83,7 +83,7 @@ int const shootBall = 2;
 //When pushing code, these should be true so everyone else's code works when they pull
 bool const DRIVE_ENABLED = true;
 bool const LIFTER_ENABLED = true;
-bool const MANIPULATOR_ENABLED = false;
+bool const MANIPULATOR_ENABLED = true;
 bool const TURN_TO_ANGLE_ENABELED = false;
 bool const SOLENOID_TEST_ENABLED = true;
 bool const CLIMB_ENABLED = true;
@@ -103,7 +103,7 @@ bool const BALL_PICKUP_ENABLED = true;
 
 void Robot::RobotInit()
 {
-    //CameraServer::GetInstance()->StartAutomaticCapture();
+     CameraServer::GetInstance()->StartAutomaticCapture();
 
     positionDecider.SetDefaultOption("Left", 0);
     positionDecider.AddOption("Center", 1);
@@ -159,6 +159,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit() 
 {
   gyro->ZeroYaw();
+  lifter->LiftInit();
   lifter->SetLift(0);
 }
 
@@ -177,7 +178,7 @@ void Robot::TeleopInit()
   SmartDashboard::PutBoolean("Vision Target Found", false);
   autoClimbing = true;
   if(LIFTER_ENABLED) {
-    lifter->LiftInit();
+    lifter->LiftInit(); //remove this for competitions
   }
   buttonTimer = 0;
 
@@ -274,9 +275,9 @@ void Robot::TeleopPeriodic()
   {
     //MecDrive2 DOES NOT WORK with rotating right
     //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
 
-    //sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
     
   }
