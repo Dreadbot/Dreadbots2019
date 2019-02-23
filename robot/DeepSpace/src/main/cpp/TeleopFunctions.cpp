@@ -8,7 +8,7 @@
 void Robot::TeleopLifterControl()
 {
   //lifter->TesterLift(0);
-  std::cout << "Lifter Encoder Position:" << lifter->GetEncoderPosition()<< std::endl;
+  //std::cout << "Lifter Encoder Position:";
   //std::cout << lifter->GetEncoderPosition() << std::endl;
   if (!js2->GetRawButton(manualOverrideButton))
   {

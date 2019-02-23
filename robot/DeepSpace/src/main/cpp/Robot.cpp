@@ -64,6 +64,7 @@ DDDDDDD        DDDDDDDD DDDDDDD   .DDDDDDDD DDDDDDDDDDDD       DDDDDDD*/
 
 int currentLevel = 0;
 int buttonTimer = 0;
+float stagedClimbState = 1;
 
 //js1
 int const slowButton = 7;
@@ -102,7 +103,7 @@ bool const BALL_PICKUP_ENABLED = true;
 
 void Robot::RobotInit()
 {
-     CameraServer::GetInstance()->StartAutomaticCapture();
+     //CameraServer::GetInstance()->StartAutomaticCapture();
 
     positionDecider.SetDefaultOption("Left", 0);
     positionDecider.AddOption("Center", 1);
@@ -136,7 +137,7 @@ void Robot::RobotInit()
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
-  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, prototypeRobot);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, true);
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
@@ -178,6 +179,7 @@ void Robot::TeleopInit()
   SmartDashboard::PutNumber("Target Angle", 0);
   SmartDashboard::PutBoolean("Vision Target Found", false);
   autoClimbing = true;
+  stagedClimbState = 1;
   if(LIFTER_ENABLED) {
     lifter->LiftInit(); //remove this for competitions
   }
@@ -191,8 +193,8 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic() 
 { 
-  std::cout << "Back Stilts: " << backStilts->GetSelectedSensorPosition() << std::endl;
-  std::cout << "Front Stilts: " << frontStilts->GetSelectedSensorPosition() << std::endl;
+  //std::cout << "Back Stilts: " << backStilts->GetSelectedSensorPosition() << std::endl;
+  //std::cout << "Front Stilts: " << frontStilts->GetSelectedSensorPosition() << std::endl;
   if(VISION_ENABLED)
   {
     std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
@@ -302,18 +304,13 @@ void Robot::TeleopPeriodic()
     {
        if(js3->GetRawButton(2))
        {
-         stilts->threeStageHeight(12);
-         stilts->threeStageHeight(12);
+         std::cout << "Climbing to " << stagedClimbState << std::endl;
+         stagedClimbState = stilts->stagedClimb(21, .1, stagedClimbState, 10);
+         //stilts->threeStageHeight(6);
        }
        else if(js3->GetRawButton(3))
        {
-         stilts->setFrontToHeight(0);
-         stilts->setBackToHeight(0);
-       }
-       else if(js3->GetRawButton(4))
-       {
-          stilts->threeStageHeight(-3);
-          stilts->threeStageHeight(-3);
+         stilts->setBothToHeight(0);
        }
     }
   }

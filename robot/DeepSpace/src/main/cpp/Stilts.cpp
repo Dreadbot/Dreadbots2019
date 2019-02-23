@@ -2,6 +2,7 @@
 #include <Stilts.h>
 #include <ctre/Phoenix.h>
 #include <iostream>
+#include <frc/Joystick.h>
 double backCoefficientP = 0.2;
 double frontCoefficientP = 0.4;
 double inchesToTicks = 57444;//153184
@@ -61,16 +62,19 @@ Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor, 
     m_driveMotor.Config_kD(0, 1);
     m_driveMotor.Set(ControlMode::Position, 0);
     m_driveMotor.Set(ControlMode::PercentOutput, 0);
-
+    currentFront = 0;
+    currentBack = 0;
     
 }
 void Stilts::setFrontToHeight(float height)//sets the front stilt to height in inches using encoders
 {
+    currentFront = m_frontMotor.GetSelectedSensorPosition();
     m_frontMotor.Set(ControlMode::Position, -1*height*inchesToTicks);
     std::cout << "Front stilts set to: " << -1*height*inchesToTicks << std::endl;
 } 
 void Stilts::setBackToHeight(float height)//sets the back stilts to height in inches using encoders
 {
+    currentBack = m_backMotor.GetSelectedSensorPosition();
     m_backMotor.Set(ControlMode::Position, height*inchesToTicks);
     std::cout << "Back stilts set to: " << height*inchesToTicks << std::endl;
 }
@@ -79,40 +83,69 @@ void Stilts::driveWheels(float speed)// turns the drive stilts at a set speed
     m_driveMotor.Set(ControlMode::PercentOutput, speed);
     std::cout << "Stilt wheels set to: " << speed << "%" << std::endl;
 }
-void Stilts::threeStageHeight(float height)
+void Stilts::setBothToHeight(float height)
 {
-    std::cout << "Three Stage Height started" << std::endl;
+    setFrontToHeight(height);
+    setBackToHeight(height);
+}
+void Stilts::fiveStageHeight(float height)//Prototype for a staged stilts, used for testing, replaced with stagedLift()
+{
+    std::cout << "Five Stage Height started" << std::endl;
     int state = 1;
     
-    while(state != 4)
+    while(state != 6)
     {
-        if(state == 1 && getFrontHeight() >= height * 0.25 && getBackHeight() >= height * 0.25)
+        if(state == 1 && getFrontHeight() >= height * 0.15 && getBackHeight() >= height * 0.15)
             state = 2;
-        else if(state == 2 && getFrontHeight() >= height * 0.5 && getBackHeight() >= height * 0.5)
+        else if(state == 2 && getFrontHeight() >= height * 0.35 && getBackHeight() >= height * 0.35)
             state = 3;
-        else if(state == 3 && getFrontHeight() >= height * 0.95 && getBackHeight() >= height * 0.95)
+        else if(state == 3 && getFrontHeight() >= height * 0.55 && getBackHeight() >= height * 0.55)
             state = 4;
+        else if(state == 4 && getFrontHeight() >= height * 0.75 && getBackHeight() >= height * 0.75)
+            state = 5;
+        else if(state == 5 && getFrontHeight() >= height * 0.95 && getBackHeight() >= height * 0.95)
+            state == 6;
 
         if(state == 1)
         {
-            setFrontToHeight(height / 3);
-            setBackToHeight(height / 3);
+            setBothToHeight(height / 5);
         }
         if(state == 2)
         {
-            setFrontToHeight(height * 2/3);
-            setBackToHeight(height * 2/3);
+            setBothToHeight(height * 2 / 5);
         }
         if(state == 3)
         {
-            setFrontToHeight(height);
-            setBackToHeight(height);
+            setBothToHeight(height * 3 / 5);
         }
-
+        if(state == 4)
+        {
+            setBothToHeight(height * 4 / 5);
+        }
+        if(state == 5)
+        {
+            setBothToHeight(height);
+        }
         std::cout << "State: " << state << " Inches: " << getFrontHeight() << ", " << getBackHeight() << std::endl;
         
     }
     //The difference between the state triggers and what the PID is trying to get to exists to make it less precise.
+}
+float Stilts::stagedClimb(float height, float slop, float s, int stages = 10)//Lifts the robot to a height in stages, waiting for each leg to reach a height to move to the next stage
+{
+    std::cout << s << std::endl;
+    if(s != stages + 1) 
+    {
+        setBothToHeight(height * s / stages);
+        //std::cout << "I: " << i << " State: " << state << " Front Stilts: " << getFrontHeight() << " Back Stilts: " << getBackHeight()<< " Trying for: " << (((height * state) / stages) - slop) << std::endl;
+        if((getFrontHeight() >= (((height * s) / stages) - slop)) && (getBackHeight() >= ((height * s) / stages) - slop))
+        {
+            std::cout << "Changed state from " << s << std::endl;
+            s = s + 1;         
+        } 
+
+        return s;
+    }
 }
 double Stilts::getFrontHeight()//returns the front stilt encoder value in inches
 {
@@ -135,28 +168,33 @@ void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDo
     {
         std::cout << "Speed:" << frontSpeed << ", " << backSpeed << std::endl;
         m_frontMotor.Set(ControlMode::PercentOutput, frontSpeed);
+        currentFront = m_frontMotor.GetSelectedSensorPosition();
+        
     }
     else if(frontDown)
     {
         m_frontMotor.Set(ControlMode::PercentOutput, -frontSpeed);
+        currentFront = m_frontMotor.GetSelectedSensorPosition();
     }
     else
     {
         //m_frontMotor.Set(ControlMode::PercentOutput, 0);
-        m_frontMotor.Set(ControlMode::Position, m_frontMotor.GetSelectedSensorPosition());
+        m_frontMotor.Set(ControlMode::Position, currentFront);
     }
     if(backUp)
     {
         m_backMotor.Set(ControlMode::PercentOutput, backSpeed);
+        currentBack = m_backMotor.GetSelectedSensorPosition();
     }
     else if(backDown)
     {
         m_backMotor.Set(ControlMode::PercentOutput, -backSpeed);
+        currentBack = m_backMotor.GetSelectedSensorPosition();
     }
     else
     {
        // m_backMotor.Set(ControlMode::PercentOutput, 0);
-        m_backMotor.Set(ControlMode::Position, m_backMotor.GetSelectedSensorPosition());
+        m_backMotor.Set(ControlMode::Position, currentBack);
     }
     if(stiltsDriveAxis >= 0.1 || stiltsDriveAxis <= -0.1)
     {
@@ -167,3 +205,45 @@ void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDo
         m_driveMotor.Set(ControlMode::PercentOutput, 0);
     }
 }
+// I'm leaving this older version of stagedLift() here for debugging purposes - Kyle
+/*
+        if(state == 1 && getFrontHeight() >= (height / 10) - slop && getBackHeight() >= (height / 10) - slop)
+        {
+            state = 2;
+        }
+        else if(state == 2 && getFrontHeight() >= (height * 2 / 10) - slop && getBackHeight() >= (height * 2 / 10) - slop)
+        {
+            state = 3;
+        }
+        else if(state == 3 && getFrontHeight() >= (height * 3 / 10) - slop  && getBackHeight() >= (height * 3 / 10) - slop)
+        {
+            state == 4;
+        }
+        else if(state == 4 && getFrontHeight() >= (height * 4 / 10) - slop && getBackHeight() >= (height * 4 / 10) - slop)
+        {
+            state == 5;
+        }
+        else if(state == 5 && getFrontHeight() >= (height * 5 / 10) - slop && getBackHeight() >= (height * 5 / 10) - slop)
+        {
+            state == 6;
+        }
+        else if(state == 6 && getFrontHeight() >= (height * 6 / 10) - slop && getBackHeight() >= (height * 6 / 10) - slop)
+        {e
+            state == 7;
+        }
+        else if(state == 7 && getFrontHeight() >= (height * 7 / 10) - slop && getBackHeight() >= (height * 7 / 10) - slop)
+        {
+            state == 8;
+        }
+        else if(state == 8 && getFrontHeight() >= (height * 8 / 10) - slop && getBackHeight() >= (height * 8 / 10) - slop)
+        {
+            state == 9;
+        }
+        else if(state == 9 && getFrontHeight() >= (height * 9 / 10) - slop && getBackHeight() >= (height * 9 / 10) - slop)
+        {
+            state == 10;
+        }
+        else if(state == 10 && getFrontHeight() >= height - slop && getBackHeight() >= height - slop)
+        {
+            state == 11; 
+        }*/

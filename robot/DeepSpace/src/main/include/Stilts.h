@@ -7,12 +7,14 @@
 class Stilts
 {
     public:
-        Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor, bool prototypeRobot);
+        Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor, bool prototypeRobot = true);
         void setFrontToHeight(float height);//Height in inches
         void setBackToHeight(float height);//Height in inches
         void driveWheels(float speed);//Speed from -1 to 1
+        void setBothToHeight(float height);
         void teleopStilts(bool frontUpButton, bool frontDownButton, bool backUpButton, bool backDownButton, double stiltsDriveAxis, double frontSpeed, double backSpeed);
-        void threeStageHeight(float height);
+        void fiveStageHeight(float height);
+        float stagedClimb(float height, float slop, float s, int stages);
         double getFrontHeight();
         double getBackHeight();
         double getDrivePosition();
@@ -21,4 +23,6 @@ class Stilts
         TalonSRX& m_frontMotor;
         double defaultFrontSpeed = 0.8;
         double defaultBackSpeed = 0.4;
+        int currentFront;
+        int currentBack;
 };
