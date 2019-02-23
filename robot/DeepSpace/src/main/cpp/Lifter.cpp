@@ -19,7 +19,7 @@
 int const ENCODER_ID = 8;
 
 WPI_TalonSRX liftMotor = {ENCODER_ID};
-double levels [] = {0.0, 4.0, 12.0, 32.0, 42.0, 60.0, 70.0}; //Based on measurements 2/21/19
+double levels [] = {0.0, 4.0, 12.0, 32.0, 42.0, 60.0, 72.0}; //Based on measurements 2/21/19
 double slop = 0.5;
 double motorSpeed = 0;
 double MAXLIFTROTATION = 29000;

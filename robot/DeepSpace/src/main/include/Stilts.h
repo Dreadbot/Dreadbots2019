@@ -7,7 +7,7 @@
 class Stilts
 {
     public:
-        Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor);
+        Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor, bool prototypeRobot);
         void setFrontToHeight(float height);//Height in inches
         void setBackToHeight(float height);//Height in inches
         void driveWheels(float speed);//Speed from -1 to 1

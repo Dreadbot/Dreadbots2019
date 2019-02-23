@@ -58,7 +58,7 @@ frc::Joystick *js3; //Backup Manual Controls
 bool isSolButtonDown = false;
 bool isADown = false;
 bool isBackDown = false;
-const bool prototypeRobot = true;
+bool prototypeRobot = false;
 
 int currentCamera = 0;
 

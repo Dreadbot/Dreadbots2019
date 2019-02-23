@@ -89,7 +89,6 @@ bool const SOLENOID_TEST_ENABLED = true;
 bool const CLIMB_ENABLED = true;
 bool const VISION_ENABLED = false;
 bool const BALL_PICKUP_ENABLED = true;
-
 //-------------Talons-------------------
 // WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
 // WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
@@ -137,10 +136,11 @@ void Robot::RobotInit()
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
-  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, prototypeRobot);
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
+  SmartDashboard::PutBoolean("Is Prototype Bot", prototypeRobot);
 }
 
 /**
@@ -173,6 +173,7 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+  prototypeRobot = SmartDashboard::GetBoolean("Is Prototype Bot", false);
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   SmartDashboard::PutBoolean("Vision Target Found", false);

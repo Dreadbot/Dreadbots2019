@@ -8,8 +8,8 @@
 void Robot::TeleopLifterControl()
 {
   //lifter->TesterLift(0);
-  std::cout << "Lifter Encoder Position:";
-  std::cout << lifter->GetEncoderPosition() << std::endl;
+  std::cout << "Lifter Encoder Position:" << lifter->GetEncoderPosition()<< std::endl;
+  //std::cout << lifter->GetEncoderPosition() << std::endl;
   if (!js2->GetRawButton(manualOverrideButton))
   {
     if (js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6)
@@ -47,6 +47,8 @@ void Robot::TeleopLifterControl()
 
 void Robot::TeleopManipulatorControl()
  { 
+   std::cout << "Manipulator Encoder Value:" << wrist->GetSelectedSensorPosition() << std::endl;
+   std::cout << "Manipulator Encoder Position:" << manipulator->GetCurrentPosition() << std::endl;
   //std::cout << wrist->GetSelectedSensorPosition() << std::endl;
   //std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
   //std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
@@ -55,7 +57,7 @@ void Robot::TeleopManipulatorControl()
     if (js2->GetRawButton(lowerManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() < 3)
     {
       manipulator->wrist.ConfigClosedLoopPeakOutput(0, 0.5);
-      std::cout << manipulator->GetCurrentPosition() << std::endl;
+      //std::cout << "Manipulator Encoder Value:" << manipulator->GetCurrentPosition() << std::endl;
       if(manipulator->GetCurrentPosition() == 2){
         std::cout << "shrugged" << std::endl;
         lifter->Shrug();
@@ -90,11 +92,11 @@ void Robot::TeleopManipulatorControl()
   else {
     if(js2->GetRawButton(raiseManipulator))
     {
-      wrist->Set(ControlMode::PercentOutput, 0.7);
+      wrist->Set(ControlMode::PercentOutput, -0.7);
     }
     else if(js2->GetRawButton(lowerManipulator))
     {
-      wrist->Set(ControlMode::PercentOutput, -0.7);
+      wrist->Set(ControlMode::PercentOutput, 0.5);
     }
     else
     {

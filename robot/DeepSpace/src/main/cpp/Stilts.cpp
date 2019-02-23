@@ -6,10 +6,8 @@ double backCoefficientP = 0.2;
 double frontCoefficientP = 0.4;
 double inchesToTicks = 57444;//153184
 double ticksToInches = 0.000017408;
-Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor) : m_backMotor(backMotor), m_driveMotor(driveMotor), m_frontMotor(frontMotor)
+Stilts::Stilts(TalonSRX& driveMotor, TalonSRX& backMotor, TalonSRX& frontMotor, bool prototypeRobot) : m_backMotor(backMotor), m_driveMotor(driveMotor), m_frontMotor(frontMotor)
 {
-    const bool prototypeRobot = true;
-
     m_frontMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
     m_frontMotor.SetSensorPhase(false);
     m_backMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
