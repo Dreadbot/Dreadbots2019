@@ -70,18 +70,18 @@ void Stilts::setFrontToHeight(float height)//sets the front stilt to height in i
 {
     currentFront = m_frontMotor.GetSelectedSensorPosition();
     m_frontMotor.Set(ControlMode::Position, -1*height*inchesToTicks);
-    std::cout << "Front stilts set to: " << -1*height*inchesToTicks << std::endl;
+    //std::cout << "Front stilts set to: " << -1*height*inchesToTicks << std::endl;
 } 
 void Stilts::setBackToHeight(float height)//sets the back stilts to height in inches using encoders
 {
     currentBack = m_backMotor.GetSelectedSensorPosition();
     m_backMotor.Set(ControlMode::Position, height*inchesToTicks);
-    std::cout << "Back stilts set to: " << height*inchesToTicks << std::endl;
+    //std::cout << "Back stilts set to: " << height*inchesToTicks << std::endl;
 }
 void Stilts::driveWheels(float speed)// turns the drive stilts at a set speed
 {
     m_driveMotor.Set(ControlMode::PercentOutput, speed);
-    std::cout << "Stilt wheels set to: " << speed << "%" << std::endl;
+    //std::cout << "Stilt wheels set to: " << speed << "%" << std::endl;
 }
 void Stilts::setBothToHeight(float height)
 {
@@ -90,7 +90,7 @@ void Stilts::setBothToHeight(float height)
 }
 void Stilts::fiveStageHeight(float height)//Prototype for a staged stilts, used for testing, replaced with stagedLift()
 {
-    std::cout << "Five Stage Height started" << std::endl;
+    //std::cout << "Five Stage Height started" << std::endl;
     int state = 1;
     
     while(state != 6)
@@ -126,21 +126,21 @@ void Stilts::fiveStageHeight(float height)//Prototype for a staged stilts, used 
         {
             setBothToHeight(height);
         }
-        std::cout << "State: " << state << " Inches: " << getFrontHeight() << ", " << getBackHeight() << std::endl;
+        //std::cout << "State: " << state << " Inches: " << getFrontHeight() << ", " << getBackHeight() << std::endl;
         
     }
     //The difference between the state triggers and what the PID is trying to get to exists to make it less precise.
 }
 float Stilts::stagedClimb(float height, float slop, float s, int stages = 10)//Lifts the robot to a height in stages, waiting for each leg to reach a height to move to the next stage
 {
-    std::cout << s << std::endl;
+    //std::cout << s << std::endl;
     if(s != stages + 1) 
     {
         setBothToHeight(height * s / stages);
         //std::cout << "I: " << i << " State: " << state << " Front Stilts: " << getFrontHeight() << " Back Stilts: " << getBackHeight()<< " Trying for: " << (((height * state) / stages) - slop) << std::endl;
         if((getFrontHeight() >= (((height * s) / stages) - slop)) && (getBackHeight() >= ((height * s) / stages) - slop))
         {
-            std::cout << "Changed state from " << s << std::endl;
+            //std::cout << "Changed state from " << s << std::endl;
             s = s + 1;         
         } 
 
