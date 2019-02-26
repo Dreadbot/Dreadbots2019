@@ -24,7 +24,7 @@
 #include <frc/shuffleboard/Shuffleboard.h> //not needed once Abbie's stuff is changed
 #include <SparkDrive.h>
 double const TALON_TICKS_PER_ROTATION = 4096;
-float const LEVEL_3_HEIGHT = 21.5;
+float const LEVEL_3_HEIGHT = 21;
 
 class Robot : public frc::TimedRobot {
  public:
@@ -131,8 +131,10 @@ double strafeDifference;
    
 //-----------TeleopVariables---------
 int climbState;
+int stagedClimbState;
 bool defenseMode = false;
-bool autoClimbing = true;
+bool autoClimbing = false;
+bool teleopClimbing = false;
 
 //-----------Objects----------------
 Lifter *lifter;

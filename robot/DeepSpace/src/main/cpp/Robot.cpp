@@ -191,8 +191,9 @@ void Robot::TeleopInit()
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   SmartDashboard::PutBoolean("Vision Target Found", false);
-  autoClimbing = true;
+  autoClimbing = false;
   stagedClimbState = 1;
+  climbState = 1;
   if(LIFTER_ENABLED) {
     lifter->LiftInit(); //remove this for competitions
   }
@@ -299,8 +300,26 @@ void Robot::TeleopPeriodic()
   }
 
 
-  if(CLIMB_ENABLED) {
-    if(!autoClimbing)
+  if(CLIMB_ENABLED)
+  {
+    if(js2->GetRawButton(climbButton) && !autoClimbing && buttonTimer > BUTTON_TIMEOUT)
+    {
+      autoClimbing = true;
+      teleopClimbing = false;
+      buttonTimer = 0;
+    }
+    else if(js2->GetRawButton(climbButton) && autoClimbing && buttonTimer > BUTTON_TIMEOUT)
+    {
+      autoClimbing = false;
+      teleopClimbing = true;
+      buttonTimer = 0;
+    }
+
+    if(autoClimbing && !teleopClimbing)
+    {
+      Climb(); 
+    }
+    else if(teleopClimbing && !autoClimbing)
     {
       stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton),
        js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
@@ -309,22 +328,9 @@ void Robot::TeleopPeriodic()
        std::cout << "Back Encoder Position: " << backStilts->GetSelectedSensorPosition() << ", ";
        std::cout << stilts->getBackHeight() << std::endl;
     }
-    if(js3->GetRawButton(10))
+    else if(teleopClimbing && autoClimbing)
     {
-      autoClimbing = false;
-    }
-    if(autoClimbing)
-    {
-       if(js3->GetRawButton(2))
-       {
-         std::cout << "Climbing to " << stagedClimbState << std::endl;
-         stagedClimbState = stilts->stagedClimb(21, .1, stagedClimbState, 10);
-         //stilts->threeStageHeight(6);
-       }
-       else if(js3->GetRawButton(3))
-       {
-         stilts->setBothToHeight(0);
-       }
+      stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton), js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
     }
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
