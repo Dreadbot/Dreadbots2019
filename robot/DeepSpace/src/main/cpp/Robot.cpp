@@ -103,7 +103,7 @@ bool const BALL_PICKUP_ENABLED = true;
 
 void Robot::RobotInit()
 {
-     //CameraServer::GetInstance()->StartAutomaticCapture();
+    CameraServer::GetInstance()->StartAutomaticCapture();
 
     positionDecider.SetDefaultOption("Left", 0);
     positionDecider.AddOption("Center", 1);
@@ -292,9 +292,9 @@ void Robot::TeleopPeriodic()
   {
     //MecDrive2 DOES NOT WORK with rotating right
     //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
 
-    //sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
     
   }
@@ -335,7 +335,7 @@ void Robot::TeleopPeriodic()
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
   
-  CameraSwap();
+  //CameraSwap();
 
   buttonTimer++;
 }

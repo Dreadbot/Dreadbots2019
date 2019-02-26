@@ -142,7 +142,7 @@ void Robot::Climb()
       }
       if (climbState == 2)
       {
-        stilts->driveWheels(0.2);
+        stilts->driveWheels(-0.2);
         std::cout << "Ran state 2" << std::endl;
       }
       if (climbState == 3)
@@ -152,7 +152,7 @@ void Robot::Climb()
       }
       if (climbState == 4)
       {
-        stilts->driveWheels(0.2);
+        stilts->driveWheels(-0.2);
       }
       if (climbState == 5)
       {
