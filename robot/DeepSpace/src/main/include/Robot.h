@@ -135,7 +135,8 @@ int stagedClimbState;
 bool defenseMode = false;
 bool autoClimbing = false;
 bool teleopClimbing = false;
-
+float const driveStiltsSpeed = 0.4;
+float const sparksClimbSpeed = 0.2;
 //-----------Objects----------------
 Lifter *lifter;
 Drive *drive;

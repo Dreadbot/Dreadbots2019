@@ -82,14 +82,14 @@ int const ballPickup = 1;
 int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
-bool const DRIVE_ENABLED = true;
-bool const LIFTER_ENABLED = true;
-bool const MANIPULATOR_ENABLED = true;
+bool const DRIVE_ENABLED = false;
+bool const LIFTER_ENABLED = false;
+bool const MANIPULATOR_ENABLED = false;
 bool const TURN_TO_ANGLE_ENABELED = false;
-bool const SOLENOID_TEST_ENABLED = true;
+bool const SOLENOID_TEST_ENABLED = false;
 bool const CLIMB_ENABLED = true;
 bool const VISION_ENABLED = false;
-bool const BALL_PICKUP_ENABLED = true;
+bool const BALL_PICKUP_ENABLED = false;
 //-------------Talons-------------------
 // WPI_TalonSRX *lFront = new WPI_TalonSRX(4); //left front
 // WPI_TalonSRX *rFront = new WPI_TalonSRX(1); //right front
@@ -203,6 +203,9 @@ void Robot::TeleopInit()
     manipulator->Init();
     //manipulator->SetBallPickup(true);
   }
+  frontStilts->SetSelectedSensorPosition(0);
+  backStilts->SetSelectedSensorPosition(0);
+  stilts->setBothToHeight(0);
 }
 
 void Robot::TeleopPeriodic() 
@@ -211,7 +214,7 @@ void Robot::TeleopPeriodic()
   //std::cout << "Front Stilts: " << frontStilts->GetSelectedSensorPosition() << std::endl;
   if(VISION_ENABLED)
   {
-    std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
+    std::string direction = frc::SmartDashboard::GetString("Strafe Direction", "correct");
     std::cout << "direction: " << direction << std::endl;
     StrafeToAlign(direction);
   }
@@ -318,6 +321,12 @@ void Robot::TeleopPeriodic()
     if(autoClimbing && !teleopClimbing)
     {
       Climb(); 
+      std::cout << "Front Stilts: " << stilts->getFrontHeight();
+      std::cout << " Back Stilts: " << stilts->getBackHeight() << std::endl;
+      std::cout << " Front Left Ultra: " << ultra->getDistanceLeftFront();
+      std::cout << " Back Left Ultra: " << ultra->getDistanceLeftBack() << std::endl;
+      std::cout << "Climb state: " << climbState << std::endl;
+
     }
     else if(teleopClimbing && !autoClimbing)
     {

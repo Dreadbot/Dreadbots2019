@@ -119,7 +119,7 @@ void Robot::Climb()
         climbState = 2; //Drive the stilt wheel
         std::cout << "Changed to state 2, climb State = " << climbState << std::endl;
       }
-      else if (climbState == 2 && ultra->getDistanceLeftFront() <= 5)
+      else if (climbState == 2 && ultra->getDistanceLeftFront() <= 5 && ultra->getDistanceLeftFront() >= 1 && ultra->getDistanceRightFront() <= 5 && ultra->getDistanceRightFront() >= 1)
       {
         climbState = 3; //Retract front
       }
@@ -127,7 +127,7 @@ void Robot::Climb()
       {
         climbState = 4; //drive the stilt wheel
       }
-      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 5)
+      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 5 && ultra->getDistanceLeftBack() >= 1 && ultra->getDistanceRightBack() <= 5 && ultra->getDistanceRightBack() >= 1)
       {
         climbState = 5; //retract back wheel
       }
@@ -142,7 +142,7 @@ void Robot::Climb()
       }
       if (climbState == 2)
       {
-        stilts->driveWheels(-0.2);
+        stilts->driveWheels(-driveStiltsSpeed);
         std::cout << "Ran state 2" << std::endl;
       }
       if (climbState == 3)
@@ -152,7 +152,7 @@ void Robot::Climb()
       }
       if (climbState == 4)
       {
-        stilts->driveWheels(-0.2);
+        stilts->driveWheels(-driveStiltsSpeed);
       }
       if (climbState == 5)
       {
@@ -265,7 +265,8 @@ void Robot::StrafeToAlign (std::string direction)
     }
     else if (direction == "right")
     {
-      sparkDrive->MecDrive(.4, 0, 0, true, false);
+      std::cout<<"haha"<<std::endl;
+      sparkDrive->MecDrive(.2, 0, 0, true, false);
     }
     else if(direction == "left")
     {
