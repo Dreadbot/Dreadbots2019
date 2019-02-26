@@ -116,6 +116,8 @@ int buttonTimer = 0;
 int const BUTTON_TIMEOUT = 25;
 
 
+frc::SendableChooser<int> strafeDir;
+
 //------------Auton Variables-------
 double currentAngle;
 double x1, y1, x2, y2, cameraAngle, cameraLength;

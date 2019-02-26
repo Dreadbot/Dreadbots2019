@@ -112,6 +112,9 @@ void Robot::RobotInit()
     gamePieceDecider.SetDefaultOption("Hatch", 0);
     gamePieceDecider.AddOption("Ball", 1);
 
+    strafeDir.SetDefaultOption("Left", 0);
+    strafeDir.AddOption("Right", 1);
+    frc::SmartDashboard::PutData("Strafe Direction", &strafeDir);
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
   js2 = new frc::Joystick(1);        //Driver 2
@@ -121,6 +124,10 @@ void Robot::RobotInit()
   rFront = new WPI_TalonSRX(1);      //right front
   lBack = new WPI_TalonSRX(2);       //left rear
   rBack = new WPI_TalonSRX(3);       //right rear
+  rFront->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+  lFront->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+  rBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+  lBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
                                      //-------------Sparks-------------------
   lFrontSpark = new rev::CANSparkMax(0, rev::CANSparkMax::MotorType::kBrushless);
   rFrontSpark = new rev::CANSparkMax(1, rev::CANSparkMax::MotorType::kBrushless);
@@ -162,14 +169,20 @@ void Robot::AutonomousInit()
   gyro->ZeroYaw();
   lifter->LiftInit();
   lifter->SetLift(0);
+  
+  rFront->SetSelectedSensorPosition(0);
+  lFront->SetSelectedSensorPosition(0);
+  rBack->SetSelectedSensorPosition(0);
+  lBack->SetSelectedSensorPosition(0);
 }
 
 void Robot::AutonomousPeriodic() 
 {
   currentAngle = gyro->GetYaw();
-
+  int direction = strafeDir.GetSelected();
   //drive->DriveStraight(.3, currentAngle);
-  //drive->StrafeStraight(currentAngle, 0, 0.5);
+  //drive->StrafeStraight(currentAngle, 0, 0.25);
+  drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
 }
 
 void Robot::TeleopInit()
@@ -278,9 +291,9 @@ void Robot::TeleopPeriodic()
   {
     //MecDrive2 DOES NOT WORK with rotating right
     //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
 
-    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    //sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
     
   }

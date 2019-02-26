@@ -2,6 +2,12 @@
 #include <Drive.h>
 #include <AHRS.h>
 
+const float driveGearRatio = 5;
+const float driveGearDiameter = 3.5;
+const double pi = 3.1415;
+const  int ticksPerRotation = 4096;
+const float inchesPerRotation = 1; //dummy value, pls change later (NOTE: THIS IS SPECIFIC TO THE DRIVE GEARS)
+
 Drive::Drive(WPI_TalonSRX *lFront_in, WPI_TalonSRX *lBack_in, WPI_TalonSRX *rFront_in, WPI_TalonSRX *rBack_in)
 {
     lFront = lFront_in;
@@ -9,6 +15,7 @@ Drive::Drive(WPI_TalonSRX *lFront_in, WPI_TalonSRX *lBack_in, WPI_TalonSRX *rFro
     rFront = rFront_in;
     rBack = rBack_in;
 }
+
 //Mec drive with ramp up or down speed
 void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, bool slowButton) //homemade mecanum drive!
 	{
@@ -246,25 +253,25 @@ void Drive::Strafe(std::string side)
 	}
 	void Drive::StrafeStraight(double currentAngle, double targetAngle, double xSpeed) //real one
 	{
-	double difference = targetAngle - currentAngle; //(-) = left, (+) = right
-	//double rightDifference = currentAngle - targetAngle;
-		if(difference > 5)
+		double difference = targetAngle - currentAngle; //(-) = left, (+) = right
+		//double rightDifference = currentAngle - targetAngle;
+		if(rFront->GetSelectedSensorPosition() < ticksPerRotation)
 		{
-		double rotSpeed = difference / 30;	
-		MecDrive(xSpeed, 0, rotSpeed, true, false);
+			if(difference > 5)
+			{
+				double rotSpeed = difference / 30;	
+				MecDrive(xSpeed, 0, rotSpeed, true, false);
+			}
+			else if(difference < 5)
+			{
+				double rotSpeed = difference / 30;
+				MecDrive(xSpeed, 0, rotSpeed, true, false);                                                                                                                                          
+			}
 		}
-		else if(difference < 5)
-		{
-		double rotSpeed = difference / 30;
-		MecDrive(xSpeed, 0, rotSpeed, true, false);                                                                                                                                          
-		}
+		else
+			MecDrive(0, 0, 0, true, false);
 	}
 
-const float driveGearRatio = 5;
-const float driveGearDiameter = 3.5;
-const double pi = 3.1415;
-const  int ticksPerRotation = 4096;
-const float inchesPerRotation = 1; //dummy value, pls change later (NOTE: THIS IS SPECIFIC TO THE DRIVE GEARS)
 
 float strafeDistance(float rotations) //finding rotations to inches - comment once THIS mystery has been solved
 {
@@ -284,14 +291,22 @@ void Drive::StrafeToDistance(StrafeDirection direction, float rotations)
 	switch(direction)
 	{
 		case LEFT:
+			std::cout<<"Going LEFT"<<std::endl;
+			std::cout<<tick<<std::endl;
+			std::cout<<"Current encoder value: "<<rFront->GetSelectedSensorPosition()<<std::endl;
 			lFront->Set(ControlMode::Position, -tick);
 			rFront->Set(ControlMode::Position, tick);
 			lBack->Set(ControlMode::Position, tick);
 			rBack->Set(ControlMode::Position, -tick);
+			break;
 		case RIGHT:
+			std::cout<<"Going RIGHT"<<std::endl;
+			std::cout<<tick<<std::endl;
+			std::cout<<"Current encoder value: "<<rFront->GetSelectedSensorPosition()<<std::endl;
 			lFront->Set(ControlMode::Position, tick);
 			rFront->Set(ControlMode::Position, -tick);
 			lBack->Set(ControlMode::Position, -tick);
 			rBack->Set(ControlMode::Position, tick);
+			break;
 	}
 }
