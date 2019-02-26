@@ -103,7 +103,7 @@ bool const BALL_PICKUP_ENABLED = true;
 
 void Robot::RobotInit()
 {
-     //CameraServer::GetInstance()->StartAutomaticCapture();
+    CameraServer::GetInstance()->StartAutomaticCapture();
 
     positionDecider.SetDefaultOption("Left", 0);
     positionDecider.AddOption("Center", 1);
@@ -112,6 +112,9 @@ void Robot::RobotInit()
     gamePieceDecider.SetDefaultOption("Hatch", 0);
     gamePieceDecider.AddOption("Ball", 1);
 
+    strafeDir.SetDefaultOption("Left", 0);
+    strafeDir.AddOption("Right", 1);
+    frc::SmartDashboard::PutData("Strafe Direction", &strafeDir);
   //---------Joysticks---------------------
   js1 = new frc::Joystick(0);        //Driver 1
   js2 = new frc::Joystick(1);        //Driver 2
@@ -121,6 +124,10 @@ void Robot::RobotInit()
   rFront = new WPI_TalonSRX(1);      //right front
   lBack = new WPI_TalonSRX(2);       //left rear
   rBack = new WPI_TalonSRX(3);       //right rear
+  rFront->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+  lFront->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+  rBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+  lBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
                                      //-------------Sparks-------------------
   lFrontSpark = new rev::CANSparkMax(0, rev::CANSparkMax::MotorType::kBrushless);
   rFrontSpark = new rev::CANSparkMax(1, rev::CANSparkMax::MotorType::kBrushless);
@@ -162,14 +169,20 @@ void Robot::AutonomousInit()
   gyro->ZeroYaw();
   lifter->LiftInit();
   lifter->SetLift(0);
+  
+  rFront->SetSelectedSensorPosition(0);
+  lFront->SetSelectedSensorPosition(0);
+  rBack->SetSelectedSensorPosition(0);
+  lBack->SetSelectedSensorPosition(0);
 }
 
 void Robot::AutonomousPeriodic() 
 {
   currentAngle = gyro->GetYaw();
-
+  int direction = strafeDir.GetSelected();
   //drive->DriveStraight(.3, currentAngle);
-  //drive->StrafeStraight(currentAngle, 0, 0.5);
+  //drive->StrafeStraight(currentAngle, 0, 0.25);
+  drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
 }
 
 void Robot::TeleopInit()
@@ -178,8 +191,9 @@ void Robot::TeleopInit()
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   SmartDashboard::PutBoolean("Vision Target Found", false);
-  autoClimbing = true;
+  autoClimbing = false;
   stagedClimbState = 1;
+  climbState = 1;
   if(LIFTER_ENABLED) {
     lifter->LiftInit(); //remove this for competitions
   }
@@ -286,8 +300,26 @@ void Robot::TeleopPeriodic()
   }
 
 
-  if(CLIMB_ENABLED) {
-    if(!autoClimbing)
+  if(CLIMB_ENABLED)
+  {
+    if(js2->GetRawButton(climbButton) && !autoClimbing && buttonTimer > BUTTON_TIMEOUT)
+    {
+      autoClimbing = true;
+      teleopClimbing = false;
+      buttonTimer = 0;
+    }
+    else if(js2->GetRawButton(climbButton) && autoClimbing && buttonTimer > BUTTON_TIMEOUT)
+    {
+      autoClimbing = false;
+      teleopClimbing = true;
+      buttonTimer = 0;
+    }
+
+    if(autoClimbing && !teleopClimbing)
+    {
+      Climb(); 
+    }
+    else if(teleopClimbing && !autoClimbing)
     {
       stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton),
        js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
@@ -296,27 +328,14 @@ void Robot::TeleopPeriodic()
        std::cout << "Back Encoder Position: " << backStilts->GetSelectedSensorPosition() << ", ";
        std::cout << stilts->getBackHeight() << std::endl;
     }
-    if(js3->GetRawButton(10))
+    else if(teleopClimbing && autoClimbing)
     {
-      autoClimbing = false;
-    }
-    if(autoClimbing)
-    {
-       if(js3->GetRawButton(2))
-       {
-         std::cout << "Climbing to " << stagedClimbState << std::endl;
-         stagedClimbState = stilts->stagedClimb(21, .1, stagedClimbState, 10);
-         //stilts->threeStageHeight(6);
-       }
-       else if(js3->GetRawButton(3))
-       {
-         stilts->setBothToHeight(0);
-       }
+      stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton), js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
     }
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not
   
-  CameraSwap();
+  //CameraSwap();
 
   buttonTimer++;
 }

@@ -108,56 +108,58 @@ void Robot::TeleopManipulatorControl()
 //Fully autonomous level 3 climb using ultrasonics and encoders
 void Robot::Climb()
 {
-  if (js2->GetRawButton(climbButton))
-  {
-    climbState = 1;
-    while (climbState != 6 && !js2->GetRawButton(manualOverrideButton))
+  float slop = .1;
+  std::cout<< "Climb State: " << climbState;
+  //std::cout << " Front Height: " << stilts->getFrontHeight();
+  //std::cout << " Back Height: " << stilts->getBackHeight();
+    if (climbState != 6)
     {
-
-      if (climbState == 1 && stilts->getFrontHeight() >= LEVEL_3_HEIGHT && stilts->getBackHeight() >= LEVEL_3_HEIGHT)
+      if (climbState == 1 && stilts->getFrontHeight() >= LEVEL_3_HEIGHT - slop && stilts->getBackHeight() >= LEVEL_3_HEIGHT - slop)
       {
         climbState = 2; //Drive the stilt wheel
+        std::cout << "Changed to state 2, climb State = " << climbState << std::endl;
       }
       else if (climbState == 2 && ultra->getDistanceLeftFront() <= 5)
       {
         climbState = 3; //Retract front
       }
-      else if (climbState == 3 && stilts->getFrontHeight() == 0)
+      else if (climbState == 3 && stilts->getFrontHeight() <= 0 + slop)
       {
         climbState = 4; //drive the stilt wheel
       }
-      else if (climbState == 4)
+      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 5)
       {
         climbState = 5; //retract back wheel
       }
-      else if (climbState == 5 && stilts->getBackHeight() == 0)
+      else if (climbState == 5 && stilts->getBackHeight() <= 0 + slop)
       {
         climbState = 6; //finished
       }
 
-      if (climbState = 1)
+      if (climbState == 1)
       {
-        stilts->setFrontToHeight(LEVEL_3_HEIGHT);
-        stilts->setBackToHeight(LEVEL_3_HEIGHT);
+        stagedClimbState = stilts->stagedClimb(21, .1, stagedClimbState, 10);
       }
       if (climbState == 2)
       {
-        stilts->driveWheels(0.2);
+        stilts->driveWheels(-0.2);
+        std::cout << "Ran state 2" << std::endl;
       }
       if (climbState == 3)
       {
+        stilts->driveWheels(0.0);
         stilts->setFrontToHeight(0);
       }
       if (climbState == 4)
       {
-        stilts->driveWheels(0.2);
+        stilts->driveWheels(-0.2);
       }
       if (climbState == 5)
       {
-        stilts->setBackToHeight(0);
+        stilts->driveWheels(0);
+        stilts->setBackToHeight(LEVEL_3_HEIGHT - 5);
       }
     }
-  }
 }
 void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 {
