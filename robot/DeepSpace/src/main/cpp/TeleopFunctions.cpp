@@ -261,19 +261,19 @@ void Robot::StrafeToAlign (std::string direction)
   {
     if(direction == "correct")
     {
-      drive->MecDrive(0, 0, 0, false, false);
+      sparkDrive->MecDrive(0, 0, 0, false, false);
     }
     else if (direction == "right")
     {
-      drive->MecDrive(.4, 0, 0, true, false);
+      sparkDrive->MecDrive(.4, 0, 0, true, false);
     }
     else if(direction == "left")
     {
-      drive->MecDrive(-0.4, 0, 0, true, false);
+      sparkDrive->MecDrive(-0.4, 0, 0, true, false);
     }
   }
   else{
-    drive->MecDrive(0, 0, 0, false, false);
+    sparkDrive->MecDrive(0, 0, 0, false, false);
   }
 }
 
