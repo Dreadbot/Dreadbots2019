@@ -286,7 +286,7 @@ if __name__ == "__main__":
     for i in cameraConfigs:
         cameras.append(startCamera(i))
     
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     print("Camera opened by cv2")
     grip = SlimTape()
     cycle = 0
@@ -327,13 +327,23 @@ if __name__ == "__main__":
                 #Center point 112.5 x 150 is 26 inches from the camera ULTRALORD SPECIFIC!!!!!
                 #20.9:1 pixel:inch
                 #Divide pixels by 20.9 to get strafe difference
+
+                #80 inches
+                #112.5/80 = 
                 strafe_difference_pixel = average_x1-112.5
                 strafe_difference_inch = 20.9/strafe_difference_pixel
+
+                if x1 < 102.5:
+                    table.putString("Strafe Direction", "left")
+                elif x1 > 122.5:
+                    table.putString("Strafe Direction", "right")
+                else:
+                    table.putString("Strafe Direction", correct)
 
                 table.putNumber("x1", average_x1)
                 table.putNumber("x2", average_x2)
                 table.putNumber("Strafe Difference", strafe_difference_inch)
-                print("Lines worked")
+                print("Lines worked - V2")
             else:
                 print("Camera not found")
         except Exception as e:
