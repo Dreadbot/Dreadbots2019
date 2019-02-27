@@ -127,6 +127,7 @@ int autoState;
 frc::SendableChooser<int> positionDecider;
 frc::SendableChooser<int> gamePieceDecider;
 
+int climbTimeout = 0;
 double strafeDifference;
    
 //-----------TeleopVariables---------
