@@ -128,6 +128,7 @@ int autoState;
 frc::SendableChooser<int> positionDecider;
 frc::SendableChooser<int> gamePieceDecider;
 
+int climbTimeout = 0;
 double strafeDifference;
    
 //-----------TeleopVariables---------
@@ -136,7 +137,8 @@ int stagedClimbState;
 bool defenseMode = false;
 bool autoClimbing = false;
 bool teleopClimbing = false;
-
+float const driveStiltsSpeed = 0.4;
+float const sparksClimbSpeed = 0.2;
 //-----------Objects----------------
 Lifter *lifter;
 Drive *drive;

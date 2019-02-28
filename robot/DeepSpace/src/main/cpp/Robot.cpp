@@ -144,7 +144,7 @@ void Robot::RobotInit()
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
-  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, true);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, false);
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
@@ -207,15 +207,24 @@ void Robot::TeleopInit()
     manipulator->Init();
     //manipulator->SetBallPickup(true);
   }
+  frontStilts->SetSelectedSensorPosition(0);
+  backStilts->SetSelectedSensorPosition(0);
+  stilts->setBothToHeight(0);
+  frontStilts->Set(ControlMode::PercentOutput, 0);
+  backStilts->Set(ControlMode::PercentOutput, 0);
 }
 
 void Robot::TeleopPeriodic() 
 { 
-  //std::cout << "Back Stilts: " << backStilts->GetSelectedSensorPosition() << std::endl;
-  //std::cout << "Front Stilts: " << frontStilts->GetSelectedSensorPosition() << std::endl;
+      std::cout << "Front Stilts: " << stilts->getFrontHeight() << ", " << frontStilts->GetSelectedSensorPosition();
+      std::cout << " Back Stilts: " << stilts->getBackHeight() << ", " << frontStilts->GetSelectedSensorPosition() << std::endl;
+      std::cout << " Front Left Ultra: " << ultra->getDistanceLeftFront();
+      std::cout << " Back Left Ultra: " << ultra->getDistanceLeftBack() << std::endl;
+      std::cout << " Manipulator: " << wrist->GetSelectedSensorPosition();
+  
   if(VISION_ENABLED)
   {
-    std::string direction = frc::SmartDashboard::GetString("StrafeToAlign", "correct");
+    std::string direction = frc::SmartDashboard::GetString("Strafe Direction", "correct");
     std::cout << "direction: " << direction << std::endl;
     StrafeToAlign(direction);
   }
@@ -253,23 +262,9 @@ void Robot::TeleopPeriodic()
   
   if(!defenseMode)
   { 
-    if(CLIMB_ENABLED)
-    {
-      //Climb();
-    }
     if(LIFTER_ENABLED)
     {
       TeleopLifterControl();
-     /* if(js2->GetRawButton(upButton))
-      {
-        lifter->TesterLift(50);
-      }gbButton(downButton))
-      {
-        lifter->TesterLift(50);
-      }
-      else{
-        lifter->TesterLift(0);
-      }*/
     }
     if(MANIPULATOR_ENABLED)
     {
@@ -277,7 +272,6 @@ void Robot::TeleopPeriodic()
     }
     if(SOLENOID_TEST_ENABLED)
     {
-      //ElectricSolenoidTest(solenoid);
       if(js1->GetRawButton(engageSol)) 
       {
       std::cout << "engaging sol" << std::endl;
@@ -318,7 +312,12 @@ void Robot::TeleopPeriodic()
       teleopClimbing = true;
       buttonTimer = 0;
     }
-
+    if(js3->GetRawButton(10))
+    {
+      autoClimbing = false;
+      teleopClimbing  = true;
+      buttonTimer = 0;
+    }
     if(autoClimbing && !teleopClimbing)
     {
       Climb(); 
