@@ -7,9 +7,8 @@
 
 void Robot::TeleopLifterControl()
 {
-  //lifter->TesterLift(0);
-  //std::cout << "Lifter Encoder Position:";
-  //std::cout << lifter->GetEncoderPosition() << std::endl;
+
+  std::cout << " Lifter: " << lifter->GetEncoderPosition() << std::endl;
   if (!js2->GetRawButton(manualOverrideButton))
   {
     if (js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6)
@@ -47,8 +46,8 @@ void Robot::TeleopLifterControl()
 
 void Robot::TeleopManipulatorControl()
  { 
-   std::cout << "Manipulator Encoder Value:" << wrist->GetSelectedSensorPosition() << std::endl;
-   std::cout << "Manipulator Encoder Position:" << manipulator->GetCurrentPosition() << std::endl;
+   //std::cout << "Manipulator Encoder Value:" << wrist->GetSelectedSensorPosition() << std::endl;
+   //std::cout << "Manipulator Encoder Position:" << manipulator->GetCurrentPosition() << std::endl;
   //std::cout << wrist->GetSelectedSensorPosition() << std::endl;
   //std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
   //std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
@@ -109,15 +108,16 @@ void Robot::TeleopManipulatorControl()
 void Robot::Climb()
 {
   float slop = .1;
-  std::cout<< "Climb State: " << climbState;
+  //std::cout<< "Climb State: " << climbState;
   //std::cout << " Front Height: " << stilts->getFrontHeight();
   //std::cout << " Back Height: " << stilts->getBackHeight();
     if (climbState != 8)
     {
       if (climbState == 1 && stilts->getFrontHeight() >= LEVEL_3_HEIGHT - slop && stilts->getBackHeight() >= LEVEL_3_HEIGHT - slop)
       {
+        climbTimeout = 0;
         climbState = 2; //Drive the stilt wheel
-        std::cout << "Changed to state 2, climb State = " << climbState << std::endl;
+        //std::cout << "Changed to state 2, climb State = " << climbState << std::endl;
       }
       else if (climbState == 2 && ultra->getDistanceLeftFront() <= 5 && ultra->getDistanceLeftFront() >= 1 && ultra->getDistanceRightFront() <= 5 && ultra->getDistanceRightFront() >= 1)
       {
@@ -135,7 +135,7 @@ void Robot::Climb()
       {
         climbState = 6; //drives to alliance wall
       }
-      else if (climbState == 6 && climbTimeout >= 50)
+      else if (climbState == 6 && climbTimeout >= 20)
       {
         climbState = 7; //stops movement
         climbTimeout = 0;
@@ -168,6 +168,7 @@ void Robot::Climb()
       {
         stilts->driveWheels(0);
         stilts->setBackToHeight(0);
+        climbTimeout = 0;
       }
       if (climbState == 6)
       {
@@ -175,6 +176,11 @@ void Robot::Climb()
         climbTimeout++;
       }
       if (climbState == 7)
+      {
+        sparkDrive->MecDrive(0, -.15, 0, false, false);
+        climbTimeout++;
+      }
+      if(climbState == 8)
       {
         sparkDrive->MecDrive(0, 0, 0, false, false);
       }
@@ -284,7 +290,7 @@ void Robot::StrafeToAlign (std::string direction)
     }
     else if (direction == "right")
     {
-      std::cout<<"haha"<<std::endl;
+      //std::cout<<"haha"<<std::endl;
       sparkDrive->MecDrive(.2, 0, 0, true, false);
     }
     else if(direction == "left")
