@@ -39,6 +39,7 @@ class Robot : public frc::TimedRobot {
   void TeleopManipulatorControl();
   void AutonBall(int position);
   void AutonHatch(int position);
+  void AutonHatch(int startPosition, int targetPosition);
   int AutonPositionDecider();
   int AutonGamePieceDecider();
   void RunAuton();

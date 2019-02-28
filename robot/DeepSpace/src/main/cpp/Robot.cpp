@@ -149,6 +149,7 @@ void Robot::RobotInit()
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
   SmartDashboard::PutBoolean("Is Prototype Bot", prototypeRobot);
+  autoState = 0;
 }
 
 /**
@@ -173,7 +174,9 @@ void Robot::AutonomousInit()
   rFront->SetSelectedSensorPosition(0);
   lFront->SetSelectedSensorPosition(0);
   rBack->SetSelectedSensorPosition(0);
-  lBack->SetSelectedSensorPosition(0);
+  lBack->SetSelectedSensorPosition(0);            
+
+  autoState = 0;
 }
 
 void Robot::AutonomousPeriodic() 
@@ -182,7 +185,8 @@ void Robot::AutonomousPeriodic()
   int direction = strafeDir.GetSelected();
   //drive->DriveStraight(.3, currentAngle);
   //drive->StrafeStraight(currentAngle, 0, 0.25);
-  drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
+  //drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
+  AutonHatch(0,0);
 }
 
 void Robot::TeleopInit()
