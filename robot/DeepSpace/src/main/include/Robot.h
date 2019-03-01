@@ -65,20 +65,22 @@ int currentCamera = 0;
 
 //js1
 int const turboButton = 8;
+int const slowButton = 6;
 int const joystickX = 0;
 int const joystickY = 1;
 int const joystickRot = 2;
 int const defenseButton = 2;
-int const engageSol = 3;
-int const disengageSol = 4;
+int const liftOverrideButton = 3;
 int const cameraButton = 9;
 int const alignMacro = 5;
+int const downButton = 7;
+int const upButton = 5;
 //js2
-int const upButton = 6; 
-int const downButton = 8; 
 int const lowerManipulator = 7;
 int const raiseManipulator = 5;
-int const manualOverrideButton = 3;
+int const engageSol = 6;
+int const disengageSol = 8;
+int const manipulatorOverrideButton = 3;
 int const climbButton = 10;
 int const ballPickup = 1;
 int const shootBall = 2;

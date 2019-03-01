@@ -9,9 +9,9 @@ void Robot::TeleopLifterControl()
 {
 
   std::cout << " Lifter: " << lifter->GetEncoderPosition() << std::endl;
-  if (!js2->GetRawButton(manualOverrideButton))
+  if (!js1->GetRawButton(liftOverrideButton))
   {
-    if (js2->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6)
+    if (js1->GetRawButton(upButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() < 6)
     {
       buttonTimer = 0;
       lifter->IncreaseCurrentLevel();
@@ -19,7 +19,7 @@ void Robot::TeleopLifterControl()
       lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
-    if (js2->GetRawButton(downButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() > 0)
+    if (js1->GetRawButton(downButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() > 0)
     {
       buttonTimer = 0;
       lifter->DecreaseCurrentLevel();
@@ -29,11 +29,11 @@ void Robot::TeleopLifterControl()
   }
   else
   {
-    if (js2->GetRawButton(upButton))
+    if (js1->GetRawButton(upButton))
     {
       lifter->MoveLift(1);
     }
-    else if (js2->GetRawButton(downButton))
+    else if (js1->GetRawButton(downButton))
     {
       lifter->MoveLift(-1);
     }
@@ -51,7 +51,7 @@ void Robot::TeleopManipulatorControl()
   //std::cout << wrist->GetSelectedSensorPosition() << std::endl;
   //std::cout<<"Button timer: " << (buttonTimer >= BUTTON_TIMEOUT) << std::endl;
   //std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
-  if (!js2->GetRawButton(manualOverrideButton))
+  if (!js2->GetRawButton(manipulatorOverrideButton))
   {
     if (js2->GetRawButton(lowerManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() < 3)
     {
@@ -209,10 +209,10 @@ void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
   else if (!js1->GetRawButton(solButton) && isSolOut == false)
     isXDown = false;
     */
-  if(js1->GetRawButton(engageSol))
+  if(js2->GetRawButton(engageSol))
     solenoid->Set(true);
   
-  if(js1->GetRawButton(disengageSol))
+  if(js2->GetRawButton(disengageSol))
     solenoid->Set(false);
 
 }
