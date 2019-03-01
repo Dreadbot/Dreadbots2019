@@ -43,7 +43,7 @@ void Drive::MecDrive2(double xAxis, double yAxis, double rot, bool turboButton, 
 		}
 		else if (slowButton)
 		{
-			maxSpeed = .3;
+			maxSpeed = .2;
 		}
 		else
 		{	

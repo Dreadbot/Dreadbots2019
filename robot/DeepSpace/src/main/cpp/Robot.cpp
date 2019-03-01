@@ -66,20 +66,6 @@ int currentLevel = 0;
 int buttonTimer = 0;
 float stagedClimbState = 1;
 
-//js1
-int const slowButton = 7;
-int const turboButton = 8;
-int const joystickX = 0;
-int const joystickY = 1;
-int const joystickRot = 2;
-int const alignMacro = 5;
-//js2
-int const upButton = 6; 
-int const downButton = 8;
-int const lowerManipulator = 7;
-int const raiseManipulator = 5;
-int const ballPickup = 1;
-int const shootBall = 2;
 //---------------------------------
 //When pushing code, these should be true so everyone else's code works when they pull
 bool const DRIVE_ENABLED = true;
@@ -144,12 +130,11 @@ void Robot::RobotInit()
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
-  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, false);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, true);
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
-  SmartDashboard::PutBoolean("Is Prototype Bot", prototypeRobot);
-  autoState = 0;
+  //SmartDashboard::PutBoolean("Is Prototype Bot", prototypeRobot);
 }
 
 /**
@@ -174,9 +159,7 @@ void Robot::AutonomousInit()
   rFront->SetSelectedSensorPosition(0);
   lFront->SetSelectedSensorPosition(0);
   rBack->SetSelectedSensorPosition(0);
-  lBack->SetSelectedSensorPosition(0);            
-
-  autoState = 0;
+  lBack->SetSelectedSensorPosition(0);
 }
 
 void Robot::AutonomousPeriodic() 
@@ -185,13 +168,12 @@ void Robot::AutonomousPeriodic()
   int direction = strafeDir.GetSelected();
   //drive->DriveStraight(.3, currentAngle);
   //drive->StrafeStraight(currentAngle, 0, 0.25);
-  //drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
-  AutonHatch(0,0);
+  drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
 }
 
 void Robot::TeleopInit()
 {
-  prototypeRobot = SmartDashboard::GetBoolean("Is Prototype Bot", false);
+  //prototypeRobot = SmartDashboard::GetBoolean("Is Prototype Bot", false);
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   SmartDashboard::PutBoolean("Vision Target Found", false);
@@ -210,18 +192,12 @@ void Robot::TeleopInit()
   frontStilts->SetSelectedSensorPosition(0);
   backStilts->SetSelectedSensorPosition(0);
   stilts->setBothToHeight(0);
-  frontStilts->Set(ControlMode::PercentOutput, 0);
-  backStilts->Set(ControlMode::PercentOutput, 0);
 }
 
 void Robot::TeleopPeriodic() 
 { 
-      std::cout << "Front Stilts: " << stilts->getFrontHeight() << ", " << frontStilts->GetSelectedSensorPosition();
-      std::cout << " Back Stilts: " << stilts->getBackHeight() << ", " << frontStilts->GetSelectedSensorPosition() << std::endl;
-      std::cout << " Front Left Ultra: " << ultra->getDistanceLeftFront();
-      std::cout << " Back Left Ultra: " << ultra->getDistanceLeftBack() << std::endl;
-      std::cout << " Manipulator: " << wrist->GetSelectedSensorPosition();
-  
+  //std::cout << "Back Stilts: " << backStilts->GetSelectedSensorPosition() << std::endl;
+  //std::cout << "Front Stilts: " << frontStilts->GetSelectedSensorPosition() << std::endl;
   if(VISION_ENABLED)
   {
     std::string direction = frc::SmartDashboard::GetString("Strafe Direction", "correct");
@@ -262,9 +238,23 @@ void Robot::TeleopPeriodic()
   
   if(!defenseMode)
   { 
+    if(CLIMB_ENABLED)
+    {
+      //Climb();
+    }
     if(LIFTER_ENABLED)
     {
       TeleopLifterControl();
+     /* if(js2->GetRawButton(upButton))
+      {
+        lifter->TesterLift(50);
+      }gbButton(downButton))
+      {
+        lifter->TesterLift(50);
+      }
+      else{
+        lifter->TesterLift(0);
+      }*/
     }
     if(MANIPULATOR_ENABLED)
     {
@@ -272,6 +262,7 @@ void Robot::TeleopPeriodic()
     }
     if(SOLENOID_TEST_ENABLED)
     {
+      //ElectricSolenoidTest(solenoid);
       if(js1->GetRawButton(engageSol)) 
       {
       std::cout << "engaging sol" << std::endl;
@@ -312,15 +303,16 @@ void Robot::TeleopPeriodic()
       teleopClimbing = true;
       buttonTimer = 0;
     }
-    if(js3->GetRawButton(10))
-    {
-      autoClimbing = false;
-      teleopClimbing  = true;
-      buttonTimer = 0;
-    }
+
     if(autoClimbing && !teleopClimbing)
     {
       Climb(); 
+      std::cout << "Front Stilts: " << stilts->getFrontHeight();
+      std::cout << " Back Stilts: " << stilts->getBackHeight() << std::endl;
+      std::cout << " Front Left Ultra: " << ultra->getDistanceLeftFront();
+      std::cout << " Back Left Ultra: " << ultra->getDistanceLeftBack() << std::endl;
+      std::cout << "Climb state: " << climbState << std::endl;
+
     }
     else if(teleopClimbing && !autoClimbing)
     {
