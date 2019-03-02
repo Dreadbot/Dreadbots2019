@@ -177,7 +177,8 @@ void Robot::TeleopInit()
   std::cout << "TeleopInit" << std::endl;
   SmartDashboard::PutNumber("Target Angle", 0);
   SmartDashboard::PutBoolean("Vision Target Found", false);
-  autoClimbing = false;
+  level2Climbing = false;
+  level3Climbing = false;
   stagedClimbState = 1;
   climbState = 1;
   if(LIFTER_ENABLED) {
@@ -291,30 +292,42 @@ void Robot::TeleopPeriodic()
 
   if(CLIMB_ENABLED)
   {
-    if(js2->GetRawButton(climbButton) && !autoClimbing && buttonTimer > BUTTON_TIMEOUT)
+    if(js2->GetRawButton(climbButton) && !level3Climbing && buttonTimer > BUTTON_TIMEOUT)
     {
-      autoClimbing = true;
+      level3Climbing = true;
+      level2Climbing = false;
       teleopClimbing = false;
       buttonTimer = 0;
     }
-    else if(js2->GetRawButton(climbButton) && autoClimbing && buttonTimer > BUTTON_TIMEOUT)
+    else if(js2->GetRawButton(climbButton) && (level2Climbing || level3Climbing) && buttonTimer > BUTTON_TIMEOUT)
     {
-      autoClimbing = false;
+      level2Climbing = false;
+      level3Climbing = false;
       teleopClimbing = true;
       buttonTimer = 0;
     }
-
-    if(autoClimbing && !teleopClimbing)
+    else if(js2->GetRawButton(level2Climb) && !level2Climbing && buttonTimer > BUTTON_TIMEOUT)
     {
-      Climb(); 
-      std::cout << "Front Stilts: " << stilts->getFrontHeight();
-      std::cout << " Back Stilts: " << stilts->getBackHeight() << std::endl;
-      std::cout << " Front Left Ultra: " << ultra->getDistanceLeftFront();
-      std::cout << " Back Left Ultra: " << ultra->getDistanceLeftBack() << std::endl;
-      std::cout << "Climb state: " << climbState << std::endl;
-
+      level2Climbing = true;
+      level3Climbing = false;
+      teleopClimbing = false;
     }
-    else if(teleopClimbing && !autoClimbing)
+    if(js3->GetRawButton(10))
+    {
+      level2Climbing = false;
+      level3Climbing = false;
+      teleopClimbing  = true;
+      buttonTimer = 0;
+    }
+    if(level2Climbing && !teleopClimbing)
+    {
+      Climb(2); 
+    }
+    else if(level3Climbing && !teleopClimbing)
+    {
+      Climb(3);
+    }
+    else if(teleopClimbing)
     {
       stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton),
        js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
@@ -322,10 +335,6 @@ void Robot::TeleopPeriodic()
        std::cout << stilts->getFrontHeight() << std::endl;
        std::cout << "Back Encoder Position: " << backStilts->GetSelectedSensorPosition() << ", ";
        std::cout << stilts->getBackHeight() << std::endl;
-    }
-    else if(teleopClimbing && autoClimbing)
-    {
-      stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton), js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
     }
   }
   // always increment buttonTimer - regardless of what functionality is Enabled or not

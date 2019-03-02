@@ -25,6 +25,7 @@
 #include <SparkDrive.h>
 double const TALON_TICKS_PER_ROTATION = 4096;
 float const LEVEL_3_HEIGHT = 21;
+float const LEVEL_2_HEIGHT = 7.5;
 
 class Robot : public frc::TimedRobot {
  public:
@@ -43,7 +44,7 @@ class Robot : public frc::TimedRobot {
   int AutonPositionDecider();
   int AutonGamePieceDecider();
   void RunAuton();
-  void Climb();
+  void Climb(int level);
   void ElectricSolenoidTest(frc::Solenoid *solenoid);
   void DefenseMode();
   void CameraSwap();
@@ -82,6 +83,7 @@ int const engageSol = 6;
 int const disengageSol = 8;
 int const manipulatorOverrideButton = 3;
 int const climbButton = 10;
+int const level2Climb = 9;
 int const ballPickup = 1;
 int const shootBall = 2;
 //js3
@@ -137,8 +139,10 @@ double strafeDifference;
 int climbState;
 int stagedClimbState;
 bool defenseMode = false;
-bool autoClimbing = false;
+bool level3Climbing = false;
+bool level2Climbing = false;
 bool teleopClimbing = false;
+
 float const driveStiltsSpeed = 0.4;
 float const sparksClimbSpeed = 0.2;
 //-----------Objects----------------
