@@ -25,7 +25,7 @@
 #include <SparkDrive.h>
 double const TALON_TICKS_PER_ROTATION = 4096;
 float const LEVEL_3_HEIGHT = 21;
-float const LEVEL_2_HEIGHT = 7.5;
+float const LEVEL_2_HEIGHT = 8.5;
 
 class Robot : public frc::TimedRobot {
  public:

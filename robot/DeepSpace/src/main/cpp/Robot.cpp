@@ -264,12 +264,12 @@ void Robot::TeleopPeriodic()
     if(SOLENOID_TEST_ENABLED)
     {
       //ElectricSolenoidTest(solenoid);
-      if(js1->GetRawButton(engageSol)) 
+      if(js2->GetRawButton(engageSol)) 
       {
       std::cout << "engaging sol" << std::endl;
       manipulator->GrabPanel(solenoid);
       }
-      else if(js1->GetRawButton(disengageSol))
+      else if(js2->GetRawButton(disengageSol))
       {
       std::cout << "disengaging sol" << std::endl;
       manipulator->ReleasePanel(solenoid); 

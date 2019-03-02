@@ -119,7 +119,7 @@ void Robot::Climb(int level)
         climbState = 2; //Drive the stilt wheel
         //std::cout << "Changed to state 2, climb State = " << climbState << std::endl;
       }
-      else if (climbState == 2 && ultra->getDistanceLeftFront() <= 3 && ultra->getDistanceLeftFront() >= 1 && ultra->getDistanceRightFront() <= 3 && ultra->getDistanceRightFront() >= 1)
+      else if (climbState == 2 && ultra->getDistanceLeftFront() <= 5 && ultra->getDistanceLeftFront() >= 1 && ultra->getDistanceRightFront() <= 5 && ultra->getDistanceRightFront() >= 1)
       {
         climbState = 3; //Retract front
       }
@@ -127,7 +127,7 @@ void Robot::Climb(int level)
       {
         climbState = 4; //drive the stilt wheel
       }
-      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 3 && ultra->getDistanceLeftBack() >= 1 && ultra->getDistanceRightBack() <= 3 && ultra->getDistanceRightBack() >= 1 && climbTimeout >= 100)
+      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 5 && ultra->getDistanceLeftBack() >= 1 && ultra->getDistanceRightBack() <= 5 && ultra->getDistanceRightBack() >= 1 && climbTimeout >= 100)
       {
         climbState = 5; //retract back wheel
       }
@@ -193,7 +193,7 @@ void Robot::Climb(int level)
         climbState = 2; //Drive the stilt wheel
         //std::cout << "Changed to state 2, climb State = " << climbState << std::endl;
       }
-      else if (climbState == 2 && ultra->getDistanceLeftFront() <= 3 && ultra->getDistanceLeftFront() >= 1 && ultra->getDistanceRightFront() <= 3 && ultra->getDistanceRightFront() >= 1)
+      else if (climbState == 2 && ultra->getDistanceLeftFront() <= 5 && ultra->getDistanceLeftFront() >= 1 && ultra->getDistanceRightFront() <= 5 && ultra->getDistanceRightFront() >= 1)
       {
         climbState = 3; //Retract front
       }
@@ -201,7 +201,7 @@ void Robot::Climb(int level)
       {
         climbState = 4; //drive the stilt wheel
       }
-      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 3 && ultra->getDistanceLeftBack() >= 1 && ultra->getDistanceRightBack() <= 5 && ultra->getDistanceRightBack() >= 1 && climbTimeout >= 100)
+      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 5 && ultra->getDistanceLeftBack() >= 1 && ultra->getDistanceRightBack() <= 5 && ultra->getDistanceRightBack() >= 1 && climbTimeout >= 100)
       {
         climbState = 5; //retract back wheel
       }
@@ -242,11 +242,11 @@ void Robot::Climb(int level)
       {
         stilts->driveWheels(0);
         stilts->setBackToHeight(0);
+        sparkDrive->MecDrive(0, .25, 0, false, false); 
         climbTimeout = 0;
       }
       if (climbState == 6)
       {
-        sparkDrive->MecDrive(0, .25, 0, false, false); //doesn't drive forward for some reason, even though it's in state 6
         climbTimeout++;
       }
       if (climbState == 7)
@@ -260,10 +260,10 @@ void Robot::Climb(int level)
       }
     }
 }
-void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
+/*void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 {
   //toggle function for button "X" to fire solenoid
-  /*if (js1->GetRawButton(solButton) && isSolOut == false && Robot::isXDown == false)
+  if (js1->GetRawButton(solButton) && isSolOut == false && Robot::isXDown == false)
   {
     solenoid->Set(true);
     isSolOut = true;
@@ -282,7 +282,7 @@ void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
 
   else if (!js1->GetRawButton(solButton) && isSolOut == false)
     isXDown = false;
-    */
+    
   if(js2->GetRawButton(engageSol))
     solenoid->Set(true);
   
@@ -290,7 +290,7 @@ void Robot::ElectricSolenoidTest(frc::Solenoid *solenoid)
     solenoid->Set(false);
 
 }
-
+*/
 void Robot::DefenseMode()
 {
   //toggle function for button "A" to retract all appendages and lock them in place
