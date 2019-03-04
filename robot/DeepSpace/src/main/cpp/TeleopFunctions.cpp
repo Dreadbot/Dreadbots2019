@@ -380,9 +380,9 @@ void Robot::StrafeToAlign (std::string direction)
 void Robot::BallPickup(bool in, bool out)
 {
   if(in)
-    intakeWheels->Set(-.5);
+    intakeWheels->Set(.5);
   else if(out)
-    intakeWheels->Set(1);
+    intakeWheels->Set(-1);
   else 
     intakeWheels->Set(0);
 }

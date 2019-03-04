@@ -22,8 +22,8 @@ WPI_TalonSRX liftMotor = {ENCODER_ID};
 double levels [] = {0.0, 4.0, 12.0, 32.0, 42.0, 60.0, 72.0}; //Based on measurements 2/21/19
 double slop = 0.5;
 double motorSpeed = 0;
-double MAXLIFTROTATION = 29000;
-double MINLIFTROTATION = -100; //set to just under zero for actual lift
+const double MAXLIFTROTATION = 29000;
+const double MINLIFTROTATION = 0; //set to just under zero for actual lift
 float const LIFT_GEAR_RATIO = 70;
 float const DIAMETER_LIFT = 1.2;
 float const PI = 3.14159265358979823846264288;
@@ -36,7 +36,7 @@ Lifter::Lifter() {
     liftMotor.ConfigPeakOutputReverse(-1,0);
 
     liftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
-    liftMotor.SetSensorPhase(true);
+    liftMotor.SetSensorPhase(false);
 
     liftMotor.SetSafetyEnabled(false);
     liftMotor.SetSelectedSensorPosition(0);
@@ -101,7 +101,7 @@ void Lifter::MoveLift(double motorSpeed)
 void Lifter::LiftInit()
 {
     liftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
-    liftMotor.SetSensorPhase(true);
+    liftMotor.SetSensorPhase(false);
 
 //    liftMotor.ConfigClosedLoopPeakOutput(0, .1);
 
@@ -119,7 +119,7 @@ int Lifter::GetEncoderPosition()
 {
     int currentPosition;
     currentPosition = liftMotor.GetSelectedSensorPosition();
-    return currentPosition;
+    return abs(currentPosition);
 }
 
 int Lifter::CheckHeight()
@@ -128,7 +128,7 @@ int Lifter::CheckHeight()
     //these are the current rotations for the different levels, once we have a bot they will need to be changed
     int currentHeight;
     int currentRotation;
-    currentRotation = liftMotor.GetSelectedSensorPosition()/TALON_TICKS_PER_ROTATION;
+    currentRotation = GetEncoderPosition()/TALON_TICKS_PER_ROTATION;
 
     for (int i = 0; i < (sizeof(levels))/8; i++) {
         if(currentRotation > levels[i] - slop && currentRotation < levels[i] + slop){
