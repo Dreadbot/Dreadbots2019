@@ -130,7 +130,7 @@ void Robot::RobotInit()
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
-  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, true);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, false);
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
