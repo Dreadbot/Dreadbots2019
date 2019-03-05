@@ -115,7 +115,7 @@ void Robot::RobotInit()
   rBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
   lBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
                                      //-------------Sparks-------------------
-  lFrontSpark = new rev::CANSparkMax(0, rev::CANSparkMax::MotorType::kBrushless);
+  lFrontSpark = new rev::CANSparkMax(10, rev::CANSparkMax::MotorType::kBrushless); 
   rFrontSpark = new rev::CANSparkMax(1, rev::CANSparkMax::MotorType::kBrushless);
   lBackSpark = new rev::CANSparkMax(2, rev::CANSparkMax::MotorType::kBrushless);
   rBackSpark = new rev::CANSparkMax(3, rev::CANSparkMax::MotorType::kBrushless);
