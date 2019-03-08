@@ -145,33 +145,31 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating
  */
-void Robot::RobotPeriodic() 
-{
-
-}
+void Robot::RobotPeriodic() {}
 
 void Robot::AutonomousInit() 
 {
-  gyro->ZeroYaw();
-  lifter->LiftInit();
-  lifter->SetLift(0);
-  
-  rFront->SetSelectedSensorPosition(0);
-  lFront->SetSelectedSensorPosition(0);
-  rBack->SetSelectedSensorPosition(0);
-  lBack->SetSelectedSensorPosition(0);
+  OverallInit();
 }
 
 void Robot::AutonomousPeriodic() 
 {
   currentAngle = gyro->GetYaw();
-  int direction = strafeDir.GetSelected();
+  //int direction = strafeDir.GetSelected();
   //drive->DriveStraight(.3, currentAngle);
   //drive->StrafeStraight(currentAngle, 0, 0.25);
-  drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
+  //drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
+  OverallPeriodic();
 }
 
-void Robot::TeleopInit()
+void Robot::TeleopInit(){}
+
+void Robot::TeleopPeriodic() 
+{ 
+  OverallPeriodic();
+}
+
+void Robot::OverallInit()
 {
   //prototypeRobot = SmartDashboard::GetBoolean("Is Prototype Bot", false);
   std::cout << "TeleopInit" << std::endl;
@@ -182,21 +180,30 @@ void Robot::TeleopInit()
   stagedClimbState = 1;
   climbState = 1;
   if(LIFTER_ENABLED) {
-    lifter->LiftInit(); //remove this for competitions
+    //lifter->LiftInit(); //remove this for competitions
   }
   buttonTimer = 0;
 
   if(MANIPULATOR_ENABLED) {
-    manipulator->Init();
+    //manipulator->Init();
     //manipulator->SetBallPickup(true);
   }
   frontStilts->SetSelectedSensorPosition(0);
   backStilts->SetSelectedSensorPosition(0);
   stilts->setBothToHeight(0);
+
+   gyro->ZeroYaw();
+  lifter->LiftInit();
+  lifter->SetLift(0);
+  
+  rFront->SetSelectedSensorPosition(0);
+  lFront->SetSelectedSensorPosition(0);
+  rBack->SetSelectedSensorPosition(0);
+  lBack->SetSelectedSensorPosition(0);
 }
 
-void Robot::TeleopPeriodic() 
-{ 
+void Robot::OverallPeriodic()
+{
   //std::cout << "Back Stilts: " << backStilts->GetSelectedSensorPosition() << std::endl;
   //std::cout << "Front Stilts: " << frontStilts->GetSelectedSensorPosition() << std::endl;
   if(VISION_ENABLED)
@@ -237,8 +244,8 @@ void Robot::TeleopPeriodic()
      currentAngle = SmartDashboard::PutNumber("Current Angle", currentAngle);
   }
   
-  if(!defenseMode)
-  { 
+  //if(!defenseMode)
+  //{ 
     if(CLIMB_ENABLED)
     {
       //Climb();
@@ -277,7 +284,7 @@ void Robot::TeleopPeriodic()
     }
     if(BALL_PICKUP_ENABLED)
       BallPickup(js2->GetRawButton(ballPickup), js2->GetRawButton(shootBall));
-  }
+ // }
  if (DRIVE_ENABLED)
   {
     //MecDrive2 DOES NOT WORK with rotating right
@@ -292,27 +299,34 @@ void Robot::TeleopPeriodic()
 
   if(CLIMB_ENABLED)
   {
-    if(js2->GetRawButton(climbButton) && !level3Climbing && buttonTimer > BUTTON_TIMEOUT)
+    if(js2->GetRawButton(climbButton) && !(level2Climbing || level3Climbing) && buttonTimer > BUTTON_TIMEOUT)
     {
       level3Climbing = true;
       level2Climbing = false;
       teleopClimbing = false;
       buttonTimer = 0;
     }
-    else if(js2->GetRawButton(climbButton) && (level2Climbing || level3Climbing) && buttonTimer > BUTTON_TIMEOUT)
+    else if(js1->GetRawButton(climbButton) && level2Climbing && buttonTimer > BUTTON_TIMEOUT)
     {
       level2Climbing = false;
       level3Climbing = false;
       teleopClimbing = true;
       buttonTimer = 0;
     }
-    else if(js2->GetRawButton(level2Climb) && !level2Climbing && buttonTimer > BUTTON_TIMEOUT)
+    else if(js2->GetRawButton(climbButton) && level3Climbing && buttonTimer > BUTTON_TIMEOUT)
+    {
+      level2Climbing = false;
+      level3Climbing = false;
+      teleopClimbing = true;
+      buttonTimer = 0;
+    }
+    else if(js1->GetRawButton(climbButton) && !(level2Climbing||level3Climbing) && buttonTimer > BUTTON_TIMEOUT)
     {
       level2Climbing = true;
       level3Climbing = false;
       teleopClimbing = false;
     }
-    if(js3->GetRawButton(10))
+    if(js3->GetRawButton(climbButton))
     {
       level2Climbing = false;
       level3Climbing = false;
@@ -349,10 +363,7 @@ bool Robot::IsVisionTargetFound()
   return true;
 }
 
-void Robot::TestPeriodic() 
-{
-  
-}
+void Robot::TestPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
