@@ -293,7 +293,7 @@ void Drive::StrafeToDistance(StrafeDirection direction, float rotations)
 		case LEFT:
 			std::cout<<"Going LEFT"<<std::endl;
 			std::cout<<tick<<std::endl;
-			std::cout<<"Current encoder value: "<<rFront->GetSelectedSensorPosition()<<std::endl;
+			//std::cout<<"Current encoder value: "<<rFront->GetSelectedSensorPosition()<<std::endl;
 			lFront->Set(ControlMode::Position, -tick);
 			rFront->Set(ControlMode::Position, tick);
 			lBack->Set(ControlMode::Position, tick);
@@ -302,7 +302,7 @@ void Drive::StrafeToDistance(StrafeDirection direction, float rotations)
 		case RIGHT:
 			std::cout<<"Going RIGHT"<<std::endl;
 			std::cout<<tick<<std::endl;
-			std::cout<<"Current encoder value: "<<rFront->GetSelectedSensorPosition()<<std::endl;
+			//std::cout<<"Current encoder value: "<<rFront->GetSelectedSensorPosition()<<std::endl;
 			lFront->Set(ControlMode::Position, tick);
 			rFront->Set(ControlMode::Position, -tick);
 			lBack->Set(ControlMode::Position, -tick);
