@@ -227,9 +227,12 @@ void Robot::AutonomousPeriodic()
     //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
     //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
 
-    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    if (!level2Climbing && !level3Climbing && !teleopClimbing)
+      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
-    
+    else 
+      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+              js1->GetRawAxis(joystickRot), false, true);
   }
 
 
@@ -249,7 +252,7 @@ void Robot::AutonomousPeriodic()
       teleopClimbing = true;
       buttonTimer = 0;
     }
-    else if(js2->GetRawButton(level2Climb) && !level2Climbing && buttonTimer > BUTTON_TIMEOUT)
+    else if(js1->GetRawButton(climbButton) && !level2Climbing && buttonTimer > BUTTON_TIMEOUT)
     {
       level2Climbing = true;
       level3Climbing = false;
@@ -383,9 +386,12 @@ void Robot::TeleopPeriodic()
     //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
     //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
 
-    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    if (!level2Climbing && !level3Climbing && !teleopClimbing)
+      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
-    
+    else 
+      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+              js1->GetRawAxis(joystickRot), false, true);
   }
 
 

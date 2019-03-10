@@ -148,15 +148,16 @@ void Drive::MecDrive(double xAxis, double yAxis, double rot, bool turboButton, b
 
 		if (fabs(rot) < noMove)
 			rot = 0.0;
+	
+			
+			if (slowButton)
+				maxSpeed = .3;
 
-		if (turboButton)
-			maxSpeed = 1;
+			else if (turboButton)
+				maxSpeed = 1;
 
-		else if (slowButton)
-			maxSpeed = .3;
-
-		else
-			maxSpeed = .5;
+			else
+				maxSpeed = .5;
 
 		double lFrontSpeed = -yAxis - xAxis - rot;
 		double rFrontSpeed = +yAxis - xAxis - rot;
