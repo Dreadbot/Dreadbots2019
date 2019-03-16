@@ -261,18 +261,32 @@ void Robot::TeleopPeriodic()
     {
       TeleopManipulatorControl();
     }
+
     if(SOLENOID_TEST_ENABLED)
     {
       //ElectricSolenoidTest(solenoid);
       if(js2->GetRawButton(engageSol)) 
       {
-      std::cout << "engaging sol" << std::endl;
-      manipulator->GrabPanel(solenoid);
+        std::cout << "engaging sol" << std::endl;
+        manipulator->GrabPanel(solenoid);
       }
+      
       else if(js2->GetRawButton(disengageSol))
       {
-      std::cout << "disengaging sol" << std::endl;
-      manipulator->ReleasePanel(solenoid); 
+        std::cout << "disengaging sol" << std::endl;
+        manipulator->ReleasePanel(solenoid);
+      } 
+      
+      if(js1->GetRawButton(1)) 
+      {
+        std::cout << "engaging pushsol" << std::endl;
+        manipulator->GrabPanel(pushSolenoid);
+      }
+      
+      else if(js1->GetRawButton(2))
+      {
+        std::cout << "disengaging pushsol" << std::endl;
+        manipulator->ReleasePanel(pushSolenoid);
       } 
     }
     if(BALL_PICKUP_ENABLED)
