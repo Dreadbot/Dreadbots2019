@@ -91,7 +91,7 @@ void Robot::TeleopManipulatorControl()
   else {
     if(js2->GetRawButton(raiseManipulator))
     {
-      wrist->Set(ControlMode::PercentOutput, -0.7);
+      wrist->Set(ControlMode::PercentOutput, -0.5);
     }
     else if(js2->GetRawButton(lowerManipulator))
     {
@@ -99,7 +99,7 @@ void Robot::TeleopManipulatorControl()
     }
     else
     {
-      wrist->Set(ControlMode::PercentOutput, 0);
+      wrist->Set(ControlMode::PercentOutput, -0.3);
     }
   }
 }
@@ -168,11 +168,12 @@ void Robot::Climb(int level)
       {
         stilts->driveWheels(0);
         stilts->setBackToHeight(0);
+        sparkDrive->MecDrive(0, .25, 0, false, true);
         climbTimeout = 0;
       }
       if (climbState == 6)
       {
-        sparkDrive->MecDrive(0, .25, 0, false, false); //doesn't drive forward for some reason, even though it's in state 6
+        sparkDrive->MecDrive(0, .25, 0, false, true); //doesn't drive forward for some reason, even though it's in state 6
         climbTimeout++;
       }
       if (climbState == 7)
@@ -380,7 +381,7 @@ void Robot::StrafeToAlign (std::string direction)
 void Robot::BallPickup(bool in, bool out)
 {
   if(in)
-    intakeWheels->Set(.5);
+    intakeWheels->Set(1);
   else if(out)
     intakeWheels->Set(-1);
   else 
