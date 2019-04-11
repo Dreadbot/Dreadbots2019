@@ -115,7 +115,7 @@ void Robot::RobotInit()
   rBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
   lBack->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
                                      //-------------Sparks-------------------
-  lFrontSpark = new rev::CANSparkMax(10, rev::CANSparkMax::MotorType::kBrushless); 
+  lFrontSpark = new rev::CANSparkMax(0, rev::CANSparkMax::MotorType::kBrushless);
   rFrontSpark = new rev::CANSparkMax(1, rev::CANSparkMax::MotorType::kBrushless);
   lBackSpark = new rev::CANSparkMax(2, rev::CANSparkMax::MotorType::kBrushless);
   rBackSpark = new rev::CANSparkMax(3, rev::CANSparkMax::MotorType::kBrushless);
@@ -130,7 +130,7 @@ void Robot::RobotInit()
   lifter = new Lifter();
   drive = new Drive(lFront, lBack, rFront, rBack);
   sparkDrive = new SparkDrive(lFrontSpark, lBackSpark, rFrontSpark, rBackSpark);
-  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, false);
+  stilts = new Stilts(*driveStilts, *backStilts, *frontStilts, true);
   gyro->ZeroYaw();
   ultra = new Ultra();
   manipulator = new DoubleManipulator(*wrist, *intakeWheels);
@@ -145,7 +145,10 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() 
+{
+
+}
 
 void Robot::AutonomousInit() 
 {
@@ -153,19 +156,6 @@ void Robot::AutonomousInit()
   lifter->LiftInit();
   lifter->SetLift(0);
   
-  manipulator->Init();
-
-  SmartDashboard::PutNumber("Target Angle", 0);
-  SmartDashboard::PutBoolean("Vision Target Found", false);
-  level2Climbing = false;
-  level3Climbing = false;
-  stagedClimbState = 1;
-  climbState = 1;
-  
-  frontStilts->SetSelectedSensorPosition(0);
-  backStilts->SetSelectedSensorPosition(0);
-  stilts->setBothToHeight(0);
-
   rFront->SetSelectedSensorPosition(0);
   lFront->SetSelectedSensorPosition(0);
   rBack->SetSelectedSensorPosition(0);
@@ -179,122 +169,30 @@ void Robot::AutonomousPeriodic()
   //drive->DriveStraight(.3, currentAngle);
   //drive->StrafeStraight(currentAngle, 0, 0.25);
   drive->StrafeToDistance((Drive::StrafeDirection)direction, 1);
-  
-  if(!defenseMode)
-  { 
-    if(CLIMB_ENABLED)
-    {
-      //Climb();
-    }
-    if(LIFTER_ENABLED)
-    {
-      TeleopLifterControl();
-     /* if(js2->GetRawButton(upButton))
-      {
-        lifter->TesterLift(50);
-      }gbButton(downButton))
-      {
-        lifter->TesterLift(50);
-      }
-      else{
-        lifter->TesterLift(0);
-      }*/
-    }
-    if(MANIPULATOR_ENABLED)
-    {
-      TeleopManipulatorControl();
-    }
-    if(SOLENOID_TEST_ENABLED)
-    {
-      //ElectricSolenoidTest(solenoid);
-      if(js2->GetRawButton(engageSol)) 
-      {
-      std::cout << "engaging sol" << std::endl;
-      manipulator->GrabPanel(solenoid);
-      }
-      else if(js2->GetRawButton(disengageSol))
-      {
-      std::cout << "disengaging sol" << std::endl;
-      manipulator->ReleasePanel(solenoid); 
-      } 
-    }
-    if(BALL_PICKUP_ENABLED)
-      BallPickup(js2->GetRawButton(ballPickup), js2->GetRawButton(shootBall));
-  }
- if (DRIVE_ENABLED)
-  {
-    //MecDrive2 DOES NOT WORK with rotating right
-    //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-    //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-
-    if (!level2Climbing && !level3Climbing && !teleopClimbing)
-      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-              js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
-    else 
-      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-              js1->GetRawAxis(joystickRot), false, true);
-  }
-
-
-  if(CLIMB_ENABLED)
-  {
-    if(js2->GetRawButton(climbButton) && !level3Climbing && buttonTimer > BUTTON_TIMEOUT)
-    {
-      level3Climbing = true;
-      level2Climbing = false;
-      teleopClimbing = false;
-      buttonTimer = 0;
-    }
-    else if(js2->GetRawButton(climbButton) && (level2Climbing || level3Climbing) && buttonTimer > BUTTON_TIMEOUT)
-    {
-      level2Climbing = false;
-      level3Climbing = false;
-      teleopClimbing = true;
-      buttonTimer = 0;
-    }
-    else if(js1->GetRawButton(climbButton) && !level2Climbing && buttonTimer > BUTTON_TIMEOUT)
-    {
-      level2Climbing = true;
-      level3Climbing = false;
-      teleopClimbing = false;
-    }
-    if(js3->GetRawButton(10))
-    {
-      level2Climbing = false;
-      level3Climbing = false;
-      teleopClimbing  = true;
-      buttonTimer = 0;
-    }
-    if(level2Climbing && !teleopClimbing)
-    {
-      Climb(2); 
-    }
-    else if(level3Climbing && !teleopClimbing)
-    {
-      Climb(3);
-    }
-    else if(teleopClimbing)
-    {
-      stilts->teleopStilts(js3->GetRawButton(frontStiltsUpButton), js3->GetRawButton(frontStiltsDownButton), js3->GetRawButton(backStiltsUpButton), js3->GetRawButton(backStiltsDownButton),
-       js3->GetRawAxis(stiltsDriveStick), stilts->defaultFrontSpeed, stilts->defaultBackSpeed);
-       std::cout << "Front Encoder Position: " << frontStilts->GetSelectedSensorPosition() << ", ";
-       std::cout << stilts->getFrontHeight() << std::endl;
-       std::cout << "Back Encoder Position: " << backStilts->GetSelectedSensorPosition() << ", ";
-       std::cout << stilts->getBackHeight() << std::endl;
-    }
-  }
-  // always increment buttonTimer - regardless of what functionality is Enabled or not
-  
-  //CameraSwap();
-
-  buttonTimer++;
 }
 
 void Robot::TeleopInit()
 {
   //prototypeRobot = SmartDashboard::GetBoolean("Is Prototype Bot", false);
   std::cout << "TeleopInit" << std::endl;
- 
+  SmartDashboard::PutNumber("Target Angle", 0);
+  SmartDashboard::PutBoolean("Vision Target Found", false);
+  level2Climbing = false;
+  level3Climbing = false;
+  stagedClimbState = 1;
+  climbState = 1;
+  if(LIFTER_ENABLED) {
+    lifter->LiftInit(); //remove this for competitions
+  }
+  buttonTimer = 0;
+
+  if(MANIPULATOR_ENABLED) {
+    manipulator->Init();
+    //manipulator->SetBallPickup(true);
+  }
+  frontStilts->SetSelectedSensorPosition(0);
+  backStilts->SetSelectedSensorPosition(0);
+  stilts->setBothToHeight(0);
 }
 
 void Robot::TeleopPeriodic() 
@@ -363,18 +261,32 @@ void Robot::TeleopPeriodic()
     {
       TeleopManipulatorControl();
     }
+
     if(SOLENOID_TEST_ENABLED)
     {
       //ElectricSolenoidTest(solenoid);
       if(js2->GetRawButton(engageSol)) 
       {
-      std::cout << "engaging sol" << std::endl;
-      manipulator->GrabPanel(solenoid);
+        std::cout << "engaging sol" << std::endl;
+        manipulator->GrabPanel(solenoid);
       }
+      
       else if(js2->GetRawButton(disengageSol))
       {
-      std::cout << "disengaging sol" << std::endl;
-      manipulator->ReleasePanel(solenoid); 
+        std::cout << "disengaging sol" << std::endl;
+        manipulator->ReleasePanel(solenoid);
+      } 
+      
+      if(js1->GetRawButton(1)) 
+      {
+        std::cout << "engaging pushsol" << std::endl;
+        manipulator->GrabPanel(pushSolenoid);
+      }
+      
+      else if(js1->GetRawButton(2))
+      {
+        std::cout << "disengaging pushsol" << std::endl;
+        manipulator->ReleasePanel(pushSolenoid);
       } 
     }
     if(BALL_PICKUP_ENABLED)
@@ -386,12 +298,9 @@ void Robot::TeleopPeriodic()
     //drive->MecDrive2(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
     //drive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
 
-    if (!level2Climbing && !level3Climbing && !teleopClimbing)
-      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
+    sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
               js1->GetRawAxis(joystickRot), js1->GetRawButton(turboButton), js1->GetRawButton(slowButton));
-    else 
-      sparkDrive->MecDrive(js1->GetRawAxis(joystickX), -(js1->GetRawAxis(joystickY)),
-              js1->GetRawAxis(joystickRot), false, true);
+    
   }
 
 

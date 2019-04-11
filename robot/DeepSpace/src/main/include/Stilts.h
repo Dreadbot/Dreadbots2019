@@ -22,7 +22,7 @@ class Stilts
         TalonSRX& m_backMotor;
         TalonSRX& m_frontMotor;
         double defaultFrontSpeed = 0.8;
-        double defaultBackSpeed = 0.8;
+        double defaultBackSpeed = 0.4;
         int currentFront;
         int currentBack;
 };

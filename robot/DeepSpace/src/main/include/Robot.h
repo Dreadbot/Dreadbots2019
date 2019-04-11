@@ -99,6 +99,7 @@ int const stiltsDriveStick = 3;
 //If you comment these out, please uncomment them before pushing to avoid compilation errors for other people
 frc::Compressor *compressor = new frc::Compressor(0);
 frc::Solenoid *solenoid = new frc::Solenoid(0);
+frc::Solenoid *pushSolenoid = new frc::Solenoid(1);
 bool isSolOut = false;
 
 //-------------Talons-------------------
