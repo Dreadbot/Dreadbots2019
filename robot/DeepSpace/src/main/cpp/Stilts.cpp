@@ -198,7 +198,7 @@ void Stilts::teleopStilts(bool frontUp, bool frontDown, bool backUp, bool backDo
     }
     if(stiltsDriveAxis >= 0.1 || stiltsDriveAxis <= -0.1)
     {
-        m_driveMotor.Set(ControlMode::PercentOutput, stiltsDriveAxis * 0.5);
+        m_driveMotor.Set(ControlMode::PercentOutput, stiltsDriveAxis);
     }
     else
     {

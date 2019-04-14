@@ -20,7 +20,7 @@
 //const int WHEEL_ID = 1;
 const int SAFETY_TIMEOUT_SECONDS = 3;
 const int GEAR_RATIO = 514;
-double positions[] = {0, -10, -45, -90};//Angles of the manipulator, where 0 is straight up, flush with the lift, and -90 is facing the ground
+double positions[] = {0, 20, 47, 110};//Angles of the manipulator, where 0 is straight up, flush with the lift, and -90 is facing the ground
 int actualPositions[] = {0, 122795, 317190, 578940}; //actual encoder values of where we want to go (without math)
 //TalonSRX wrist = {WRIST_ID};
 //TalonSRX intakeWheels = {WHEEL_ID};
@@ -53,11 +53,18 @@ void DoubleManipulator::Init()
 void DoubleManipulator::RotateWrist(int position)
 { //0 = lowest, 1 = 45 degrees, 2 = 90 degrees, 3 = a little past 90 for rocket
     //Must raise lift in order to get to 0
+
+    if(position < currentPosition){
+        wrist.ConfigClosedLoopPeakOutput(0, 0.5);
+    }
+    else{
+        wrist.ConfigClosedLoopPeakOutput(0, 0.7);
+    }
     std::cout << "moving to position: " << (((positions[position] / 360) * TALON_TICKS_PER_ROTATION)*GEAR_RATIO) << std::endl;
     std::cout << "Motor Position: " << wrist.GetSelectedSensorPosition() << std::endl;
     currentPosition = position;
-    //wrist.Set(ControlMode::Position, ((positions[position] / 360) * TALON_TICKS_PER_ROTATION)*GEAR_RATIO);
-    wrist.Set(ControlMode::Position, actualPositions[position]); //just sets the wrist to pre-set values
+    wrist.Set(ControlMode::Position, ((positions[position] / 360) * TALON_TICKS_PER_ROTATION)*GEAR_RATIO);
+    //wrist.Set(ControlMode::Position, actualPositions[position]); //just sets the wrist to pre-set values
 }
 
 void DoubleManipulator::SpinWheels(double motorSpeed)

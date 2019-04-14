@@ -16,14 +16,14 @@ void Robot::TeleopLifterControl()
       buttonTimer = 0;
       lifter->IncreaseCurrentLevel();
       //std::cout << "UpButton Pressed" << std::endl;
-      lifter->SetLift(lifter->GetCurrentLevel());
+      //lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
     if (js1->GetRawButton(downButton) && buttonTimer >= BUTTON_TIMEOUT && lifter->GetCurrentLevel() > 0)
     {
       buttonTimer = 0;
       lifter->DecreaseCurrentLevel();
-      lifter->SetLift(lifter->GetCurrentLevel());
+      //lifter->SetLift(lifter->GetCurrentLevel());
       frc::SmartDashboard::PutNumber("Wanted level", lifter->GetCurrentLevel()); //needs to be changed to Shuffleboard
     }
   }
@@ -53,10 +53,10 @@ void Robot::TeleopManipulatorControl()
   //std::cout<<"Picking up: " << manipulator->CheckPickup() <<std::endl;
   if (!js2->GetRawButton(manipulatorOverrideButton))
   {
+    std::cout << "Manipulator Encoder Value:" << wrist->GetSelectedSensorPosition() << std::endl;
     if (js2->GetRawButton(lowerManipulator) && buttonTimer >= BUTTON_TIMEOUT && Robot::manipulator->GetCurrentPosition() < 3)
     {
       manipulator->wrist.ConfigClosedLoopPeakOutput(0, 0.5);
-      //std::cout << "Manipulator Encoder Value:" << manipulator->GetCurrentPosition() << std::endl;
       if(manipulator->GetCurrentPosition() == 2){
         std::cout << "shrugged" << std::endl;
         lifter->Shrug();
@@ -91,7 +91,7 @@ void Robot::TeleopManipulatorControl()
   else {
     if(js2->GetRawButton(raiseManipulator))
     {
-      wrist->Set(ControlMode::PercentOutput, -0.7);
+      wrist->Set(ControlMode::PercentOutput, -0.5);
     }
     else if(js2->GetRawButton(lowerManipulator))
     {
@@ -99,7 +99,7 @@ void Robot::TeleopManipulatorControl()
     }
     else
     {
-      wrist->Set(ControlMode::PercentOutput, 0);
+      wrist->Set(ControlMode::PercentOutput, -0.3);
     }
   }
 }
@@ -127,7 +127,7 @@ void Robot::Climb(int level)
       {
         climbState = 4; //drive the stilt wheel
       }
-      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 5 && ultra->getDistanceLeftBack() >= 1 && ultra->getDistanceRightBack() <= 5 && ultra->getDistanceRightBack() >= 1 && climbTimeout >= 100)
+      else if (climbState == 4 && ultra->getDistanceLeftBack() <= 7 && ultra->getDistanceLeftBack() >= 1 && ultra->getDistanceRightBack() <= 7 && ultra->getDistanceRightBack() >= 1 && climbTimeout >= 100)
       {
         climbState = 5; //retract back wheel
       }
@@ -168,11 +168,12 @@ void Robot::Climb(int level)
       {
         stilts->driveWheels(0);
         stilts->setBackToHeight(0);
+        sparkDrive->MecDrive(0, .25, 0, false, true);
         climbTimeout = 0;
       }
       if (climbState == 6)
       {
-        sparkDrive->MecDrive(0, .25, 0, false, false); //doesn't drive forward for some reason, even though it's in state 6
+        sparkDrive->MecDrive(0, .25, 0, false, true); //doesn't drive forward for some reason, even though it's in state 6
         climbTimeout++;
       }
       if (climbState == 7)
@@ -380,9 +381,9 @@ void Robot::StrafeToAlign (std::string direction)
 void Robot::BallPickup(bool in, bool out)
 {
   if(in)
-    intakeWheels->Set(-.5);
-  else if(out)
     intakeWheels->Set(1);
+  else if(out)
+    intakeWheels->Set(-1);
   else 
     intakeWheels->Set(0);
 }
