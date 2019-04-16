@@ -108,9 +108,9 @@ void Robot::TeleopManipulatorControl()
 void Robot::Climb(int level)
 {
   float slop = .1;
-  //std::cout<< "Climb State: " << climbState;
-  //std::cout << " Front Height: " << stilts->getFrontHeight();
-  //std::cout << " Back Height: " << stilts->getBackHeight();
+  std::cout<< "Climb State: " << climbState;
+  std::cout << " Front Height: " << stilts->getFrontHeight();
+  std::cout << " Back Height: " << stilts->getBackHeight();
     if (climbState != 8 && level == 3)
     {
       if (climbState == 1 && stilts->getFrontHeight() >= LEVEL_3_HEIGHT - slop && stilts->getBackHeight() >= LEVEL_3_HEIGHT - slop)
